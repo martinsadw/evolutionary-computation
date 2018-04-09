@@ -1,4 +1,5 @@
 import random
+from ga_gene import Gene
 
 BIT_INVERSION_MUTATION = 0
 
@@ -11,12 +12,18 @@ def mutation_gene(gene, method, args):
 	return gene
 
 def _bit_inversion_mutation_gene(gene, args):
-	assert 'gene_bitsize' in args
 	assert 'mutation_chance' in args
 
-	for x in range(args['gene_bitsize']):
-		if random.random() < args['mutation_chance']:
-			gene ^= (1 << x)
+	new_gene = Gene.like(gene)
 
-	return gene
-	
+	for name in new_gene.variables:
+		bitsize = new_gene.get_variable_size(name)
+
+		mask = 0
+		for x in range(bitsize):
+			if random.random() < args['mutation_chance']:
+				mask &= (1 << x)
+
+		new_gene.variables[name] ^= mask
+
+	return new_gene
