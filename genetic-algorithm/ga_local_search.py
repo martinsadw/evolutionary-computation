@@ -3,9 +3,11 @@ from ga_gene import Gene
 
 PER_VARIABLE_LOCAL_SEARCH = 0
 
+
 def local_search_gene(population, fitness_func, method, args):
     if (method == PER_VARIABLE_LOCAL_SEARCH):
         new_gene = _per_variable_local_search_gene(population, fitness_func, args)
+
 
 def _per_variable_local_search_gene(population, fitness_func, args):
     for gene in population:
@@ -28,6 +30,7 @@ def _per_variable_local_search_gene(population, fitness_func, args):
                 variable_value += args['local_search_step'] * i
 
             gene.set_value(name, best_variable_value)
+
 
 # def _multi_variable_local_search_gene(population, fitness_func, args):
 # def _adaptive_local_search_gene(population, fitness_func, args):
