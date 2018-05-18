@@ -1,6 +1,8 @@
 import random
-import matplotlib.pyplot as plt
 import numpy as np
+import copy
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 #http://mnemstudio.org/particle-swarm-introduction.htm
 
@@ -48,6 +50,8 @@ def pso(num_particles, num_iterations, a, b, c, low_limit, high_limit, fitness_f
 
 		particles.append(new_particle)
 
+	np_data = np.array([copy.deepcopy(particles)])
+
 	for x in range(num_iterations):
 		for particle in particles:
 			for d in range(num_dimensions):
@@ -71,6 +75,7 @@ def pso(num_particles, num_iterations, a, b, c, low_limit, high_limit, fitness_f
 					global_best_pos = particle.pos[:]
 
 		# print(str(global_best_pos) + " -> " + str(global_best))
+		np_data = np.append(np_data, [copy.deepcopy(particles)], axis=0)
 
 	if num_dimensions == 2:
 		fig = plt.figure()
@@ -86,9 +91,23 @@ def pso(num_particles, num_iterations, a, b, c, low_limit, high_limit, fitness_f
 
 		# plt.plot([1,2,3,4], [1,4,9,16], 'ro')
 		# plt.scatter([particle.pos[0] for particle in particles], [particle.pos[1] for particle in particles])
-		plt.scatter(*zip(*[particle.pos for particle in particles]))
+		# plt.scatter(*zip(*[particle.pos for particle in particles]), s=10)
+
+		scat = plt.scatter([], [], s=10)
+
+		def anim_func(frame, *fargs):
+			scat.set_offsets(np.hstack([particle.pos for particle in frame]))
+
+		def init_func():
+			scat.set_offsets([])
+
+		anim = animation.FuncAnimation(fig, anim_func, frames=np_data, init_func=init_func, interval=200)
+		# anim.save('test.mp4', fps=30, extra_args=['-vcodec', 'x264'])
 
 		plt.show()
 	# print(particles)
 
-pso(1000, 100, 0.2, 0.2, 0.6, (-20, -20), (20, 20), fitness)
+	list.sort(particles, key=fitness_func)
+	print(particles[0])
+
+pso(100, 10, 0.2, 0.2, 0.6, (-20, -20), (20, 20), fitness)

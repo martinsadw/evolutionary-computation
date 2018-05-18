@@ -59,7 +59,5 @@ def _roulette_selection_gene(population, quant):
     return parents
 
 
-
-
 # def _stochastic_selection_gene(population, quant, args):
 # def _truncation_selection_gene(population, quant, args):

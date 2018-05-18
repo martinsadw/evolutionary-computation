@@ -30,7 +30,7 @@ def crossover_gene(genes, method, args):
     return new_gene
 
 
-def _single_point_crossover_gene(genes, args, cut_point = ''):
+def _single_point_crossover_gene(genes, args, cut_point = None):
     assert len(genes) == 2
 
     # Exemplo:
@@ -56,7 +56,7 @@ def _single_point_crossover_gene(genes, args, cut_point = ''):
         value1 = genes[0].variables[name]
         value2 = genes[1].variables[name]
 
-        if cut_point == '':
+        if cut_point is None:
             bitsize = new_gene1.get_variable_size(name)
             cut_point = random.randrange(1, bitsize)
 
@@ -105,7 +105,7 @@ def _two_point_crossover_gene(genes, args):
 
         mask1 = (1 << cut_point1) - 1  # e.g. 0000 0000 0011 1111 se cut_point1 = 6
         mask2 = (1 << cut_point2) - 1  # e.g. 0000 0111 1111 1111 se cut_point2 = 11
-        mask = (mask1 ^ mask2)  # e.g. 0000 0111 1100 0000
+        mask = (mask1 ^ mask2)         # e.g. 0000 0111 1100 0000
 
         new_gene1.variables[name] = (value1 & ~mask) | (value2 & mask)
         new_gene2.variables[name] = (value1 & mask) | (value2 & ~mask)

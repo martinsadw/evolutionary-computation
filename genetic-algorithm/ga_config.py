@@ -1,4 +1,5 @@
 from ga_copying import *
+from ga_local_search import *
 from ga_selection import *
 from ga_crossover import *
 from ga_mutation import *
@@ -26,16 +27,21 @@ def get_config():
     config = {}
 
     config['copying_method'] = ELITISM_COPYING
-    config['crossover_method'] = TWO_POINT_CROSSOVER
+    config['local_search_method'] = PER_VARIABLE_LOCAL_SEARCH
 
     config['selection_method'] = ROULETTE_SELECTION
+    config['crossover_method'] = TWO_POINT_CROSSOVER
     config['mutation_method'] = BIT_INVERSION_MUTATION
 
-    config['population_size'] = 50
-    config['num_generations'] = 2000
+    config['population_size'] = 20
+    config['num_generations'] = 100
 
     config['top_selection_ratio'] = 0.2
     config['bottom_selection_ratio'] = 0.1
-    config['mutation_chance'] = 0.001
+    config['mutation_chance'] = 0.01
+
+    config['use_local_search'] = True
+    config['local_search_step'] = 0.5
+    config['local_search_quant'] = 10
 
     return config
