@@ -87,7 +87,9 @@ class LearningMaterial:
             if learningResourceType in learning_resource_type_possible_global_values:
                 self.learning_style_global_value += 1
 
-        if interativity_level == "low":
+        if interativity_level == "very low":
+            self.learning_style_active_value += 0
+        elif interativity_level == "low":
             self.learning_style_active_value += 1
         elif interativity_level == "medium":
             self.learning_style_active_value += 2

@@ -1,0 +1,7 @@
+ppatosca.path = ..\instance_files
+ppatosca.path.learningMaterialsLOM = LOM
+ppatosca.file.concepts = concepts.txt
+ppatosca.file.prerequisites = prerequisites.txt
+ppatosca.file.learningMaterials = learning_materials.txt
+ppatosca.file.learners = learners.txt
+ppatosca.file.learnersScore = learners_score.txt
