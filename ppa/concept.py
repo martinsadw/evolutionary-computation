@@ -5,5 +5,8 @@ class Concept:
 
         self.id = 0
         self.prerequisites = None
-        self.LMs = None
+        self.learning_materials = None
         self.level = 0
+
+    def __str__(self):
+        return "Concept{name=" + self.name + ", abbreviation=" + self.abbreviation + "}"

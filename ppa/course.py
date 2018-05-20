@@ -1,99 +1,112 @@
 import xml.etree.ElementTree as xml
 import os
-from courseconfig import CourseConfig
+from course_config import CourseConfig
 from concept import Concept
-from learningmaterial import LearningMaterial
+from learning_material import LearningMaterial
 from learner import Learner
 
 
 class Course:
-    def __init__(self, configFile):
-        courseConfig = CourseConfig(configFile)
+    def __init__(self, config_filename):
+        course_config = CourseConfig(config_filename)
 
-        with open(courseConfig.conceptsFile, 'r') as br:
-            self.concepts = {}
-            for line in br:
+        self.concepts = {}
+        with open(course_config.concepts_filename, 'r') as concepts_file:
+            for line in concepts_file:
                 ccp_info = line.split('\n')[0].split(';')
                 abbreviation = ccp_info[0]
-                conceptName = ccp_info[1]
-                self.concepts[abbreviation] = Concept(conceptName, abbreviation)
+                concept_name = ccp_info[1]
+                self.concepts[abbreviation] = Concept(concept_name, abbreviation)
 
-        lomFiles = os.listdir(courseConfig.learningMaterialsLOM)
-        list.sort(lomFiles)
+        self.learning_materials = {}
 
-        self.learningMaterials = {}
+        # TODO(andre:2018-05-19): Mover procedimento de leitura de arquivo LOM
+        # para dentro da classe LearningMaterial
+        for root, dirs, files in os.walk(course_config.learning_materials_lom):
+            for lom_file in files:
+                if lom_file.endswith('.xml'):
+                    tree = xml.parse(os.path.join(root, lom_file))
 
-        for lomFile in lomFiles:
-            tree = xml.parse(lomFile)
+                    xml_root = tree.getroot()
 
-            root = tree.getroot()
+                    pref = xml_root.tag.split('}')[0] + '}'
 
-            pref = root.tag.split('}')[0] + '}'
+                    material_id = int(xml_root.find('./' + pref + 'general/' + pref + 'identifier/' + pref + 'entry').text)
+                    material_name = xml_root.find('./' + pref + 'general/' + pref + 'title/' + pref + 'string').text
+                    material_type = xml_root.find('./' + pref + 'technical/' + pref + 'format').text
+                    typical_learning_time = xml_root.find('./' + pref + 'educational/' + pref + 'typicalLearningTime/' + pref + 'duration').text
+                    difficulty = xml_root.find('./' + pref + 'educational/' + pref + 'difficulty/' + pref + 'value').text
+                    interactivity_level = xml_root.find('./' + pref + 'educational/' + pref + 'interactivityLevel/' + pref + 'value').text
+                    interactivity_type = xml_root.find('./' + pref + 'educational/' + pref + 'interactivityType/' + pref + 'value').text
+                    learning_resource_type = []
 
-            materialID = int(root.find('./' + pref + 'general/' + pref + 'identifier/' + pref + 'entry').text)
-            materialName = root.find('./' + pref + 'general/' + pref + 'title/' + pref + 'string').text
-            materialType = root.find('./' + pref + 'technical/' + pref + 'format').text
-            typicalLearningTime = root.find('./' + pref + 'educational/' + pref + 'typicalLearningTime/' + pref + 'duration').text
-            difficulty = root.find('./' + pref + 'educational/' + pref + 'difficulty/' + pref + 'value').text
-            interactivityLevel = root.find('./' + pref + 'educational/' + pref + 'interactivityLevel/' + pref + 'value').text
-            interactivityType = root.find('./' + pref + 'educational/' + pref + 'interactivityType/' + pref + 'value').text
-            learningResourceType = []
+                    for i in xml_root.findall('./' + pref + 'educational/' + pref + 'learningResourceType/' + pref + 'value'):
+                        learning_resource_type.append(i.text)
 
-            for i in root.findall('./' + pref + 'educational/' + pref + 'learningResourceType/' + pref + 'value'):
-                learningResourceType.append(i.text)
+                    learning_material = LearningMaterial(material_id, material_name, material_type, typical_learning_time, difficulty, learning_resource_type, interactivity_level, interactivity_type)
+                    self.learning_materials[material_id] = learning_material
 
-            learningMaterial = LearningMaterial(materialID, materialName, materialType, typicalLearningTime, difficulty, learningResourceType, interactivityLevel, interactivityType)
-            self.learningMaterials[materialID] = learningMaterial
+        with open(course_config.learning_materials_filename, 'r') as learning_materials_file:
+            for line in learning_materials_file:
+                ccp_info = line.split('\n')[0].split(';')
+                learning_material_id = int(ccp_info[0])
+                learning_material = self.learning_materials[learning_material_id]
+                for i in range(2, len(ccp_info)):
+                    concept_abbreviation = ccp_info[i]
+                    concept_material = self.concepts[concept_abbreviation]
 
-            with open(courseConfig.learningMaterialsFile, 'r') as br:
-                for line in br:
-                    ccp_info = line.split('\n')[0].split(';')
-                    learningMaterialID = int(ccp_info[0])
-                    learningMaterial = self.learningMaterials[learningMaterialID]
-                    for i in range(2, len(ccp_info)):
-                        conceptAbbreviation = ccp_info[i]
-                        conceptMaterial = self.concepts[conceptAbbreviation]
+                    if learning_material.covered_concepts is None:
+                        learning_material.covered_concepts = []
+                    learning_material.covered_concepts.append(concept_material)
 
-                        if learningMaterial.coveredConcepts is None:
-                            learningMaterial.coveredConcepts = []
-                        learningMaterial.coveredConcepts.append(conceptMaterial)
+                    if concept_material.learning_materials is None:
+                        concept_material.learning_materials = []
+                    concept_material.learning_materials.append(learning_material)
 
-                        if conceptMaterial.LMs is None:
-                            conceptMaterial.LMs = []
-                        conceptMaterial.LMs.append(learningMaterial)
+        self.learners = {}
+        with open(course_config.learners_filename, 'r') as learners_file:
+            for line in learners_file:
+                ccp_info = line.split('\n')[0].split(';')
+                if len(ccp_info) > 7:
+                    learning_goals = []
+                    for i in range(7, len(ccp_info)):
+                        learner_learning_goal = ccp_info[i]
+                        learning_goals.append(self.concepts[learner_learning_goal])
 
-            with open(courseConfig.learnersFile, 'r') as br:
-                self.learners = {}
-                for line in br:
-                    ccp_info = line.split('\n')[0].split(';')
-                    if len(ccp_info) > 7:
-                        learningGoals = []
-                        for i in range(7, len(ccp_info)):
-                            learnerLearningGoal = ccp_info[i]
-                            learningGoals.append(self.concepts[learnerLearningGoal])
+                    registration_code = ccp_info[0]
+                    learner_lower_time = float(ccp_info[1])
+                    learner_upper_time = float(ccp_info[2])
+                    active_reflexive = int(ccp_info[3])
+                    sensory_intuitive = int(ccp_info[4])
+                    visual_verbal = int(ccp_info[5])
+                    sequential_global = int(ccp_info[6])
 
-                        registrationCode = ccp_info[0]
-                        learnerLowerTime = float(ccp_info[1])
-                        learnerUpperTime = float(ccp_info[2])
-                        atvref = int(ccp_info[3])
-                        senint = int(ccp_info[4])
-                        visver = int(ccp_info[5])
-                        seqglo = int(ccp_info[6])
+                    learner = Learner(registration_code, learner_lower_time, learner_upper_time, active_reflexive, sensory_intuitive, visual_verbal, sequential_global, learning_goals)
+                    self.learners[registration_code] = learner
 
-                        learner = Learner(registrationCode, learnerLowerTime, learnerUpperTime, atvref, senint, visver, seqglo, learningGoals)
-                        self.learners[registrationCode] = learner
+        with open(course_config.learners_score_filename, 'r') as learners_score_file:
+            concept = None
+            for line in learners_score_file:
+                ccp_info = line.split('\n')[0].split(';')
+                learner_registration_code = ccp_info[0]
+                concept_abbreviation = ccp_info[1]
+                concept_score = float(ccp_info[2])
+                learner = self.learners[learner_registration_code]
+                concept = self.concepts[concept_abbreviation]
 
-            with open(courseConfig.learnersScoreFile, 'r') as br:
-                score = {}
-                concept = None
-                for line in br:
-                    ccp_info = line.split('\n')[0].split(';')
-                    learnerRegistrationCode = ccp_info[0]
-                    conceptAbbreviation = ccp_info[1]
-                    conceptScore = float(ccp_info[2])
-                    learner = self.learners[learnerRegistrationCode]
-                    concept = self.concepts[conceptAbbreviation]
+                if learner.score is None:
+                    learner.score = {}
+                learner.score[concept] = concept_score
 
-                    if learner.score is None:
-                        learner.score = {}
-                    learner.score[concept] = conceptScore
+
+if __name__ == "__main__":
+    course = Course("../instance_files/config.txt")
+
+    for material in course.learning_materials:
+        print(str(course.learning_materials[material]))
+
+    for concept in course.concepts:
+        print(str(course.concepts[concept]))
+
+    for learner in course.learners:
+        print(str(course.learners[learner]))
