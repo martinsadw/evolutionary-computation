@@ -110,6 +110,11 @@ class LearningMaterial:
         else:
             print("Tipo de interatividade não mapeado: {}".format(interativity_type))
 
+        self.active_reflexive = self.learning_style_active_value - self.learning_style_reflexive_value
+        self.sensory_intuitive = self.learning_style_sensory_value - self.learning_style_intuitive_value
+        self.visual_verbal = self.learning_style_visual_value - self.learning_style_verbal_value
+        self.sequential_global = self.learning_style_sequential_value - self.learning_style_global_value
+
         self.learning_resource_types = None
         self.interativity_level = ''
         self.interativity_type = ''
