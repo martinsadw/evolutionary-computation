@@ -4,6 +4,9 @@ import random
 
 
 class Roulette:
+    # TODO(andre:2018-05-29): Permitir passar um parametro opcional contendo uma
+    # uma lista com dados associados a cada probabilidade. Caso essa lista nao
+    # seja fornecida utilizar range(distribution_size) no lugar
     def __init__(self, distribution):
         distribution_size = len(distribution)
 
@@ -13,6 +16,10 @@ class Roulette:
         distribution_sum = 0
         for i in range(distribution_size):
             distribution_sum += distribution[i]
+
+        # TODO(andre:2018-05-28): Definir como tratar a situação em que a soma das probabilidades é zero
+        if (distribution_sum == 0):
+            return
 
         # Faz com que a soma dos elementos seja igual o tamanho da lista
         normalize_factor = distribution_size / distribution_sum
