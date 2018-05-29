@@ -169,3 +169,38 @@ class Instance:
         instance.learning_style_weight = 1
 
         return instance
+
+
+def print_instance(instance):
+    print("\nCobertura dos materiais:")
+    print(instance.concepts_materials)
+
+    print("\nObjetivos do aluno:")
+    print(instance.objectives)
+
+    print("\nHabilidades do aluno:")
+    print(instance.student_abilities)
+
+    print("\nDificuldades dos materiais:")
+    print(instance.materials_difficulty)
+
+    print("\nDuração dos materiais:")
+    print(instance.estimated_time)
+
+    print("\nDuração mínima:")
+    print(instance.duration_min)
+
+    print("\nDuração máxima:")
+    print(instance.duration_max)
+
+    print("\nEstilo dos materiais:")
+    print("     Ativo | Reflexivo: {}".format(instance.materials_active_reflexive))
+    print(" Sensorial | Intuitivo: {}".format(instance.materials_sensory_intuitive))
+    print("    Visual | Verbal:    {}".format(instance.materials_visual_verbal))
+    print("Sequencial | Global:    {}".format(instance.materials_sequential_global))
+
+    print("\nEstilo do aluno:")
+    print("     Ativo | Reflexivo: {}".format(instance.student_active_reflexive))
+    print(" Sensorial | Intuitivo: {}".format(instance.student_sensory_intuitive))
+    print("    Visual | Verbal:    {}".format(instance.student_visual_verbal))
+    print("Sequencial | Global:    {}".format(instance.student_sequential_global))

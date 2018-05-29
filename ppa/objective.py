@@ -122,3 +122,40 @@ def learning_style_function(individual, instance):
     objective_sequential_global = np.abs(3 * signal_sequential_global - student_sequential_global).mean()
 
     return (objective_active_reflexive + objective_sensory_intuitive + objective_visual_verbal + objective_sequential_global) / 4
+
+
+def fitness(individual, instance, print_results=False):
+    concepts_covered_objective = concepts_covered_function(individual, instance)
+    difficulty_objective = difficulty_function(individual, instance)
+    total_time_objective = total_time_function(individual, instance)
+    materials_balancing_objective = materials_balancing_function(individual, instance)
+    learning_style_objective = learning_style_function(individual, instance)
+
+    sum_objective = (instance.concepts_covered_weight * concepts_covered_objective
+                     + instance.difficulty_weight * difficulty_objective
+                     + instance.total_time_weight * total_time_objective
+                     + instance.materials_balancing_weight * materials_balancing_objective
+                     + instance.learning_style_weight * learning_style_objective)
+
+    if print_results:
+        print("Materiais do aluno:")
+        print(individual)
+        print("Penalidades: [{}, {}, {}, {}, {}] = {}".format(
+            concepts_covered_objective,
+            difficulty_objective,
+            total_time_objective,
+            materials_balancing_objective,
+            learning_style_objective,
+            sum_objective))
+
+    return sum_objective
+
+
+def fitness_population(population, instance):
+    population_size = population.shape[0]
+    survival_values = np.empty(population_size)
+    for i in range(population_size):
+        # Calcula o valor de sobrevivencia do individuo i
+        survival_values[i] = fitness(population[i], instance)
+
+    return survival_values

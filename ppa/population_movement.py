@@ -1,5 +1,7 @@
 import numpy as np
 
+from objective import fitness_population
+
 # TODO(andre:2018-05-29): Fazer com que as funcoes de movimento realizem o
 # numero correto de passos. Atualmente os materiais que sao iguais aos materiais
 # da direcao para a qual se esta se movendo contam como um passo mesmo que
@@ -100,21 +102,22 @@ def move_population_random_complement(population, num_steps, away_direction, mas
 
     return new_population
 
-def move_population_local_search(population, num_steps, mask, num_tries):
+def move_population_local_search(population, mask, max_steps, num_tries, instance):
     best_population = np.copy(population)
-    best_survival_values = fitness_population(best_population, instance_test)
+    best_survival_values = fitness_population(best_population, instance)
     for i in range(num_tries):
         # print('-----------------------------' + str(i))
-        num_steps = np.round(config['min_steps'] * np.random.rand(population_size))
-        temp_population = move_population_random(new_population, num_steps, best_prey_mask)
-
-        temp_survival_values = fitness_population(temp_population, instance_test)
+        num_steps = np.round(max_steps * np.random.rand(population.shape[0]))
+        temp_population = move_population_random(population, num_steps, mask)
+        temp_survival_values = fitness_population(temp_population, instance)
 
         # print('Temp population:\n{}\n'.format(temp_population))
         # print('Temp survival values:\n{}\n'.format(temp_survival_values))
 
         better_survival_values = (temp_survival_values < best_survival_values)
-        best_population = np.where(np.repeat(better_survival_values[:, np.newaxis], instance_test.num_materials, axis=1), temp_population, best_population)
+        best_population = np.where(np.repeat(better_survival_values[:, np.newaxis], population.shape[1], axis=1), temp_population, best_population)
         best_survival_values = np.where(better_survival_values, temp_survival_values, best_survival_values)
         # print('Partial best population:\n{}\n'.format(best_population))
         # print('Partial best survival values:\n{}\n'.format(best_survival_values))
+
+    return best_population
