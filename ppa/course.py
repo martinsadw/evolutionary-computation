@@ -56,22 +56,28 @@ class Course:
                     concept_material = self.concepts[concept_abbreviation]
 
                     if learning_material.covered_concepts is None:
-                        learning_material.covered_concepts = []
-                    learning_material.covered_concepts.append(concept_material)
+                        # learning_material.covered_concepts = []
+                        learning_material.covered_concepts = {}
+                    # learning_material.covered_concepts.append(concept_material)
+                    learning_material.covered_concepts[concept_abbreviation] = concept_material
 
                     if concept_material.learning_materials is None:
-                        concept_material.learning_materials = []
-                    concept_material.learning_materials.append(learning_material)
+                        # concept_material.learning_materials = []
+                        concept_material.learning_materials = {}
+                    # concept_material.learning_materials.append(learning_material)
+                    concept_material.learning_materials[learning_material_id] = learning_material
 
         self.learners = {}
         with open(course_config.learners_filename, 'r') as learners_file:
             for line in learners_file:
                 ccp_info = line.split('\n')[0].split(';')
                 if len(ccp_info) > 7:
-                    learning_goals = []
+                    # learning_goals = []
+                    learning_goals = {}
                     for i in range(7, len(ccp_info)):
                         learner_learning_goal = ccp_info[i]
-                        learning_goals.append(self.concepts[learner_learning_goal])
+                        # learning_goals.append(self.concepts[learner_learning_goal])
+                        learning_goals[learner_learning_goal] = (self.concepts[learner_learning_goal])
 
                     registration_code = ccp_info[0]
                     learner_lower_time = float(ccp_info[1])
@@ -96,7 +102,7 @@ class Course:
 
                 if learner.score is None:
                     learner.score = {}
-                learner.score[concept] = concept_score
+                learner.score[concept.abbreviation] = concept_score
 
 
 if __name__ == "__main__":
