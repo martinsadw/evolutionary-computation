@@ -50,7 +50,7 @@ class Instance:
 
         # TODO(andre:2018-05-21): Garantir que a ordem das disciplinas está correta
         # TODO(andre:2018-05-21): Modificar o restante do codigo para aceitar
-        # multiplos alunos e então modificar essas atributições
+        # multiplos alunos e então modificar essas atribuições
         instance.student_abilities = np.empty((instance.num_learners, instance.num_concepts))
         for learner in range(instance.num_learners):
             for concept in range(instance.num_concepts):
@@ -60,7 +60,6 @@ class Instance:
                     instance.student_abilities[learner, concept] = 0
         instance.student_abilities = instance.student_abilities[0]
         # instance.student_abilities = np.array([[course.learners[learner].score[score] for score in course.learners[learner].score] for learner in course.learners])
-        # instance.student_abilities = instance.student_abilities[0]
 
         instance.objectives = np.empty((instance.num_learners, instance.num_concepts), dtype=bool)
         for learner in range(instance.num_learners):
@@ -97,15 +96,10 @@ class Instance:
         instance.materials_difficulty = np.array([course.learning_materials[material].difficulty for material in course.learning_materials])
 
         instance.concepts_materials = np.zeros((instance.num_concepts, instance.num_materials), dtype=bool)
-        for concept in range(instance.num_concepts):
-            for material in range(instance.num_materials):
-                try:
-                    if materials_list[material] in course.concepts[concepts_list[concept]].learning_materials:
-                        instance.concepts_materials[concept, material] = True
-                    else:
-                        instance.concepts_materials[concept, material] = False
-                except (KeyError, TypeError):
-                    instance.concepts_materials[concept, material] = False
+        for material in range(instance.num_materials):
+            for concept in range(instance.num_concepts):
+                if concepts_list[concept] in course.material_coverage[materials_list[material]]:
+                    instance.concepts_materials[concept, material] = True
         # instance.concepts_materials = np.array([course.concepts[concept].learning_materials for concept in course.concepts])
 
         instance.estimated_time = np.array([course.learning_materials[material].typical_learning_time for material in course.learning_materials])
@@ -115,13 +109,12 @@ class Instance:
         instance.materials_visual_verbal = np.array([course.learning_materials[material].visual_verbal for material in course.learning_materials])
         instance.materials_sequential_global = np.array([course.learning_materials[material].sequential_global for material in course.learning_materials])
 
-        # TODO(andre:2018-05-22): Definir parametros no arquivo de configuração
-        instance.missing_concepts_coeficient = 2
-        instance.concepts_covered_weight = 1
-        instance.difficulty_weight = 1
-        instance.total_time_weight = 1
-        instance.materials_balancing_weight = 1
-        instance.learning_style_weight = 1
+        instance.missing_concepts_coeficient = course.missing_concepts_coeficient
+        instance.concepts_covered_weight = course.concepts_covered_weight
+        instance.difficulty_weight = course.difficulty_weight
+        instance.total_time_weight = course.total_time_weight
+        instance.materials_balancing_weight = course.materials_balancing_weight
+        instance.learning_style_weight = course.learning_style_weight
 
         return instance
 
@@ -172,7 +165,7 @@ class Instance:
 
 
 def print_instance(instance):
-    print("\nCobertura dos materiais:")
+    print("Cobertura dos materiais:")
     print(instance.concepts_materials)
 
     print("\nObjetivos do aluno:")

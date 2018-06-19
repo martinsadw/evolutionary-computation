@@ -4,14 +4,15 @@ import random
 
 
 class Roulette:
-    # TODO(andre:2018-05-29): Permitir passar um parametro opcional contendo uma
-    # uma lista com dados associados a cada probabilidade. Caso essa lista nao
-    # seja fornecida utilizar range(distribution_size) no lugar
-    def __init__(self, distribution):
+    def __init__(self, distribution, data=None):
         distribution_size = len(distribution)
+
+        if data is None:
+            data = range(distribution_size)
 
         self.alias = [None] * distribution_size
         self.prob = [None] * distribution_size
+        self.data = data
 
         distribution_sum = 0
         for i in range(distribution_size):
@@ -58,10 +59,10 @@ class Roulette:
         index = random.randrange(len(self.prob))
         prob = random.random()
 
-        if (prob < self.prob[index]):
-            return index
-        else:
-            return self.alias[index]
+        if (prob >= self.prob[index]):
+            index = self.alias[index]
+
+        return self.data[index]
 
 
 def roulette_spin(distribution):

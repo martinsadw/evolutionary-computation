@@ -1,112 +1,89 @@
 import xml.etree.ElementTree as xml
+import configparser
 import os
-from course_config import CourseConfig
 from concept import Concept
 from learning_material import LearningMaterial
 from learner import Learner
+from collections import defaultdict
 
 
 class Course:
     def __init__(self, config_filename):
-        course_config = CourseConfig(config_filename)
+        # config_string = '[section]\n'  # python precisa de um "section" para ler o arquivo de configurações
+        with open(config_filename, 'r') as config_file:
+            config_string = config_file.read()
+        config = configparser.ConfigParser()
+        config.read_string(config_string)
+
+        dirname = os.path.dirname(config_filename)
+        path = config['section']['ppatosca.path']
+        learning_materials_lom      = os.path.normpath(os.path.join(dirname, path, config['section']['ppatosca.path.learningMaterialsLOM']))
+        concepts_filename           = os.path.normpath(os.path.join(dirname, path, config['section']['ppatosca.file.concepts']))
+        material_coverage_filename  = os.path.normpath(os.path.join(dirname, path, config['section']['ppatosca.file.materialsCoverage']))
+        learners_filename           = os.path.normpath(os.path.join(dirname, path, config['section']['ppatosca.file.learners']))
+        learners_score_filename     = os.path.normpath(os.path.join(dirname, path, config['section']['ppatosca.file.learnersScore']))
+        fitness_parameters_filename = os.path.normpath(os.path.join(dirname, path, config['section']['ppatosca.file.fitnessParameters']))
+        # prerequisites_filename      = os.path.normpath(os.path.join(dirname, path, config['section']['ppatosca.file.prerequisites']))
 
         self.concepts = {}
-        with open(course_config.concepts_filename, 'r') as concepts_file:
+        with open(concepts_filename, 'r') as concepts_file:
             for line in concepts_file:
-                ccp_info = line.split('\n')[0].split(';')
-                abbreviation = ccp_info[0]
-                concept_name = ccp_info[1]
-                self.concepts[abbreviation] = Concept(concept_name, abbreviation)
+                # A leitura de arquivos do python converte os caracteres de fim de linha em \n
+                concept = Concept.load_from_string(line.rstrip('\n'))
+                self.concepts[concept.abbreviation] = concept
 
         self.learning_materials = {}
-
-        # TODO(andre:2018-05-19): Mover procedimento de leitura de arquivo LOM
-        # para dentro da classe LearningMaterial
-        for root, dirs, files in os.walk(course_config.learning_materials_lom):
+        for root, dirs, files in os.walk(learning_materials_lom):
             for lom_file in files:
                 if lom_file.endswith('.xml'):
-                    tree = xml.parse(os.path.join(root, lom_file))
+                    learning_material = LearningMaterial.load_from_file(os.path.join(root, lom_file))
+                    self.learning_materials[learning_material.id] = learning_material
 
-                    xml_root = tree.getroot()
+        # TODO(andre:2018-06-15): Oferecer opção 'strict' para retornar erro
+        # caso o curso ou o material nesse arquivo não existam
+        self.material_coverage = defaultdict(set)
+        with open(material_coverage_filename, 'r') as material_coverage_file:
+            for line in material_coverage_file:
+                material_fields = line.rstrip('\n').split(';')
 
-                    pref = xml_root.tag.split('}')[0] + '}'
-
-                    material_id = int(xml_root.find('./' + pref + 'general/' + pref + 'identifier/' + pref + 'entry').text)
-                    material_name = xml_root.find('./' + pref + 'general/' + pref + 'title/' + pref + 'string').text
-                    material_type = xml_root.find('./' + pref + 'technical/' + pref + 'format').text
-                    typical_learning_time = xml_root.find('./' + pref + 'educational/' + pref + 'typicalLearningTime/' + pref + 'duration').text
-                    difficulty = xml_root.find('./' + pref + 'educational/' + pref + 'difficulty/' + pref + 'value').text
-                    interactivity_level = xml_root.find('./' + pref + 'educational/' + pref + 'interactivityLevel/' + pref + 'value').text
-                    interactivity_type = xml_root.find('./' + pref + 'educational/' + pref + 'interactivityType/' + pref + 'value').text
-                    learning_resource_type = []
-
-                    for i in xml_root.findall('./' + pref + 'educational/' + pref + 'learningResourceType/' + pref + 'value'):
-                        learning_resource_type.append(i.text)
-
-                    learning_material = LearningMaterial(material_id, material_name, material_type, typical_learning_time, difficulty, learning_resource_type, interactivity_level, interactivity_type)
-                    self.learning_materials[material_id] = learning_material
-
-        with open(course_config.learning_materials_filename, 'r') as learning_materials_file:
-            for line in learning_materials_file:
-                ccp_info = line.split('\n')[0].split(';')
-                learning_material_id = int(ccp_info[0])
-                learning_material = self.learning_materials[learning_material_id]
-                for i in range(2, len(ccp_info)):
-                    concept_abbreviation = ccp_info[i]
-                    concept_material = self.concepts[concept_abbreviation]
-
-                    if learning_material.covered_concepts is None:
-                        # learning_material.covered_concepts = []
-                        learning_material.covered_concepts = {}
-                    # learning_material.covered_concepts.append(concept_material)
-                    learning_material.covered_concepts[concept_abbreviation] = concept_material
-
-                    if concept_material.learning_materials is None:
-                        # concept_material.learning_materials = []
-                        concept_material.learning_materials = {}
-                    # concept_material.learning_materials.append(learning_material)
-                    concept_material.learning_materials[learning_material_id] = learning_material
+                material_id = int(material_fields[0])
+                self.material_coverage[material_id].update(material_fields[2:])
 
         self.learners = {}
-        with open(course_config.learners_filename, 'r') as learners_file:
+        with open(learners_filename, 'r') as learners_file:
             for line in learners_file:
-                ccp_info = line.split('\n')[0].split(';')
-                if len(ccp_info) > 7:
-                    # learning_goals = []
-                    learning_goals = {}
-                    for i in range(7, len(ccp_info)):
-                        learner_learning_goal = ccp_info[i]
-                        # learning_goals.append(self.concepts[learner_learning_goal])
-                        learning_goals[learner_learning_goal] = (self.concepts[learner_learning_goal])
+                # A leitura de arquivos do python converte os caracteres de fim de linha em \n
+                learner = Learner.load_from_string(line.rstrip('\n'))
+                self.learners[learner.id] = learner
 
-                    registration_code = ccp_info[0]
-                    learner_lower_time = float(ccp_info[1])
-                    learner_upper_time = float(ccp_info[2])
-                    active_reflexive = int(ccp_info[3])
-                    sensory_intuitive = int(ccp_info[4])
-                    visual_verbal = int(ccp_info[5])
-                    sequential_global = int(ccp_info[6])
-
-                    learner = Learner(registration_code, learner_lower_time, learner_upper_time, active_reflexive, sensory_intuitive, visual_verbal, sequential_global, learning_goals)
-                    self.learners[registration_code] = learner
-
-        with open(course_config.learners_score_filename, 'r') as learners_score_file:
-            concept = None
+        # TODO(andre:2018-06-15): Oferecer opção 'strict' para retornar erro
+        # caso o aluno nesse arquivo não exista
+        with open(learners_score_filename, 'r') as learners_score_file:
             for line in learners_score_file:
-                ccp_info = line.split('\n')[0].split(';')
-                learner_registration_code = ccp_info[0]
-                concept_abbreviation = ccp_info[1]
-                concept_score = float(ccp_info[2])
-                learner = self.learners[learner_registration_code]
-                concept = self.concepts[concept_abbreviation]
+                score_fields = line.rstrip('\n').split(';')
 
-                if learner.score is None:
-                    learner.score = {}
-                learner.score[concept.abbreviation] = concept_score
+                learner_id = score_fields[0]
+                concept_abbreviation = score_fields[1]
+                concept_score = float(score_fields[2])
+
+                if learner_id in self.learners:
+                    self.learners[learner_id].score[concept_abbreviation] = concept_score
+
+        with open(fitness_parameters_filename, 'r') as fitness_parameters_file:
+            fitness_string = fitness_parameters_file.read()
+            config = configparser.ConfigParser(inline_comment_prefixes=(';',))
+            config.read_string(fitness_string)
+
+            self.missing_concepts_coeficient = float(config['section']['ppatosca.fitness.missingConceptsCoeficient'])
+            self.concepts_covered_weight = float(config['section']['ppatosca.fitness.conceptsCoveredWeight'])
+            self.difficulty_weight = float(config['section']['ppatosca.fitness.difficultyWeight'])
+            self.total_time_weight = float(config['section']['ppatosca.fitness.totalTimeWeight'])
+            self.materials_balancing_weight = float(config['section']['ppatosca.fitness.materialsBalancingWeight'])
+            self.learning_style_weight = float(config['section']['ppatosca.fitness.learningStyleWeight'])
 
 
 if __name__ == "__main__":
-    course = Course("../instance_files/config.txt")
+    course = Course("../instances/test/instance_config.txt")
 
     for material in course.learning_materials:
         print(str(course.learning_materials[material]))

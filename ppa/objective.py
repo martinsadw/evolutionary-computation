@@ -1,5 +1,9 @@
 import numpy as np
 
+import warnings
+
+
+INVALID_VALUE = 1000
 
 def concepts_covered_function(individual, instance):
     objectives = instance.objectives
@@ -16,10 +20,6 @@ def concepts_covered_function(individual, instance):
     return over_covered_test.sum() + missing_concepts_coeficient * under_covered_test.sum()
 
 
-# TODO(andre:2018-05-09): Decidir o que fazer quando um material nao ensina
-# nenhum conceito nos objetivos do aluno
-# TODO(andre:2018-05-09): Decidir o que fazer quando nenhum dos objetivos do
-# aluno sao ensinados pelos materiais escolhidos
 def difficulty_function(individual, instance):
     objectives = instance.objectives
     concepts_materials = instance.concepts_materials
@@ -59,7 +59,7 @@ def difficulty_function(individual, instance):
     # material cobre conceitos dos objetivos do aluno
     if not isinstance(mean_student_materials_difficulty, float):
         # print("Nenhum objetivo coberto")
-        mean_student_materials_difficulty = 0
+        mean_student_materials_difficulty = INVALID_VALUE
 
     return mean_student_materials_difficulty
 
@@ -72,6 +72,10 @@ def total_time_function(individual, instance):
     masked_estimated_time = np.ma.array(estimated_time, mask=~individual)
 
     total_time = masked_estimated_time.sum()
+    # Impede que o tempo total dos materiais seja um maskedContant nos casos em
+    # que nenhum material tenha sido selecionado para o aluno
+    if not isinstance(total_time, float):
+        total_time = 0
 
     return max(duration_min - total_time, 0) + max(0, total_time - duration_max)
 
@@ -116,10 +120,28 @@ def learning_style_function(individual, instance):
     signal_visual_verbal = np.sign(selected_visual_verbal)
     signal_sequential_global = np.sign(selected_sequential_global)
 
-    objective_active_reflexive = np.abs(3 * signal_active_reflexive - student_active_reflexive).mean()
-    objective_sensory_intuitive = np.abs(3 * signal_sensory_intuitive - student_sensory_intuitive).mean()
-    objective_visual_verbal = np.abs(3 * signal_visual_verbal - student_visual_verbal).mean()
-    objective_sequential_global = np.abs(3 * signal_sequential_global - student_sequential_global).mean()
+    with warnings.catch_warnings():
+        warnings.filterwarnings("error")
+
+        try:
+            objective_active_reflexive = np.abs(3 * signal_active_reflexive - student_active_reflexive).mean()
+        except RuntimeWarning:
+            objective_active_reflexive = INVALID_VALUE
+
+        try:
+            objective_sensory_intuitive = np.abs(3 * signal_sensory_intuitive - student_sensory_intuitive).mean()
+        except RuntimeWarning:
+            objective_sensory_intuitive = INVALID_VALUE
+
+        try:
+            objective_visual_verbal = np.abs(3 * signal_visual_verbal - student_visual_verbal).mean()
+        except RuntimeWarning:
+            objective_visual_verbal = INVALID_VALUE
+
+        try:
+            objective_sequential_global = np.abs(3 * signal_sequential_global - student_sequential_global).mean()
+        except RuntimeWarning:
+            objective_sequential_global = INVALID_VALUE
 
     return (objective_active_reflexive + objective_sensory_intuitive + objective_visual_verbal + objective_sequential_global) / 4
 
@@ -151,11 +173,11 @@ def fitness(individual, instance, print_results=False):
     return sum_objective
 
 
-def fitness_population(population, instance):
+def fitness_population(population, instance, print_results=False):
     population_size = population.shape[0]
     survival_values = np.empty(population_size)
     for i in range(population_size):
         # Calcula o valor de sobrevivencia do individuo i
-        survival_values[i] = fitness(population[i], instance)
+        survival_values[i] = fitness(population[i], instance, print_results)
 
     return survival_values

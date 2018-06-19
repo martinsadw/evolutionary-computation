@@ -1,19 +1,12 @@
 import numpy as np
 
 from objective import fitness_population
+from utils import hamming_distance
 
 # TODO(andre:2018-05-29): Fazer com que as funcoes de movimento realizem o
 # numero correto de passos. Atualmente os materiais que sao iguais aos materiais
 # da direcao para a qual se esta se movendo contam como um passo mesmo que
 # nenhuma mudanca seja realizada
-
-
-# TODO(andre:2018-05-29): Mover essa funcao para um arquivo de utils
-def hamming_distance(a, b, axis=None):
-    if axis is None:
-        return np.sum(a != b)
-    else:
-        return np.sum(a != b, axis=axis)
 
 
 def move_population_roulette(population, num_steps, roulette, roulette_population, mask):
