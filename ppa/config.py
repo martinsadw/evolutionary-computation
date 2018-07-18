@@ -42,7 +42,6 @@ class Config:
 
         return config
 
-
     @classmethod
     def load_test(cls):
         config = cls()

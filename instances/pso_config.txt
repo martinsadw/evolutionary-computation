@@ -1,0 +1,8 @@
+[section]
+
+acs.pso.maxVelocity = 2
+acs.pso.numIterations = 500
+acs.pso.numParticles = 30
+acs.pso.inertiaParameter = 1.0
+acs.pso.localInfluenceParameter = 0.3
+acs.pso.globalInfluenceParameter = 0.2
