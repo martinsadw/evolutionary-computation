@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general>
+	<identifier>
+		<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+		<entry>89</entry>
+	</identifier>
+</general>
+<technical><format>video/mp4</format></technical>
+<typicalLearningTime><duration>PT24M10S</duration>
+</typicalLearningTime>
+<interactivityLevel><source>LOMv1.0</source>
+<value>medium</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>easy</value></difficulty>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>graphic</value></learningResourceType>
+</educational>
+</lom>

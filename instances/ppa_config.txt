@@ -1,0 +1,16 @@
+[section]
+
+ppatosca.arg.numIterations = 500         ; movementQuantity
+ppatosca.arg.populationSize = 10         ; populationSize
+ppatosca.arg.followDistanceParameter = 1 ; distanceFactor
+ppatosca.arg.followSurvivalParameter = 1 ; survivalValueFactor
+ppatosca.arg.minSteps = 4                ; minimumStepLength
+ppatosca.arg.maxSteps = 25               ; maximumStepLength
+ppatosca.arg.stepsDistanceParameter = 1
+ppatosca.arg.localSearchTries = 5
+ppatosca.arg.followChance = 0.8          ; followUp
+
+ppatosca.arg.followedPreysQuantity = 1
+ppatosca.arg.quantityBestRandomPreys = 1
+ppatosca.arg.maxPredatorQuantity = 1
+ppatosca.arg.maxBestPreyQuantity = 1
