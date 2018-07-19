@@ -122,6 +122,9 @@ def materials_balancing_function(individual, instance):
     # print(distance_from_mean)
     # print(mean_concepts_per_objective)
 
+    # print(materials_per_concepts)
+    # print(mean_concepts_per_objective)
+
     return distance_from_mean.sum()
 
 

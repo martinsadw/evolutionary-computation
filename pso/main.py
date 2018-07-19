@@ -7,13 +7,16 @@ import matplotlib.pyplot as plt
 from acs.objective import fitness, fitness_population
 from acs.instance import Instance, print_instance
 
+from utils.timer import Timer
+from utils.misc import sigmoid
+
 from pso.config import Config
 
 
 def generate_particle_position(particle_velocity):
     particle_sigmoid = sigmoid(particle_velocity)
     particle_random = np.random.random(particle_velocity.shape)
-    particle_position = (particle_sigmoid > particle_random).astype(int)
+    particle_position = (particle_sigmoid > particle_random).astype(bool)
 
     return particle_position
 
@@ -21,60 +24,69 @@ def generate_particle_position(particle_velocity):
 def particle_swarm_optmization(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None):
     num_particles = config.num_particles
 
+    timer = Timer() ########################################################################################################
+
     particle_velocity = np.random.rand(num_particles, instance.num_materials) * (2 * config.max_velocity) - config.max_velocity
-    # particle_sigmoid = sigmoid(particle_velocity)
-    # particle_random = np.random.random(p_velocity.shape)
-    # p_position = (p_sigmoid > p_random).astype(int)
     particle_position = generate_particle_position(particle_velocity)
 
-    local_best_position = np.copy(p_position)
-    local_best_result = np.apply_along_axis(fitness, 1, local_best_position)
+    local_best_position = np.copy(particle_position)
+    local_best_fitness = np.apply_along_axis(fitness_function, 1, local_best_position, instance, timer)
 
-    global_best_index = np.argmin(local_best_result, axis=0)
-    global_best_position = local_best_position[global_best_index]
-    global_best_result = local_best_result[global_best_index]
+    global_best_index = np.argmin(local_best_fitness, axis=0)
+    global_best_position = np.copy(local_best_position[global_best_index])
+    global_best_fitness = local_best_fitness[global_best_index]
 
-    # print(local_best_position)
-    # print(local_best_result)
-    # print(global_best_position)
-    # print(global_best_result)
+    start_perf_counter = time.perf_counter()
+    start_process_time = time.process_time()
+    for iteration in range(config.num_iterations):
+        if best_fitness is not None:
+            best_fitness[iteration] = global_best_fitness
+            # best_fitness[iteration] = np.mean(survival_values)
+            # best_fitness[iteration] = survival_values[-1]
+        if perf_counter is not None:
+            perf_counter[iteration] = time.perf_counter() - start_perf_counter
+        if process_time is not None:
+            process_time[iteration] = time.process_time() - start_process_time
 
-    for i in range(num_iterations):
         # TODO(andre:2018-04-18): Atualizar velocidade
-        p_influence = np.tile(config.local_influence_parameter * np.random.random(num_particles), (instance.num_materials, 1)).T
-        g_influence = np.tile(config.global_influence_parameter * np.random.random(num_particles), (instance.num_materials, 1)).T
+        local_influence = np.tile(config.local_influence_parameter * np.random.random(num_particles), (instance.num_materials, 1)).T
+        global_influence = np.tile(config.global_influence_parameter * np.random.random(num_particles), (instance.num_materials, 1)).T
 
-        p_velocity = param_a * p_velocity + p_influence * (p_best_position - p_position) + g_influence * (g_best_position - p_position)
-        p_velocity = np.clip(p_velocity, -config.max_velocity, config.max_velocity)
+        particle_velocity = (config.inertia_parameter * particle_velocity
+                             + local_influence * (local_best_position - particle_position)
+                             + global_influence * (global_best_position - particle_position))
+        particle_velocity = np.clip(particle_velocity, -config.max_velocity, config.max_velocity)
 
         # Calcula as novas posições
-        p_new_sigmoid = sigmoid(p_velocity)
-        p_new_random = np.random.random(p_velocity.shape)
-        p_position = (p_new_sigmoid > p_new_random).astype(int)
+        particle_position = generate_particle_position(particle_velocity)
 
         # Calcula os novos resultados
-        p_new_result = np.apply_along_axis(fitness, 1, p_position)
+        particle_new_fitness = np.apply_along_axis(fitness, 1, particle_position, instance, timer)
 
         # Calcula a mascara de melhores valores para cada particula
-        change_mask = (p_new_result < p_best_result)
+        change_mask = (particle_new_fitness < local_best_fitness)
 
         # Altera o melhor resultado de cada particula
-        p_best_result[change_mask] = p_new_result[change_mask]
-        p_best_position[change_mask] = p_position[change_mask]
+        local_best_fitness[change_mask] = particle_new_fitness[change_mask]
+        local_best_position[change_mask] = particle_position[change_mask]
 
         # Encontra o melhor resultado entre todas as particulas
-        g_best_index = np.argmin(p_best_result, axis=0)
-        g_best_position = p_best_position[g_best_index]
-        g_best_result = p_best_result[g_best_index]
+        global_best_index = np.argmin(local_best_fitness, axis=0)
+        global_best_position = np.copy(local_best_position[global_best_index])
+        global_best_fitness = local_best_fitness[global_best_index]
 
-    # print(p_best_position)
-    # print(p_best_result)
-    # print(g_best_position)
-    # print(g_best_result)
+    if best_fitness is not None:
+        best_fitness[-1] = global_best_fitness
+        # best_fitness[iteration] = np.mean(survival_values)
+        # best_fitness[iteration] = survival_values[-1]
+    if perf_counter is not None:
+        perf_counter[-1] = time.perf_counter() - start_perf_counter
+    if process_time is not None:
+        process_time[-1] = time.process_time() - start_process_time
 
-    x = get_float(g_best_position[16:32], 10)
-    y = get_float(g_best_position[0:16], 10)
-    print("Melhor resultado: (" + str(x) + ", " + str(y) + ") -> " + str(g_best_result))
+    # fitness_function(global_best_position, instance, timer, True)
+
+    return (global_best_position, global_best_fitness)
 
 
 def read_files(instance_config_filename, config_filename):
@@ -112,10 +124,10 @@ if __name__ == "__main__":
     process_time = np.zeros((config.num_iterations + 1, num_repetitions))
 
     for i in range(num_repetitions):
-        (population, survival_values) = particle_swarm_optmization(instance, config, fitness_population, best_fitness=best_fitness[:,i], perf_counter=perf_counter[:,i], process_time=process_time[:,i])
+        (population, survival_values) = particle_swarm_optmization(instance, config, fitness, best_fitness=best_fitness[:,i], perf_counter=perf_counter[:,i], process_time=process_time[:,i])
         print('#{}\n'.format(i))
         print('Survival values:\n{}\n'.format(survival_values))
-        print('Best Individual:\n{}\n'.format(population[0]))
+        print('Best Individual:\n{}\n'.format(population))
 
     mean_best_fitness = np.mean(best_fitness, axis=1)
     mean_perf_counter = np.mean(perf_counter, axis=1)
@@ -123,16 +135,16 @@ if __name__ == "__main__":
 
     print('Statistics:')
     print('Fitness:\n{}\n'.format(mean_best_fitness))
-    print('perf_counter:\n{}\n'.format(mean_perf_counter))
-    print('process_time:\n{}\n'.format(mean_process_time))
+    # print('perf_counter:\n{}\n'.format(mean_perf_counter))
+    # print('process_time:\n{}\n'.format(mean_process_time))
 
     # fig = plt.figure()
-    # fig.suptitle('PPA: perf_counter vs. process_time')
+    # fig.suptitle('PSO: perf_counter vs. process_time')
     # plt.plot(mean_perf_counter, 'r.')
     # plt.plot(mean_process_time, 'b.')
     # plt.show()
 
     fig = plt.figure()
-    fig.suptitle('PPA: best fitness')
+    fig.suptitle('PSO: best fitness')
     plt.plot(mean_best_fitness, 'r')
     plt.show()

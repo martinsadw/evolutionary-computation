@@ -21,14 +21,14 @@ class Config:
         config_values = configparser.ConfigParser(inline_comment_prefixes=(";",))
         config_values.read_string(config_string)
 
-        config.max_velocity = int(config_values['section']['acs.pso.maxVelocity'])
+        config.max_velocity = float(config_values['section']['acs.pso.maxVelocity'])
 
         config.num_iterations = int(config_values['section']['acs.pso.numIterations'])
         config.num_particles = int(config_values['section']['acs.pso.numParticles'])
 
-        config.inertia_Parameter = float(config_values['section']['acs.pso.inertiaParameter'])
-        config.local_influence_Parameter = float(config_values['section']['acs.pso.localInfluenceParameter'])
-        config.global_influence_Parameter = float(config_values['section']['acs.pso.globalInfluenceParameter'])
+        config.inertia_parameter = float(config_values['section']['acs.pso.inertiaParameter'])
+        config.local_influence_parameter = float(config_values['section']['acs.pso.localInfluenceParameter'])
+        config.global_influence_parameter = float(config_values['section']['acs.pso.globalInfluenceParameter'])
 
         return config
 
