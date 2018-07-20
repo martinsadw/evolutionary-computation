@@ -194,7 +194,7 @@ def fitness(individual, instance, timer, print_results=False):
                      + instance.materials_balancing_weight * materials_balancing_objective
                      + instance.learning_style_weight * learning_style_objective)
 
-    timer.add_time("sum_fitness")
+    timer.add_time("fitness_sum")
 
     if print_results:
         print("Materiais do aluno:")

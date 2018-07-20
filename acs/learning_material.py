@@ -53,7 +53,9 @@ class LearningMaterial:
             print("Dificuldade não mapeada: {}".format(difficulty))
             self.difficulty = 0
 
-        time_regex = re.search(r"PT(?:(?P<hours>[0-9]+)H)?(?:(?P<minutes>[0-5]?[0-9]|60)M)?(?:(?P<seconds>[0-5]?[0-9]|60)S)?", typical_learning_time)
+        # TODO(andre:2018-07-20): Confirmar o formato das datas
+        # time_regex = re.search(r"PT(?:(?P<hours>[0-9]+)H)?(?:(?P<minutes>[0-5]?[0-9]|60)M)?(?:(?P<seconds>[0-5]?[0-9]|60)S)?", typical_learning_time)
+        time_regex = re.search(r"PT(?:(?P<hours>[0-9]+)H)?(?:(?P<minutes>[0-9]+)M)?(?:(?P<seconds>[0-5]?[0-9]|60)S)?", typical_learning_time)
         self.typical_learning_time = 0
         if time_regex['hours'] is not None:
             self.typical_learning_time += int(time_regex['hours']) * 3600
@@ -146,4 +148,5 @@ class LearningMaterial:
         return cls(material_id, material_name, material_type, typical_learning_time, difficulty, learning_resource_type, interactivity_level, interactivity_type)
 
     def __str__(self):
-        return "LearningMaterial{" + "id=" + str(self.id) + ", name=" + self.name + ", type=" + self.type + ", typical_learning_time=" + str(self.typical_learning_time) + ", dificulty=" + str(self.difficulty) + ", couveredConcepts=" + str(self.covered_concepts) + '}'
+        return "LearningMaterial{{id={}, typical_learning_time={}, difficulty={}, style=({}, {}, {}, {})}}".format(self.id, self.typical_learning_time, self.difficulty, self.active_reflexive, self.sensory_intuitive, self.visual_verbal, self.sequential_global)
+        # return "LearningMaterial{" + "id=" + str(self.id) + ", name=" + self.name + ", type=" + self.type + ", typical_learning_time=" + str(self.typical_learning_time) + ", dificulty=" + str(self.difficulty) + ", coveredConcepts=" + str(self.covered_concepts) + '}'
