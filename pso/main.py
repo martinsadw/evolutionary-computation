@@ -137,7 +137,7 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 10
+    num_repetitions = 100
 
     (instance, config) = read_files(instance_config_filename, config_filename)
     best_fitness = np.zeros((config.num_iterations + 1, num_repetitions)) # Um valor extra para salvar os valores iniciais
@@ -148,6 +148,8 @@ if __name__ == "__main__":
 
     for i in range(num_repetitions):
         (population, survival_values) = particle_swarm_optmization(instance, config, fitness, best_fitness=best_fitness[:,i], perf_counter=perf_counter[:,i], process_time=process_time[:,i])
+        timer = Timer()
+        fitness(population, instance, timer, True)
         popularity += population
         print('#{}\n'.format(i))
         print('Survival values:\n{}\n'.format(survival_values))
@@ -174,4 +176,9 @@ if __name__ == "__main__":
     fig = plt.figure()
     fig.suptitle('PSO: best fitness')
     plt.plot(mean_best_fitness, 'r')
+    plt.show()
+
+    fig = plt.figure()
+    fig.suptitle('PSO: materials selected')
+    plt.hist(popularity, bins=10, range=(0, num_repetitions))
     plt.show()

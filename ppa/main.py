@@ -189,6 +189,8 @@ if __name__ == "__main__":
 
     for i in range(num_repetitions):
         (population, survival_values) = prey_predator_algorithm(instance, config, fitness_population, best_fitness=best_fitness[:,i], perf_counter=perf_counter[:,i], process_time=process_time[:,i])
+        timer = Timer()
+        fitness(population[0], instance, timer, True)
         print('#{}\n'.format(i))
         print('Survival values:\n{}\n'.format(survival_values))
         print('Best Individual:\n{}\n'.format(population[0]))

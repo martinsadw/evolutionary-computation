@@ -98,9 +98,9 @@ def total_time_function(individual, instance):
     masked_estimated_time = np.ma.array(estimated_time, mask=~individual)
 
     total_time = masked_estimated_time.sum()
-    # Impede que o tempo total dos materiais seja um maskedContant nos casos em
+    # Impede que o tempo total dos materiais seja um maskedConstant nos casos em
     # que nenhum material tenha sido selecionado para o aluno
-    if not isinstance(total_time, float):
+    if total_time is np.ma.masked:
         total_time = 0
 
     return max(duration_min - total_time, 0) + max(0, total_time - duration_max)
@@ -200,11 +200,11 @@ def fitness(individual, instance, timer, print_results=False):
         print("Materiais do aluno:")
         print(individual)
         print("Penalidades: [{}, {}, {}, {}, {}] = {}".format(
-            concepts_covered_objective,
-            difficulty_objective,
-            total_time_objective,
-            materials_balancing_objective,
-            learning_style_objective,
+            instance.concepts_covered_weight * concepts_covered_objective,
+            instance.difficulty_weight * difficulty_objective,
+            instance.total_time_weight * total_time_objective,
+            instance.materials_balancing_weight * materials_balancing_objective,
+            instance.learning_style_weight * learning_style_objective,
             sum_objective))
 
     return sum_objective
