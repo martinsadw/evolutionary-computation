@@ -52,6 +52,9 @@ def difficulty_function(individual, instance, timer):
     selected_materials_difficulty = materials_difficulty[individual]
     selected_concepts_materials = concepts_materials[objectives, :][:, individual]
 
+    if selected_concepts_materials.size == 0:
+        return INVALID_VALUE
+
     timer.add_time("fitness_difficulty_lists")
 
     tiled_student_ability = np.tile(selected_concepts_ability, (selected_materials_difficulty.shape[0], 1)).T
@@ -68,20 +71,13 @@ def difficulty_function(individual, instance, timer):
 
     timer.add_time("fitness_difficulty_abs")
 
-    # print(selected_concepts_ability)
-    # print(selected_materials_difficulty)
-    # print(selected_concepts_materials)
-    # print(mean_student_ability)
-    # print(student_materials_difficulty)
-    # print(student_materials_difficulty.mean())
-    # print(type(student_materials_difficulty.mean()))
-
     mean_student_materials_difficulty = student_materials_difficulty.mean()
 
     timer.add_time("fitness_difficulty_mean_difficulty")
     # Impede que a função retorne um maskedContant nos casos em que nenhum
     # material cobre conceitos dos objetivos do aluno
-    if not isinstance(mean_student_materials_difficulty, float):
+    # if not isinstance(mean_student_materials_difficulty, float):
+    if mean_student_materials_difficulty is np.ma.masked:
         # print("Nenhum objetivo coberto")
         mean_student_materials_difficulty = INVALID_VALUE
 
@@ -175,7 +171,7 @@ def learning_style_function(individual, instance):
     return (objective_active_reflexive + objective_sensory_intuitive + objective_visual_verbal + objective_sequential_global) / 4
 
 
-def fitness(individual, instance, timer, print_results=False):
+def fitness(individual, instance, timer, print_results=False, *, data=None):
     timer.add_time()
     concepts_covered_objective = concepts_covered_function(individual, instance, timer)
     timer.add_time()
@@ -195,6 +191,15 @@ def fitness(individual, instance, timer, print_results=False):
                      + instance.learning_style_weight * learning_style_objective)
 
     timer.add_time("fitness_sum")
+
+    if data is not None:
+        new_data = (concepts_covered_objective,
+                    difficulty_objective,
+                    total_time_objective,
+                    materials_balancing_objective,
+                    learning_style_objective)
+
+        data.append(new_data)
 
     if print_results:
         print("Materiais do aluno:")
