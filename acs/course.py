@@ -48,7 +48,7 @@ class Course:
                 material_fields = line.rstrip('\n').split(';')
 
                 material_id = int(material_fields[0])
-                self.material_coverage[material_id].update(material_fields[2:])
+                self.material_coverage[material_id].update(material_fields[1:])
 
         self.learners = {}
         with open(learners_filename, 'r') as learners_file:

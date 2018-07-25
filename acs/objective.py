@@ -61,11 +61,8 @@ def difficulty_function(individual, instance, timer):
     timer.add_time("fitness_difficulty_tiled")
     masked_student_ability = np.ma.array(tiled_student_ability, mask=~selected_concepts_materials)
     timer.add_time("fitness_difficulty_masked")
-    # mean_student_ability = masked_student_ability.mean(axis=0)
-    mean_student_ability = tiled_student_ability.mean(axis=0)
+    mean_student_ability = masked_student_ability.mean(axis=0)
     timer.add_time("fitness_difficulty_mean")
-    # mean_student_ability = masked_student_ability.mean(axis=0).filled(0)
-
 
     student_materials_difficulty = np.abs(selected_materials_difficulty - mean_student_ability)
 
