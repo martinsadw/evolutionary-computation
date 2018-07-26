@@ -4,9 +4,9 @@ from ga_gene import Gene
 PER_VARIABLE_LOCAL_SEARCH = 0
 
 
-def local_search_gene(population, fitness_func, method, args):
+def local_search_gene(population, fitness_function, method, args):
     if (method == PER_VARIABLE_LOCAL_SEARCH):
-        new_gene = _per_variable_local_search_gene(population, fitness_func, args)
+        new_gene = _per_variable_local_search_gene(population, fitness_function, args)
 
 
 def _per_variable_local_search_gene(population, fitness_func, args):

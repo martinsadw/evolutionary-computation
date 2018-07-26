@@ -71,7 +71,7 @@ def difficulty_function(individual, instance, timer):
     mean_student_materials_difficulty = student_materials_difficulty.mean()
 
     timer.add_time("fitness_difficulty_mean_difficulty")
-    # Impede que a função retorne um maskedContant nos casos em que nenhum
+    # Impede que a função retorne um maskedConstant nos casos em que nenhum
     # material cobre conceitos dos objetivos do aluno
     # if not isinstance(mean_student_materials_difficulty, float):
     if mean_student_materials_difficulty is np.ma.masked:
