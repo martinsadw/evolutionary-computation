@@ -1,4 +1,7 @@
 import random
+from enum import Enum
+
+import numpy as np
 
 
 class Copying(Enum):
@@ -32,7 +35,7 @@ def _permissive_copying_gene(population, config):
     top_selection_size = (int)(len(population) * config.top_selection_ratio)
     bottom_selection_size = (int)(len(population) * config.bottom_selection_ratio)
 
-    return np.concatenate((population[:top_selection_size], population[-bottom_selection_size:])
+    return np.concatenate((population[:top_selection_size], population[-bottom_selection_size:]))
 
 
 def _no_copying_gene(population, args):

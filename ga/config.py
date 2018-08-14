@@ -1,11 +1,8 @@
 import configparser
 from enum import Enum
 
-
-class Copying(Enum):
-    ELITISM_COPYING = 1
-    PERMISSIVE_COPYING = 2
-    NO_COPYING = 3
+from ga.copying import Copying
+from ga.local_search import LocalSearch
 
 
 class Crossover(Enum):
@@ -14,10 +11,6 @@ class Crossover(Enum):
     THREE_PARENT_CROSSOVER = 3
     UNIFORM_CROSSOVER = 4
     DECIMAL_CROSSOVER = 5
-
-
-class LocalSearch(Enum):
-    PER_VARIABLE_LOCAL_SEARCH = 1
 
 
 class Mutation(Enum):

@@ -1,4 +1,6 @@
 import sys
+import time
+import math
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,7 +10,21 @@ from acs.instance import Instance, print_instance
 
 from utils.timer import Timer
 
-from ga.config import Config
+from ga.config import Config, Crossover
+from ga.copying import copying_gene
+from ga.local_search import local_search_gene
+
+
+def selection_gene():
+    pass
+
+
+def crossover_gene():
+    pass
+
+
+def mutation_gene():
+    pass
 
 
 def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None, all_fitness=None):
@@ -16,9 +32,9 @@ def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, 
 
     population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
 
-    selection_quant = 2
-    if (args['crossover_method'] == THREE_PARENT_CROSSOVER):
-        selection_quant = 3
+    # selection_quant = 2
+    # if (config.crossover_method == Crossover.THREE_PARENT_CROSSOVER):
+    #     selection_quant = 3
 
     timer = Timer() ########################################################################################################
 
@@ -47,7 +63,21 @@ def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, 
             new_population = local_search_gene(new_population, fitness_function, config.local_search_method, config)
 
         remaining_spots = np.random.randint(2, size=(population_size - new_population.shape[0], instance.num_materials), dtype=bool)
-        remaining_spots = args['population_size'] - len(new_population)
+        remaining_spots = population_size - len(new_population)
+
+        selection_spots = remaining_spots
+        if (config.crossover_method == Crossover.THREE_PARENT_CROSSOVER):
+            selection_spots = int(3 * math.ceil(remaining_spots / 3.))
+        else:
+            selection_spots = int(2 * math.ceil(remaining_spots / 2.))
+
+        parents = selection_gene(population, selection_spots, config.selection_method, config)
+        children = crossover_gene(parents, remaining_spots, config.crossover_method, config)
+        mutated = mutation_gene(children, config.mutation_method, config)
+
+        np.append(new_population, mutated, axis=0)
+
+    return (0, 0)
 
 def read_files(instance_config_filename, config_filename):
     if instance_config_filename is None:
