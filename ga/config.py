@@ -3,23 +3,12 @@ from enum import Enum
 
 from ga.copying import Copying
 from ga.local_search import LocalSearch
-
-
-class Crossover(Enum):
-    SINGLE_POINT_CROSSOVER = 1
-    TWO_POINT_CROSSOVER = 2
-    THREE_PARENT_CROSSOVER = 3
-    UNIFORM_CROSSOVER = 4
-    DECIMAL_CROSSOVER = 5
+from ga.selection import Selection
+from ga.crossover import Crossover
 
 
 class Mutation(Enum):
     BIT_INVERSION_MUTATION = 1
-
-
-class Selection(Enum):
-    RANDOM_SELECTION = 1
-    ROULETTE_SELECTION = 2
 
 
 class Config:

@@ -13,17 +13,11 @@ from utils.timer import Timer
 from ga.config import Config, Crossover
 from ga.copying import copying_gene
 from ga.local_search import local_search_gene
+from ga.selection import selection_gene
+from ga.crossover import crossover_gene
 
 
-def selection_gene():
-    pass
-
-
-def crossover_gene():
-    pass
-
-
-def mutation_gene():
+def mutation_gene(a, b, c):
     pass
 
 
@@ -71,7 +65,7 @@ def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, 
         else:
             selection_spots = int(2 * math.ceil(remaining_spots / 2.))
 
-        parents = selection_gene(population, selection_spots, config.selection_method, config)
+        parents = selection_gene(population, survival_values, selection_spots, config.selection_method, config)
         children = crossover_gene(parents, remaining_spots, config.crossover_method, config)
         mutated = mutation_gene(children, config.mutation_method, config)
 
