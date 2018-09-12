@@ -61,12 +61,16 @@ def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, 
 
         selection_spots = remaining_spots
         if (config.crossover_method == Crossover.THREE_PARENT_CROSSOVER):
-            selection_spots = int(3 * math.ceil(remaining_spots / 3.))
+            selection_spots = int(3 * math.ceil(remaining_spots / 3.)) * 3
+        elif (config.crossover_method == Crossover.UNIFORM_CROSSOVER):
+            selection_spots = int(2 * math.ceil(remaining_spots / 2.)) * 2
         else:
             selection_spots = int(2 * math.ceil(remaining_spots / 2.))
 
         parents = selection_gene(population, survival_values, selection_spots, config.selection_method, config)
-        children = crossover_gene(parents, remaining_spots, config.crossover_method, config)
+        # children = crossover_gene(parents, remaining_spots, config.crossover_method, config)
+        children = crossover_gene(parents, config.crossover_method, config)
+        assert parents.shape[0] == remaining_spots
         mutated = mutation_gene(children, config.mutation_method, config)
 
         np.append(new_population, mutated, axis=0)

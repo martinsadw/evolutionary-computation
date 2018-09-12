@@ -4,7 +4,7 @@ acs.ga.copyingMethod = ELITISM_COPYING
 acs.ga.localSearchMethod = PER_VARIABLE_LOCAL_SEARCH
 
 acs.ga.selectionMethod = ROULETTE_SELECTION
-acs.ga.crossoverMethod = THREE_PARENT_CROSSOVER
+acs.ga.crossoverMethod = SINGLE_POINT_CROSSOVER
 acs.ga.mutationMethod = BIT_INVERSION_MUTATION
 
 acs.ga.numIterations = 1000
