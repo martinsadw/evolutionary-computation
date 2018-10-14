@@ -1,5 +1,5 @@
 import random
-from ga_gene import Gene
+from gene import Gene
 
 PER_VARIABLE_LOCAL_SEARCH = 0
 

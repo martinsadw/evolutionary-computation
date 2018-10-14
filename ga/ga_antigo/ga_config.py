@@ -3,7 +3,7 @@ from ga_local_search import *
 from ga_selection import *
 from ga_crossover import *
 from ga_mutation import *
-from ga_gene import *
+from gene import *
 
 # ELITISM_COPYING
 # PERMISSIVE_COPYING

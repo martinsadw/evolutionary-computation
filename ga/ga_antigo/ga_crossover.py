@@ -1,5 +1,5 @@
 import random
-from ga_gene import Gene
+from gene import Gene
 
 SINGLE_POINT_CROSSOVER = 0
 TWO_POINT_CROSSOVER = 1

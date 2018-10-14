@@ -1,5 +1,5 @@
 import random
-from ga_gene import Gene
+from gene import Gene
 
 BIT_INVERSION_MUTATION = 0
 
@@ -9,7 +9,7 @@ def mutation_gene(gene, method, args):
     if (method == BIT_INVERSION_MUTATION):
         new_gene = _bit_inversion_mutation_gene(gene, args)
 
-    return gene
+    return new_gene
 
 def _bit_inversion_mutation_gene(gene, args):
     assert 'mutation_chance' in args

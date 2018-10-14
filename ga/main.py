@@ -15,11 +15,7 @@ from ga.copying import copying_gene
 from ga.local_search import local_search_gene
 from ga.selection import selection_gene
 from ga.crossover import crossover_gene
-
-
-def mutation_gene(a, b, c):
-    pass
-
+from ga.mutation import mutation_gene
 
 def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None, all_fitness=None):
     population_size = config.population_size
@@ -75,7 +71,7 @@ def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, 
 
         np.append(new_population, mutated, axis=0)
 
-    return (0, 0)
+    return (population, 0)
 
 def read_files(instance_config_filename, config_filename):
     if instance_config_filename is None:

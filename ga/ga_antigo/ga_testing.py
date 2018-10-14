@@ -3,7 +3,7 @@ from ga_selection import *
 from ga_crossover import *
 from ga_mutation import *
 from ga_config import *
-from ga_gene import Gene
+from gene import Gene
 
 
 config = get_config()
