@@ -1,5 +1,5 @@
 import random
-from gene import Gene
+from ga.gene import Gene
 
 BIT_INVERSION_MUTATION = 0
 
