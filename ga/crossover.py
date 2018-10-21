@@ -59,8 +59,7 @@ def _single_point_crossover_gene(parents, config, cut_point = None):
     if cut_point is None:
         cut_point = random.randint(1, parents.shape[1] - 1)
 
-    mask = np.zeros((1, parents.shape[1]), dtype=bool)
-    mask[:, -cut_point:] = 1
+    mask = (1<<cut_point+1)-1
 
     value1 = (parents[::2] & ~mask) | (parents[1::2] &  mask)
     value2 = (parents[::2] &  mask) | (parents[1::2] & ~mask)
@@ -90,8 +89,8 @@ def _two_point_crossover_gene(genes, args):
     # value2 & ~mask: 1000 0101
     # result2:        1101 0101
 
-    new_gene1 = Gene.like(genes[0])
-    new_gene2 = Gene.like(genes[0])
+    new_gene1 = genes[0]
+    new_gene2 = genes[0]
 
     for name in new_gene1.variables:
         bitsize = new_gene1.get_variable_size(name)
@@ -102,6 +101,10 @@ def _two_point_crossover_gene(genes, args):
         # TODO(andre:2018-04-05): Garantir que os pontos de cortes sejam diferentes
         cut_point1 = random.randrange(1, bitsize)
         cut_point2 = random.randrange(1, bitsize)
+        i=0
+        while cut_point1==cut_point2 & i<5:
+            cut_point2 = random.randrange(1, bitsize)
+            i+=1
 
         mask1 = (1 << cut_point1) - 1  # e.g. 0000 0000 0011 1111 se cut_point1 = 6
         mask2 = (1 << cut_point2) - 1  # e.g. 0000 0111 1111 1111 se cut_point2 = 11
@@ -128,18 +131,24 @@ def _three_parent_crossover_gene(genes, args):
 
     # result:         110100001
 
-    new_gene = Gene.like(genes[0])
+    new_gene1 = genes[0]
+    new_gene2 = genes[0]
+    new_gene3 = genes[0]
 
-    for name in new_gene.variables:
+    for name in new_gene1.variables:
         value1 = genes[0].variables[name]
         value2 = genes[1].variables[name]
         value3 = genes[2].variables[name]
 
-        mask = ~(value1 ^ value2)  # seleciona os bits que sao iguais
+        mask1 = ~(value1 ^ value2)  # seleciona os bits que sao iguais
+        mask2 = ~(value2 ^ value3)
+        mask3 = ~(value1 ^ value3)
 
-        new_gene.variables[name] = (value1 & mask) | (value3 & ~mask)  # usa o terceiro pai em caso de empate
-
-    return (new_gene,)
+        new_gene1.variables[name] = (value1 & mask1) | (value3 & ~mask1)  # usa o terceiro pai em caso de empate
+        new_gene2.variables[name] = (value2 & mask2) | (value1 & ~mask2)
+        new_gene3.variables[name] = (value3 & mask3) | (value2 & ~mask3)
+        
+    return (new_gene1,new_gene2,new_gene3)
 
 
 def _uniform_crossover_gene(genes, args):
@@ -156,7 +165,7 @@ def _uniform_crossover_gene(genes, args):
 
     # result:         1101 0101
 
-    new_gene = Gene.like(genes[0])
+    new_gene = genes[0]
 
     for name in new_gene.variables:
         value1 = genes[0].variables[name]

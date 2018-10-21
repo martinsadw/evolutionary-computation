@@ -8,9 +8,9 @@ import matplotlib.pyplot as plt
 from acs.objective import fitness, fitness_population
 from acs.instance import Instance, print_instance
 
-from utils.timer import Timer
-from utils.roulette import Roulette
-from utils.misc import hamming_distance
+from utl.timer import Timer
+from utl.roulette import Roulette
+from utl.misc import hamming_distance
 
 from ppa.config import Config
 from ppa.population_movement import move_population_roulette, move_population_direction, move_population_random, move_population_random_complement, move_population_local_search

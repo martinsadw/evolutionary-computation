@@ -5,19 +5,14 @@ from ga.copying import Copying
 from ga.local_search import LocalSearch
 from ga.selection import Selection
 from ga.crossover import Crossover
-
-
-class Mutation(Enum):
-    BIT_INVERSION_MUTATION = 1
-
-
+from ga.mutation import Mutation
 class Config:
     def __init__(self):
         self.copying_method = Copying.ELITISM_COPYING
         self.local_search_method = LocalSearch.PER_VARIABLE_LOCAL_SEARCH
 
         self.selection_method = Selection.ROULETTE_SELECTION
-        self.crossover_method = Crossover.TWO_POINT_CROSSOVER
+        self.crossover_method = Crossover.SINGLE_POINT_CROSSOVER
         self.mutation_method = Mutation.BIT_INVERSION_MUTATION
 
         self.num_iterations = 1
@@ -25,7 +20,7 @@ class Config:
 
         self.top_selection_ratio = 0.1
         self.bottom_selection_ratio = 0.1
-        self.mutation_chance = 0.01
+        self.mutation_chance = 5
 
         self.use_local_search = True
         self.local_search_step = 0.5
@@ -64,12 +59,12 @@ class Config:
     def load_test(cls):
         config = cls()
 
-        config.copying_method = ELITISM_COPYING
-        config.local_search_method = PER_VARIABLE_LOCAL_SEARCH
+        config.copying_method = Copying.ELITISM_COPYING
+        config.local_search_method = LocalSearch.PER_VARIABLE_LOCAL_SEARCH
 
-        config.selection_method = ROULETTE_SELECTION
-        config.crossover_method = TWO_POINT_CROSSOVER
-        config.mutation_method = BIT_INVERSION_MUTATION
+        config.selection_method = Selection.ROULETTE_SELECTION
+        config.crossover_method = Crossover.TWO_POINT_CROSSOVER
+        config.mutation_method = Mutation.BIT_INVERSION_MUTATION
 
         config.num_iterations = 100
         config.population_size = 20
