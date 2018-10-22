@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from acs.objective import fitness, fitness_population
 from acs.instance import Instance, print_instance
 
-from utils.timer import Timer
+from utl.timer import Timer
 
 from ga.config import Config, Crossover
 from ga.copying import copying_gene
@@ -22,10 +22,6 @@ def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, 
 
     population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
 
-    # selection_quant = 2
-    # if (config.crossover_method == Crossover.THREE_PARENT_CROSSOVER):
-    #     selection_quant = 3
-
     timer = Timer() ########################################################################################################
 
     start_perf_counter = time.perf_counter()
@@ -37,6 +33,7 @@ def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, 
         sorted_indices = np.argsort(survival_values)
         population = population[sorted_indices]
         survival_values = survival_values[sorted_indices]
+        print(survival_values)
 
         if best_fitness is not None:
             best_fitness[iteration] = survival_values[0]
@@ -64,12 +61,12 @@ def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, 
             selection_spots = int(2 * math.ceil(remaining_spots / 2.))
 
         parents = selection_gene(population, survival_values, selection_spots, config.selection_method, config)
-        # children = crossover_gene(parents, remaining_spots, config.crossover_method, config)
         children = crossover_gene(parents, config.crossover_method, config)
         assert parents.shape[0] == remaining_spots
         mutated = mutation_gene(children, config.mutation_method, config)
 
-        np.append(new_population, mutated, axis=0)
+        new_population =np.append(new_population, mutated, axis=0)
+        population=new_population
 
     return (population, survival_values)
 
@@ -100,7 +97,7 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 10
+    num_repetitions = 1
 
     (instance, config) = read_files(instance_config_filename, config_filename)
     best_fitness = np.zeros((config.num_iterations + 1, num_repetitions)) # Um valor extra para salvar os valores iniciais
