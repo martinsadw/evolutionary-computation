@@ -36,8 +36,7 @@ def crossover_gene(parents, method, config):
     return children
 
 
-def _single_point_crossover_gene(parents, config, cut_point = None):
-# def _single_point_crossover_gene(parents, config):
+def _single_point_crossover_gene(parents, config, cut_point=None):
     assert parents.shape[0] % 2 == 0
 
     # Exemplo:
@@ -57,12 +56,14 @@ def _single_point_crossover_gene(parents, config, cut_point = None):
     # result2:        1001 0011
 
     if cut_point is None:
+        #cut_point = np.random.randint(1, parents.shape[1] - 1, size=parents.shape[0]/2, dtype=bool)
         cut_point = random.randint(1, parents.shape[1] - 1)
 
-    mask = (1<<cut_point+1)-1
+    #mask = np.zeros((parents.shape[0]/2,parents.shape[1]))
+    mask=(1 << cut_point+1)-1
 
-    value1 = (parents[::2] & ~mask) | (parents[1::2] &  mask)
-    value2 = (parents[::2] &  mask) | (parents[1::2] & ~mask)
+    value1 = ((parents[::2] & ~mask) | (parents[1::2] & mask)).astype(bool)
+    value2 = ((parents[::2] & mask) | (parents[1::2] & ~mask)).astype(bool)
 
     return np.concatenate((value1, value2))
 
@@ -101,13 +102,15 @@ def _two_point_crossover_gene(genes, args):
         # TODO(andre:2018-04-05): Garantir que os pontos de cortes sejam diferentes
         cut_point1 = random.randrange(1, bitsize)
         cut_point2 = random.randrange(1, bitsize)
-        i=0
-        while cut_point1==cut_point2 & i<5:
+        i = 0
+        while cut_point1 == cut_point2 & i < 5:
             cut_point2 = random.randrange(1, bitsize)
-            i+=1
+            i += 1
 
-        mask1 = (1 << cut_point1) - 1  # e.g. 0000 0000 0011 1111 se cut_point1 = 6
-        mask2 = (1 << cut_point2) - 1  # e.g. 0000 0111 1111 1111 se cut_point2 = 11
+        # e.g. 0000 0000 0011 1111 se cut_point1 = 6
+        mask1 = (1 << cut_point1) - 1
+        # e.g. 0000 0111 1111 1111 se cut_point2 = 11
+        mask2 = (1 << cut_point2) - 1
         mask = (mask1 ^ mask2)         # e.g. 0000 0111 1100 0000
 
         new_gene1.variables[name] = (value1 & ~mask) | (value2 & mask)
@@ -144,11 +147,12 @@ def _three_parent_crossover_gene(genes, args):
         mask2 = ~(value2 ^ value3)
         mask3 = ~(value1 ^ value3)
 
-        new_gene1.variables[name] = (value1 & mask1) | (value3 & ~mask1)  # usa o terceiro pai em caso de empate
+        new_gene1.variables[name] = (value1 & mask1) | (
+            value3 & ~mask1)  # usa o terceiro pai em caso de empate
         new_gene2.variables[name] = (value2 & mask2) | (value1 & ~mask2)
         new_gene3.variables[name] = (value3 & mask3) | (value2 & ~mask3)
-        
-    return (new_gene1,new_gene2,new_gene3)
+
+    return (new_gene1, new_gene2, new_gene3)
 
 
 def _uniform_crossover_gene(genes, args):

@@ -17,17 +17,18 @@ from ga.selection import selection_gene
 from ga.crossover import crossover_gene
 from ga.mutation import mutation_gene
 
+
 def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None, all_fitness=None):
     population_size = config.population_size
 
     population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
 
-    timer = Timer() ########################################################################################################
+    timer = Timer()
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
     for iteration in range(config.num_iterations):
-        timer.add_time() ########################################################################################################
+        timer.add_time()
         # print('==========================' + str(iteration))
         survival_values = np.apply_along_axis(fitness_function, 1, population, instance, timer, data=all_fitness)
         sorted_indices = np.argsort(survival_values)
@@ -44,12 +45,15 @@ def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, 
         if process_time is not None:
             process_time[iteration] = time.process_time() - start_process_time
 
-        new_population = copying_gene(population, config.copying_method, config)
+        new_population = copying_gene(
+            population, config.copying_method, config)
 
         if config.use_local_search:
-            new_population = local_search_gene(new_population, fitness_function, config.local_search_method, config)
+            new_population = local_search_gene(
+                new_population, fitness_function, config.local_search_method, config)
 
-        remaining_spots = np.random.randint(2, size=(population_size - new_population.shape[0], instance.num_materials), dtype=bool)
+        remaining_spots = np.random.randint(2, size=(
+            population_size - new_population.shape[0], instance.num_materials), dtype=bool)
         remaining_spots = population_size - len(new_population)
 
         selection_spots = remaining_spots
@@ -65,10 +69,11 @@ def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, 
         assert parents.shape[0] == remaining_spots
         mutated = mutation_gene(children, config.mutation_method, config)
 
-        new_population =np.append(new_population, mutated, axis=0)
-        population=new_population
+        new_population = np.append(new_population, mutated, axis=0)
+        population = new_population
 
     return (population, survival_values)
+
 
 def read_files(instance_config_filename, config_filename):
     if instance_config_filename is None:
@@ -97,10 +102,11 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 1
+    num_repetitions = 10
 
     (instance, config) = read_files(instance_config_filename, config_filename)
-    best_fitness = np.zeros((config.num_iterations + 1, num_repetitions)) # Um valor extra para salvar os valores iniciais
+    # Um valor extra para salvar os valores iniciais
+    best_fitness = np.zeros((config.num_iterations + 1, num_repetitions))
     perf_counter = np.zeros((config.num_iterations + 1, num_repetitions))
     process_time = np.zeros((config.num_iterations + 1, num_repetitions))
     all_fitness = []
@@ -108,13 +114,13 @@ if __name__ == "__main__":
     popularity = np.zeros((instance.num_materials,))
 
     for i in range(num_repetitions):
-        (population, survival_values) = genetic_algorithm(instance, config, fitness, best_fitness=best_fitness[:,i], perf_counter=perf_counter[:,i], process_time=process_time[:,i], all_fitness=all_fitness)
+        (population, survival_values) = genetic_algorithm(instance, config, fitness,best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i], all_fitness=all_fitness)
         timer = Timer()
         fitness(population[0], instance, timer, True)
         popularity += population[0]
         print('#{}\n'.format(i))
         print('Survival values:\n{}\n'.format(survival_values))
-        print('Best Individual:\n{}\n'.format(population))
+        print('Best Individual:\n{}\n'.format(population[0]))
         print('Popularity:\n{}\n'.format(popularity))
         # array = np.asarray(all_fitness)
         # print('All Fitness:\n{}\n'.format(array))

@@ -8,11 +8,11 @@ acs.ga.crossoverMethod = SINGLE_POINT_CROSSOVER
 acs.ga.mutationMethod = BIT_INVERSION_MUTATION
 
 acs.ga.numIterations = 1000
-acs.ga.populationSize = 10
+acs.ga.populationSize = 30
 
 acs.ga.topSelectionRatio = 0.2
 acs.ga.bottomSelectionRatio = 0.1
-acs.ga.mutationChance = 5
+acs.ga.mutationChance = 0.01
 
 acs.ga.useLocalSearch = True
 acs.ga.localSearchStep = 0.5
