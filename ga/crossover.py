@@ -55,16 +55,14 @@ def _single_point_crossover_gene(parents, config, cut_point=None):
     # result2:        1001 0011
 
     if cut_point is None:
-        #cut_point = np.random.randint(1, parents.shape[1] - 1, size=parents.shape[0]/2, dtype=bool)
         cut_point = random.randint(1, parents.shape[1] - 1)
 
-    #mask = np.zeros((parents.shape[0]/2,parents.shape[1]))
+    # TODO(Yann:2018-11-01): gerar mask para cada dupla de pais
+
     mask = (1 << cut_point+1)-1
 
     value1 = ((parents[::2] & ~mask) | (parents[1::2] & mask)).astype(bool)
     value2 = ((parents[::2] & mask) | (parents[1::2] & ~mask)).astype(bool)
-    #value1 = ((parents[::2] & ~mask[::1]) | (parents[1::2] & mask[::1]))
-    #value2 = ((parents[::2] & mask[::1]) | (parents[1::2] & ~mask[::1]))
 
     return np.concatenate((value1, value2))
 

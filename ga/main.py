@@ -123,6 +123,7 @@ if __name__ == "__main__":
     mean_perf_counter = np.mean(perf_counter, axis=1)
     mean_process_time = np.mean(process_time, axis=1)
 
+    print('Final:')
     print('Statistics:')
     print('Fitness:\n{}\n'.format(mean_best_fitness))
     print('perf_counter:\n{}\n'.format(mean_perf_counter))
