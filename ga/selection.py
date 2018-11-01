@@ -8,6 +8,8 @@ from utl.roulette import Roulette
 class Selection(Enum):
     RANDOM_SELECTION = 1
     ROULETTE_SELECTION = 2
+    STOCHASTIC_SELECTION = 3
+    TRUNCATION_SELECTION = 4
 
 
 def selection_gene(population, survival_values, quant, method, config):
@@ -39,5 +41,5 @@ def _roulette_selection_gene(population, survival_values, quant):
     return parents
 
 
-# def _stochastic_selection_gene(population, quant, args):
-# def _truncation_selection_gene(population, quant, args):
+# def _stochastic_selection_gene(population, quant, config):
+# def _truncation_selection_gene(population, quant, config):

@@ -40,8 +40,6 @@ def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, 
 
         if best_fitness is not None:
             best_fitness[iteration] = survival_values[0]
-            # best_fitness[iteration] = np.mean(survival_values)
-            # best_fitness[iteration] = survival_values[-1]
         if perf_counter is not None:
             perf_counter[iteration] = time.perf_counter() - start_perf_counter
         if process_time is not None:
@@ -83,9 +81,6 @@ def read_files(instance_config_filename, config_filename):
     else:
         instance = Instance.load_from_file(instance_config_filename)
 
-    # print_instance(instance)
-    # print("")
-
     if config_filename is None:
         config = Config.load_test()
     else:
@@ -95,7 +90,6 @@ def read_files(instance_config_filename, config_filename):
 
 
 if __name__ == "__main__":
-    # assert(len(sys.argv) >= 2)
     instance_config_filename = None
     if (len(sys.argv) >= 2):
         instance_config_filename = sys.argv[1]
@@ -107,7 +101,6 @@ if __name__ == "__main__":
     num_repetitions = 1
 
     (instance, config) = read_files(instance_config_filename, config_filename)
-    # Um valor extra para salvar os valores iniciais
     best_fitness = np.zeros((config.num_iterations + 1, num_repetitions))
     perf_counter = np.zeros((config.num_iterations + 1, num_repetitions))
     process_time = np.zeros((config.num_iterations + 1, num_repetitions))
@@ -116,8 +109,8 @@ if __name__ == "__main__":
     popularity = np.zeros((instance.num_materials,))
 
     for i in range(num_repetitions):
-        (population, survival_values) = genetic_algorithm(instance, config, fitness, best_fitness=best_fitness[:, i], 
-            perf_counter=perf_counter[:, i], process_time=process_time[:, i], all_fitness=all_fitness)
+        (population, survival_values) = genetic_algorithm(instance, config, fitness,
+                                                          best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i], all_fitness=all_fitness)
         timer = Timer()
         fitness(population[0], instance, timer, True)
         popularity += population[0]
@@ -125,8 +118,6 @@ if __name__ == "__main__":
         print('Survival values:\n{}\n'.format(survival_values))
         print('Best Individual:\n{}\n'.format(population[0]))
         print('Popularity:\n{}\n'.format(popularity))
-        # array = np.asarray(all_fitness)
-        # print('All Fitness:\n{}\n'.format(array))
 
     mean_best_fitness = np.mean(best_fitness, axis=1)
     mean_perf_counter = np.mean(perf_counter, axis=1)
@@ -138,12 +129,6 @@ if __name__ == "__main__":
     print('process_time:\n{}\n'.format(mean_process_time))
 
     print('Popularity:\n{}\n'.format(popularity))
-
-    # fig = plt.figure()
-    # fig.suptitle('PSO: perf_counter vs. process_time')
-    # plt.plot(mean_perf_counter, 'r.')
-    # plt.plot(mean_process_time, 'b.')
-    # plt.show()
 
     fig = plt.figure()
     fig.suptitle('GA: best fitness')

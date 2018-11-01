@@ -33,7 +33,8 @@ def _elitism_copying_gene(population, config):
 
 def _permissive_copying_gene(population, config):
     top_selection_size = (int)(len(population) * config.top_selection_ratio)
-    bottom_selection_size = (int)(len(population) * config.bottom_selection_ratio)
+    bottom_selection_size = (int)(
+        len(population) * config.bottom_selection_ratio)
 
     return np.concatenate((population[:top_selection_size], population[-bottom_selection_size:]))
 
