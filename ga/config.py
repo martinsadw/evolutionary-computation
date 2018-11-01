@@ -14,7 +14,7 @@ class Config:
 
         self.selection_method = Selection.ROULETTE_SELECTION
         self.crossover_method = Crossover.TWO_POINT_CROSSOVER
-        self.mutation_method = Mutation.BIT_INVERSION_MUTATION
+        self.mutation_method = Mutation.MULTIBIT_INVERSION_MUTATION
 
         self.num_iterations = 1
         self.population_size = 1
@@ -65,7 +65,7 @@ class Config:
 
         config.selection_method = ROULETTE_SELECTION
         config.crossover_method = TWO_POINT_CROSSOVER
-        config.mutation_method = BIT_INVERSION_MUTATION
+        config.mutation_method = MULTIBIT_INVERSION_MUTATION
 
         config.num_iterations = 100
         config.population_size = 20

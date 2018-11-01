@@ -21,16 +21,18 @@ from ga.mutation import mutation_gene
 def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None, all_fitness=None):
     population_size = config.population_size
 
-    population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
+    population = np.random.randint(
+        2, size=(population_size, instance.num_materials), dtype=bool)
 
     timer = Timer()
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
-    for iteration in range(config.num_iterations):
+    for iteration in range(config.num_iterations+1):
         timer.add_time()
         # print('==========================' + str(iteration))
-        survival_values = np.apply_along_axis(fitness_function, 1, population, instance, timer, data=all_fitness)
+        survival_values = np.apply_along_axis(
+            fitness_function, 1, population, instance, timer, data=all_fitness)
         sorted_indices = np.argsort(survival_values)
         population = population[sorted_indices]
         survival_values = survival_values[sorted_indices]
@@ -64,9 +66,9 @@ def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, 
         else:
             selection_spots = int(2 * math.ceil(remaining_spots / 2.))
 
-        parents = selection_gene(population, survival_values, selection_spots, config.selection_method, config)
+        parents = selection_gene(
+            population, survival_values, selection_spots, config.selection_method, config)
         children = crossover_gene(parents, config.crossover_method, config)
-        assert parents.shape[0] == remaining_spots
         mutated = mutation_gene(children, config.mutation_method, config)
 
         new_population = np.append(new_population, mutated, axis=0)
@@ -102,7 +104,7 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 10
+    num_repetitions = 1
 
     (instance, config) = read_files(instance_config_filename, config_filename)
     # Um valor extra para salvar os valores iniciais
@@ -114,7 +116,8 @@ if __name__ == "__main__":
     popularity = np.zeros((instance.num_materials,))
 
     for i in range(num_repetitions):
-        (population, survival_values) = genetic_algorithm(instance, config, fitness,best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i], all_fitness=all_fitness)
+        (population, survival_values) = genetic_algorithm(instance, config, fitness, best_fitness=best_fitness[:, i], 
+            perf_counter=perf_counter[:, i], process_time=process_time[:, i], all_fitness=all_fitness)
         timer = Timer()
         fitness(population[0], instance, timer, True)
         popularity += population[0]

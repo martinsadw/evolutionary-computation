@@ -13,7 +13,6 @@ class Crossover(Enum):
     DECIMAL_CROSSOVER = 5
 
 
-# def crossover_gene(parents, quant, method, config):
 def crossover_gene(parents, method, config):
     children = None
 
@@ -71,7 +70,7 @@ def _single_point_crossover_gene(parents, config, cut_point=None):
 
 
 def _two_point_crossover_gene(parents, config, cut_point1=None, cut_point2=None):
-    assert len(parents) == 2
+    assert parents.shape[0] % 2 == 0
 
     # Exemplo:
     # value1:         1101 0011
@@ -111,7 +110,7 @@ def _two_point_crossover_gene(parents, config, cut_point1=None, cut_point2=None)
 
 
 def _three_parent_crossover_gene(parents, config):
-    assert len(parents) == 3
+    assert parents.shape[0] % 3 == 0
 
     # Exemplo:
     # value1:         110100010
@@ -140,7 +139,7 @@ def _three_parent_crossover_gene(parents, config):
 
 
 def _uniform_crossover_gene(parents, config):
-    assert len(parents) == 2
+    assert parents.shape[0] % 2 == 0
 
     # Exemplo:
     # value1:         1101 0011

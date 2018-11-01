@@ -5,7 +5,7 @@ acs.ga.localSearchMethod = PER_VARIABLE_LOCAL_SEARCH
 
 acs.ga.selectionMethod = RANDOM_SELECTION
 acs.ga.crossoverMethod = SINGLE_POINT_CROSSOVER
-acs.ga.mutationMethod = BIT_INVERSION_MUTATION
+acs.ga.mutationMethod = MULTIBIT_INVERSION_MUTATION
 
 acs.ga.numIterations = 1000
 acs.ga.populationSize = 30
