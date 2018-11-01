@@ -4,7 +4,8 @@ import copy
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
-#http://mnemstudio.org/particle-swarm-introduction.htm
+# http://mnemstudio.org/particle-swarm-introduction.htm
+
 
 class Particle:
     def __init__(self, pos, fitness_func):
@@ -25,6 +26,7 @@ class Particle:
 
         return string
 
+
 def fitness(particle):
     x = particle.pos[0]
     y = particle.pos[1]
@@ -32,16 +34,18 @@ def fitness(particle):
     # return x**2 + 5*y**2 - 4*x*y + y**3 - 3*x**3 + x**4
     return x**2 + y**2 - 4*x*y + 0.2*(x**2)*(y**2)
 
+
 def pso(num_particles, num_iterations, a, b, c, low_limit, high_limit, fitness_func):
     num_dimensions = len(low_limit)
 
     particles = [Particle([0 for x in range(num_dimensions)], fitness_func)]
 
     global_best = particles[0].local_best
-    global_best_pos= particles[0].local_best_pos
+    global_best_pos = particles[0].local_best_pos
 
     for x in range(num_particles-1):
-        new_pos = [random.randrange(low_limit[x], high_limit[x]) for x in range(num_dimensions)]
+        new_pos = [random.randrange(low_limit[x], high_limit[x])
+                   for x in range(num_dimensions)]
         new_particle = Particle(new_pos, fitness_func)
 
         if (new_particle.local_best < global_best):
@@ -59,10 +63,13 @@ def pso(num_particles, num_iterations, a, b, c, low_limit, high_limit, fitness_f
                 random_global = random.random()
 
                 vel_contribution = a * particle.vel[d]
-                local_contribution = b * random_local * (particle.local_best_pos[d] - particle.pos[d])
-                global_contribution = c * random_global * (global_best_pos[d] - particle.pos[d])
+                local_contribution = b * random_local * \
+                    (particle.local_best_pos[d] - particle.pos[d])
+                global_contribution = c * random_global * \
+                    (global_best_pos[d] - particle.pos[d])
 
-                particle.vel[d] = vel_contribution + local_contribution + global_contribution
+                particle.vel[d] = vel_contribution + \
+                    local_contribution + global_contribution
                 particle.pos[d] += particle.vel[d]
 
             new_fitness = fitness(particle)
@@ -101,7 +108,8 @@ def pso(num_particles, num_iterations, a, b, c, low_limit, high_limit, fitness_f
         def init_func():
             scat.set_offsets([])
 
-        anim = animation.FuncAnimation(fig, anim_func, frames=np_data, init_func=init_func, interval=200)
+        anim = animation.FuncAnimation(
+            fig, anim_func, frames=np_data, init_func=init_func, interval=200)
         # anim.save('test.mp4', fps=30, extra_args=['-vcodec', 'x264'])
 
         plt.show()
@@ -109,5 +117,6 @@ def pso(num_particles, num_iterations, a, b, c, low_limit, high_limit, fitness_f
 
     list.sort(particles, key=fitness_func)
     print(particles[0])
+
 
 pso(100, 10, 0.2, 0.2, 0.6, (-20, -20), (20, 20), fitness)

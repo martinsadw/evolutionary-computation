@@ -23,22 +23,32 @@ class Config:
 
         with open(config_filename, 'r') as config_file:
             config_string = config_file.read()
-        config_values = configparser.ConfigParser(inline_comment_prefixes=(";",))
+        config_values = configparser.ConfigParser(
+            inline_comment_prefixes=(";",))
         config_values.read_string(config_string)
 
-        config.num_iterations = int(config_values['section']['ppatosca.arg.numIterations'])
-        config.population_size = int(config_values['section']['ppatosca.arg.populationSize'])
+        config.num_iterations = int(
+            config_values['section']['ppatosca.arg.numIterations'])
+        config.population_size = int(
+            config_values['section']['ppatosca.arg.populationSize'])
 
-        config.follow_distance_parameter = float(config_values['section']['ppatosca.arg.followDistanceParameter'])
-        config.follow_survival_parameter = float(config_values['section']['ppatosca.arg.followSurvivalParameter'])
+        config.follow_distance_parameter = float(
+            config_values['section']['ppatosca.arg.followDistanceParameter'])
+        config.follow_survival_parameter = float(
+            config_values['section']['ppatosca.arg.followSurvivalParameter'])
 
-        config.min_steps = int(config_values['section']['ppatosca.arg.minSteps'])
-        config.max_steps = int(config_values['section']['ppatosca.arg.maxSteps'])
-        config.steps_distance_parameter = float(config_values['section']['ppatosca.arg.stepsDistanceParameter'])
+        config.min_steps = int(
+            config_values['section']['ppatosca.arg.minSteps'])
+        config.max_steps = int(
+            config_values['section']['ppatosca.arg.maxSteps'])
+        config.steps_distance_parameter = float(
+            config_values['section']['ppatosca.arg.stepsDistanceParameter'])
 
-        config.local_search_tries = int(config_values['section']['ppatosca.arg.localSearchTries'])
+        config.local_search_tries = int(
+            config_values['section']['ppatosca.arg.localSearchTries'])
 
-        config.follow_chance = float(config_values['section']['ppatosca.arg.followChance'])
+        config.follow_chance = float(
+            config_values['section']['ppatosca.arg.followChance'])
 
         return config
 

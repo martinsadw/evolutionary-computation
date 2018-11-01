@@ -1,11 +1,13 @@
 import random
 import numpy as np
 
+
 def get_integer(array):
     total = 0
     for shift, bit in enumerate(array[::-1]):
         total += bit * (1 << shift)
     return total
+
 
 def get_float(array, bits_precision):
     total = 0
@@ -13,8 +15,10 @@ def get_float(array, bits_precision):
         total += bit * (1 << shift)
     return (total / (1 << bits_precision))
 
+
 def sigmoid(x):
-    return 1 / (1 + np.exp(-x));
+    return 1 / (1 + np.exp(-x))
+
 
 def fitness(array):
     # x = get_float(array[4:8], 0)
@@ -24,6 +28,7 @@ def fitness(array):
     y = get_float(array[0:16], 10)
 
     return x**2 + y**2 - 4*x*y + 0.2*(x**2)*(y**2)
+
 
 v_max = 2
 particle_size = 32
@@ -52,10 +57,14 @@ g_best_result = p_best_result[g_best_index]
 
 for i in range(num_iterations):
     # TODO(andre:2018-04-18): Atualizar velocidade
-    p_influence = np.tile(param_b * np.random.random(num_particles), (particle_size, 1)).T
-    g_influence = np.tile(param_c * np.random.random(num_particles), (particle_size, 1)).T
+    p_influence = np.tile(
+        param_b * np.random.random(num_particles), (particle_size, 1)).T
+    g_influence = np.tile(
+        param_c * np.random.random(num_particles), (particle_size, 1)).T
 
-    p_velocity = param_a * p_velocity + p_influence * (p_best_position - p_position) + g_influence * (g_best_position - p_position)
+    p_velocity = param_a * p_velocity + p_influence * \
+        (p_best_position - p_position) + \
+        g_influence * (g_best_position - p_position)
     p_velocity = np.clip(p_velocity, -v_max, v_max)
 
     # Calcula as novas posições
