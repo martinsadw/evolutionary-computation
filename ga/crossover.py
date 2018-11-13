@@ -59,7 +59,7 @@ def _single_point_crossover_gene(parents, config, cut_point=None):
 
     # TODO(Yann:2018-11-01): gerar mask para cada dupla de pais
 
-    mask = (1 << cut_point+1)-1
+    mask = (1 << cut_point)-1
 
     value1 = ((parents[::2] & ~mask) | (parents[1::2] & mask)).astype(bool)
     value2 = ((parents[::2] & mask) | (parents[1::2] & ~mask)).astype(bool)
@@ -97,8 +97,8 @@ def _two_point_crossover_gene(parents, config, cut_point1=None, cut_point2=None)
     while cut_point1 == cut_point2:
         cut_point2 = random.randint(1, bitsize)
 
-    mask1 = (1 << cut_point1+1)-1
-    mask2 = (1 << cut_point2+1)-1
+    mask1 = (1 << cut_point1)-1
+    mask2 = (1 << cut_point2)-1
     mask = mask1 ^ mask2
 
     value1 = ((parents[::2] & ~mask) | (parents[1::2] & mask)).astype(bool)
@@ -123,17 +123,11 @@ def _three_parent_crossover_gene(parents, config):
     # result:         110100001
 
     mask1 = ~(parents[::3] ^ parents[1::3])  # seleciona os bits que sao iguais
-    mask2 = ~(parents[1::3] ^ parents[2::3])
-    mask3 = ~(parents[2::3] ^ parents[::3])
 
     new_gene1 = ((parents[::3] & mask1[::1] |
                   parents[2::3] & ~mask1[::1])).astype(bool)
-    new_gene2 = ((parents[1::3] & mask2[::1] |
-                  parents[::3] & ~mask2[::1])).astype(bool)
-    new_gene3 = ((parents[2::3] & mask3[::1] |
-                  parents[1::3] & ~mask3[::1])).astype(bool)
 
-    return np.concatenate((new_gene1, new_gene2, new_gene3))
+    return np.concatenate((new_gene1,))
 
 
 def _uniform_crossover_gene(parents, config):
