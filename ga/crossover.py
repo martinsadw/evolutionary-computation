@@ -13,7 +13,6 @@ class Crossover(Enum):
     DECIMAL_CROSSOVER = 5
 
 
-# def crossover_gene(parents, quant, method, config):
 def crossover_gene(parents, method, config):
     children = None
 
@@ -36,8 +35,7 @@ def crossover_gene(parents, method, config):
     return children
 
 
-def _single_point_crossover_gene(parents, config, cut_point = None):
-# def _single_point_crossover_gene(parents, config):
+def _single_point_crossover_gene(parents, config, cut_point=None):
     assert parents.shape[0] % 2 == 0
 
     # Exemplo:
@@ -56,20 +54,27 @@ def _single_point_crossover_gene(parents, config, cut_point = None):
     # value2 & ~mask: 1000 0000
     # result2:        1001 0011
 
+    # if cut_point is None:
+    #     cut_point = random.randint(1, parents.shape[1])
+
+    bitsize = parents.shape[1]
+
     if cut_point is None:
-        cut_point = random.randint(1, parents.shape[1] - 1)
+        cut_point = np.random.randint(0, bitsize, size=int(parents.shape[0] / 2))
 
-    mask = np.zeros((1, parents.shape[1]), dtype=bool)
-    mask[:, -cut_point:] = 1
+    r = np.arange(bitsize)
+    mask = cut_point[:, np.newaxis] >= r
 
-    value1 = (parents[::2] & ~mask) | (parents[1::2] &  mask)
-    value2 = (parents[::2] &  mask) | (parents[1::2] & ~mask)
+    # mask = (1 << cut_point) - 1
+
+    value1 = ((parents[::2] & ~mask) | (parents[1::2] &  mask)).astype(bool)
+    value2 = ((parents[::2] &  mask) | (parents[1::2] & ~mask)).astype(bool)
 
     return np.concatenate((value1, value2))
 
 
-def _two_point_crossover_gene(genes, args):
-    assert len(genes) == 2
+def _two_point_crossover_gene(parents, config, cut_point1=None, cut_point2=None):
+    assert parents.shape[0] % 2 == 0
 
     # Exemplo:
     # value1:         1101 0011
@@ -90,31 +95,26 @@ def _two_point_crossover_gene(genes, args):
     # value2 & ~mask: 1000 0101
     # result2:        1101 0101
 
-    new_gene1 = Gene.like(genes[0])
-    new_gene2 = Gene.like(genes[0])
+    bitsize = parents.shape[1]
 
-    for name in new_gene1.variables:
-        bitsize = new_gene1.get_variable_size(name)
+    if(cut_point1 is None):
+        cut_point1 = np.random.randint(0, bitsize, size=int(parents.shape[0] / 2))
+    if(cut_point2 is None):
+        cut_point2 = np.random.randint(0, bitsize, size=int(parents.shape[0] / 2))
 
-        value1 = genes[0].variables[name]
-        value2 = genes[1].variables[name]
+    r = np.arange(bitsize)
+    mask1 = cut_point1[:, np.newaxis] >= r
+    mask2 = cut_point2[:, np.newaxis] >= r
+    mask = mask1 ^ mask2
 
-        # TODO(andre:2018-04-05): Garantir que os pontos de cortes sejam diferentes
-        cut_point1 = random.randrange(1, bitsize)
-        cut_point2 = random.randrange(1, bitsize)
+    value1 = ((parents[::2] & ~mask) | (parents[1::2] &  mask)).astype(bool)
+    value2 = ((parents[::2] &  mask) | (parents[1::2] & ~mask)).astype(bool)
 
-        mask1 = (1 << cut_point1) - 1  # e.g. 0000 0000 0011 1111 se cut_point1 = 6
-        mask2 = (1 << cut_point2) - 1  # e.g. 0000 0111 1111 1111 se cut_point2 = 11
-        mask = (mask1 ^ mask2)         # e.g. 0000 0111 1100 0000
-
-        new_gene1.variables[name] = (value1 & ~mask) | (value2 & mask)
-        new_gene2.variables[name] = (value1 & mask) | (value2 & ~mask)
-
-    return (new_gene1, new_gene2)
+    return np.concatenate((value1, value2))
 
 
-def _three_parent_crossover_gene(genes, args):
-    assert len(genes) == 3
+def _three_parent_crossover_gene(parents, config):
+    assert parents.shape[0] % 3 == 0
 
     # Exemplo:
     # value1:         110100010
@@ -128,22 +128,15 @@ def _three_parent_crossover_gene(genes, args):
 
     # result:         110100001
 
-    new_gene = Gene.like(genes[0])
+    mask = ~(parents[::3] ^ parents[1::3])  # seleciona os bits que sao iguais
 
-    for name in new_gene.variables:
-        value1 = genes[0].variables[name]
-        value2 = genes[1].variables[name]
-        value3 = genes[2].variables[name]
+    new_gene = ((parents[::3] & mask | parents[2::3] & ~mask))
 
-        mask = ~(value1 ^ value2)  # seleciona os bits que sao iguais
-
-        new_gene.variables[name] = (value1 & mask) | (value3 & ~mask)  # usa o terceiro pai em caso de empate
-
-    return (new_gene,)
+    return new_gene
 
 
-def _uniform_crossover_gene(genes, args):
-    assert len(genes) == 2
+def _uniform_crossover_gene(parents, config):
+    assert parents.shape[0] % 2 == 0
 
     # Exemplo:
     # value1:         1101 0011
@@ -156,18 +149,11 @@ def _uniform_crossover_gene(genes, args):
 
     # result:         1101 0101
 
-    new_gene = Gene.like(genes[0])
+    bitsize = parents.shape[1]
 
-    for name in new_gene.variables:
-        value1 = genes[0].variables[name]
-        value2 = genes[1].variables[name]
-        bitsize = new_gene.get_variable_size(name)
+    mask = np.random.rand(*parents[::2].shape) < 0.5
 
-        mask = 0
-        for x in range(bitsize):
-            if random.random() < 0.5:
-                mask &= (1 << x)
+    new_gene1 = ((parents[::2] & ~mask) | (parents[1::2] &  mask))
+    new_gene2 = ((parents[::2] &  mask) | (parents[1::2] & ~mask))
 
-        new_gene.variables[name] = (value1 & ~mask) | (value2 & mask)
-
-    return (new_gene,)
+    return np.concatenate((new_gene1, new_gene2))

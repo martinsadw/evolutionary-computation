@@ -12,7 +12,8 @@ def local_search_gene(population, fitness_function, method, config):
     new_population = None
 
     if (method == LocalSearch.PER_VARIABLE_LOCAL_SEARCH):
-        new_population = _per_variable_local_search_gene(population, fitness_function, config)
+        new_population = _per_variable_local_search_gene(
+            population, fitness_function, config)
 
     return new_population
 

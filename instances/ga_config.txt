@@ -4,11 +4,11 @@ acs.ga.copyingMethod = ELITISM_COPYING
 acs.ga.localSearchMethod = PER_VARIABLE_LOCAL_SEARCH
 
 acs.ga.selectionMethod = ROULETTE_SELECTION
-acs.ga.crossoverMethod = SINGLE_POINT_CROSSOVER
-acs.ga.mutationMethod = BIT_INVERSION_MUTATION
+acs.ga.crossoverMethod = TWO_POINT_CROSSOVER
+acs.ga.mutationMethod = SINGLE_BIT_INVERSION_MUTATION
 
 acs.ga.numIterations = 1000
-acs.ga.populationSize = 10
+acs.ga.populationSize = 30
 
 acs.ga.topSelectionRatio = 0.2
 acs.ga.bottomSelectionRatio = 0.1
