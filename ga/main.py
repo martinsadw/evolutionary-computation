@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from acs.objective import fitness, fitness_population
 from acs.instance import Instance, print_instance
 
-from utl.timer import Timer
+from utils.timer import Timer
 
 from ga.config import Config, Crossover
 from ga.copying import copying_gene
@@ -21,8 +21,7 @@ from ga.mutation import mutation_gene
 def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None, all_fitness=None):
     population_size = config.population_size
 
-    population = np.random.randint(
-        2, size=(population_size, instance.num_materials), dtype=bool)
+    population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
 
     timer = Timer()
 
@@ -31,12 +30,11 @@ def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, 
     for iteration in range(config.num_iterations+1):
         timer.add_time()
         # print('==========================' + str(iteration))
-        survival_values = np.apply_along_axis(
-            fitness_function, 1, population, instance, timer, data=all_fitness)
+        survival_values = np.apply_along_axis(fitness_function, 1, population, instance, timer, data=all_fitness)
         sorted_indices = np.argsort(survival_values)
         population = population[sorted_indices]
         survival_values = survival_values[sorted_indices]
-        print(survival_values)
+        # print(survival_values)
 
         if best_fitness is not None:
             best_fitness[iteration] = survival_values[0]
@@ -45,31 +43,25 @@ def genetic_algorithm(instance, config, fitness_function, *, best_fitness=None, 
         if process_time is not None:
             process_time[iteration] = time.process_time() - start_process_time
 
-        new_population = copying_gene(
-            population, config.copying_method, config)
+        new_population = copying_gene(population, config.copying_method, config)
 
         if config.use_local_search:
-            new_population = local_search_gene(
-                new_population, fitness_function, config.local_search_method, config)
+            new_population = local_search_gene(new_population, fitness_function, config.local_search_method, config)
 
-        remaining_spots = np.random.randint(2, size=(
-            population_size - new_population.shape[0], instance.num_materials), dtype=bool)
+        remaining_spots = np.random.randint(2, size=(population_size - new_population.shape[0], instance.num_materials), dtype=bool)
         remaining_spots = population_size - len(new_population)
 
         selection_spots = remaining_spots
         if (config.crossover_method == Crossover.THREE_PARENT_CROSSOVER):
             selection_spots = int(3 * math.ceil(remaining_spots / 3.)) * 3
-        elif (config.crossover_method == Crossover.UNIFORM_CROSSOVER):
-            selection_spots = int(2 * math.ceil(remaining_spots / 2.)) * 2
         else:
             selection_spots = int(2 * math.ceil(remaining_spots / 2.))
 
-        parents = selection_gene(
-            population, survival_values, selection_spots, config.selection_method, config)
+        parents = selection_gene(population, survival_values, selection_spots, config.selection_method, config)
         children = crossover_gene(parents, config.crossover_method, config)
         mutated = mutation_gene(children, config.mutation_method, config)
 
-        new_population = np.append(new_population, mutated, axis=0)
+        new_population = np.append(new_population, mutated[:remaining_spots], axis=0)
         population = new_population
 
     return (population, survival_values)
@@ -109,8 +101,7 @@ if __name__ == "__main__":
     popularity = np.zeros((instance.num_materials,))
 
     for i in range(num_repetitions):
-        (population, survival_values) = genetic_algorithm(instance, config, fitness,
-                                                          best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i], all_fitness=all_fitness)
+        (population, survival_values) = genetic_algorithm(instance, config, fitness, best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i], all_fitness=all_fitness)
         timer = Timer()
         fitness(population[0], instance, timer, True)
         popularity += population[0]

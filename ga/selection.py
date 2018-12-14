@@ -2,7 +2,7 @@ from enum import Enum
 
 import numpy as np
 
-from utl.roulette import Roulette
+from utils.roulette import Roulette
 
 
 class Selection(Enum):

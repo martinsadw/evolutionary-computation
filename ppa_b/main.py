@@ -8,19 +8,18 @@ import matplotlib.pyplot as plt
 from acs.objective import fitness, fitness_population
 from acs.instance import Instance, print_instance
 
-from utl.timer import Timer
-from utl.roulette import Roulette
-from utl.misc import hamming_distance
+from utils.timer import Timer
+from utils.roulette import Roulette
+from utils.misc import hamming_distance
 
-from ppa.config import Config
-from ppa.population_movement import move_population_roulette, move_population_direction, move_population_random, move_population_random_complement, move_population_local_search
+from ppa_b.config import Config
+from ppa_b.population_movement import move_population_roulette, move_population_direction, move_population_random, move_population_random_complement, move_population_local_search
 
 
 def prey_predator_algorithm(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None):
     population_size = config.population_size
 
-    population = np.random.randint(
-        2, size=(population_size, instance.num_materials), dtype=bool)
+    population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
 
     timer = Timer()
 
@@ -74,65 +73,50 @@ def prey_predator_algorithm(instance, config, fitness_function, *, best_fitness=
         follow_indices = np.where(follow_mask)[0]
         follow_quant = len(follow_indices)
 
-        population_distance = [[hamming_distance(
-            population[j], population[i]) / instance.num_materials for j in range(i)] for i in follow_indices]
-        survival_ratio = [[survival_values[j] / survival_values[i]
-                           for j in range(i)] for i in follow_indices]
-        follow_chance = [[(2 - config.follow_distance_parameter * population_distance[i][j] - config.follow_survival_parameter *
-                           survival_ratio[i][j]) / 2 for j in range(follow_indices[i])] for i in range(follow_quant)]
-        roulette_array = np.array([Roulette(follow_chance[i])
-                                   for i in range(follow_quant)])
+        population_distance = [[hamming_distance(population[j], population[i]) / instance.num_materials for j in range(i)] for i in follow_indices]
+        survival_ratio = [[survival_values[j] / survival_values[i] for j in range(i)] for i in follow_indices]
+        follow_chance = [[(2 - config.follow_distance_parameter * population_distance[i][j] - config.follow_survival_parameter * survival_ratio[i][j]) / 2 for j in range(follow_indices[i])] for i in range(follow_quant)]
+        roulette_array = np.array([Roulette(follow_chance[i]) for i in range(follow_quant)])
 
         timer.add_time("follow_chance")
 
         # TODO(andre:2018-05-28): Garantir que max_steps nunca é maior do que o numero de materiais
-        num_steps = np.round(config.max_steps * np.random.rand(follow_quant) / np.exp(
-            config.steps_distance_parameter * np.array([i[-1] for i in population_distance])))
-        new_population[follow_mask] = move_population_roulette(
-            new_population[follow_mask], num_steps, roulette_array, population)
+        num_steps = np.round(config.max_steps * np.random.rand(follow_quant) / np.exp(config.steps_distance_parameter * np.array([i[-1] for i in population_distance])))
+        new_population[follow_mask] = move_population_roulette(new_population[follow_mask], num_steps, roulette_array, population)
 
         timer.add_time("follow_roulette")
 
         # num_steps = np.round(config.min_steps * np.random.rand(population_size))
         # new_population = move_population_random(new_population, num_steps, follow_mask)
         num_steps = np.round(config.min_steps * np.random.rand(follow_quant))
-        new_population[follow_mask] = move_population_random(
-            new_population[follow_mask], num_steps)
+        new_population[follow_mask] = move_population_random(new_population[follow_mask], num_steps)
 
         timer.add_time("follow_random")
 
         # num_steps = np.round(config.max_steps * np.random.rand(population_size))
         # new_population = move_population_random_complement(new_population, num_steps, population[-1], run_mask)
-        num_steps = np.round(config.max_steps *
-                             np.random.rand(np.count_nonzero(run_mask)))
-        new_population[run_mask] = move_population_random_complement(
-            new_population[run_mask], num_steps, population[-1])
+        num_steps = np.round(config.max_steps * np.random.rand(np.count_nonzero(run_mask)))
+        new_population[run_mask] = move_population_random_complement(new_population[run_mask], num_steps, population[-1])
 
         timer.add_time("run")
 
-        new_population[best_prey_mask] = move_population_local_search(
-            new_population[best_prey_mask], fitness_function, config.min_steps, config.local_search_tries, instance, timer)
+        new_population[best_prey_mask] = move_population_local_search(new_population[best_prey_mask], fitness_function, config.min_steps, config.local_search_tries, instance, timer)
 
         timer.add_time()
 
         # num_steps = np.round(config.max_steps * np.random.rand(population_size))
         # new_population = move_population_random(new_population, num_steps, predator_mask)
-        num_steps = np.round(config.max_steps *
-                             np.random.rand(np.count_nonzero(predator_mask)))
-        new_population[predator_mask] = move_population_random(
-            new_population[predator_mask], num_steps)
+        num_steps = np.round(config.max_steps * np.random.rand(np.count_nonzero(predator_mask)))
+        new_population[predator_mask] = move_population_random(new_population[predator_mask], num_steps)
 
         timer.add_time("predator_random")
 
         # num_steps = np.round(config.min_steps * np.random.rand(population_size))
         # worst_prey = np.repeat(population[-2][np.newaxis, :], population_size, axis=0)
         # new_population = move_population_direction(new_population, num_steps, worst_prey, predator_mask)
-        num_steps = np.round(config.min_steps *
-                             np.random.rand(np.count_nonzero(predator_mask)))
-        worst_prey = np.repeat(
-            population[-2][np.newaxis, :], np.count_nonzero(predator_mask), axis=0)
-        new_population[predator_mask] = move_population_direction(
-            new_population[predator_mask], num_steps, worst_prey)
+        num_steps = np.round(config.min_steps * np.random.rand(np.count_nonzero(predator_mask)))
+        worst_prey = np.repeat(population[-2][np.newaxis, :], np.count_nonzero(predator_mask), axis=0)
+        new_population[predator_mask] = move_population_direction(new_population[predator_mask], num_steps, worst_prey)
 
         timer.add_time("predator_follow")
 
@@ -205,8 +189,7 @@ if __name__ == "__main__":
     process_time = np.zeros((config.num_iterations + 1, num_repetitions))
 
     for i in range(num_repetitions):
-        (population, survival_values) = prey_predator_algorithm(instance, config, fitness_population,
-                                                                best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i])
+        (population, survival_values) = prey_predator_algorithm(instance, config, fitness_population, best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i])
         timer = Timer()
         fitness(population[0], instance, timer, True)
         print('#{}\n'.format(i))

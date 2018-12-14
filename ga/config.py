@@ -15,7 +15,7 @@ class Config:
 
         self.selection_method = Selection.ROULETTE_SELECTION
         self.crossover_method = Crossover.TWO_POINT_CROSSOVER
-        self.mutation_method = Mutation.MULTIBIT_INVERSION_MUTATION
+        self.mutation_method = Mutation.MULTI_BIT_INVERSION_MUTATION
 
         self.num_iterations = 1
         self.population_size = 1
@@ -74,12 +74,12 @@ class Config:
     def load_test(cls):
         config = cls()
 
-        config.copying_method = ELITISM_COPYING
-        config.local_search_method = PER_VARIABLE_LOCAL_SEARCH
+        config.copying_method = Copying.ELITISM_COPYING
+        config.local_search_method = LocalSearch.PER_VARIABLE_LOCAL_SEARCH
 
-        config.selection_method = ROULETTE_SELECTION
-        config.crossover_method = TWO_POINT_CROSSOVER
-        config.mutation_method = MULTIBIT_INVERSION_MUTATION
+        config.selection_method = Selection.ROULETTE_SELECTION
+        config.crossover_method = Crossover.TWO_POINT_CROSSOVER
+        config.mutation_method = Mutation.MULTI_BIT_INVERSION_MUTATION
 
         config.num_iterations = 100
         config.population_size = 20

@@ -6,8 +6,7 @@ from utils.misc import hamming_distance
 def move_population_roulette(population, num_steps, roulette, roulette_population):
     new_population = np.copy(population)
 
-    step_order = np.random.rand(
-        population.shape[0], population.shape[1]).argsort()
+    step_order = np.random.rand(population.shape[0], population.shape[1]).argsort()
 
     try:
         biggest_num_steps = int(np.max(num_steps))
@@ -22,11 +21,9 @@ def move_population_roulette(population, num_steps, roulette, roulette_populatio
         materials_indices = step_order[still_moving_mask, i]
 
         still_moving_roulette = roulette[still_moving_mask]
-        follow_individual = [still_moving_roulette[index].spin(
-        ) for index in np.ndindex(still_moving_roulette.shape)]
+        follow_individual = [still_moving_roulette[index].spin() for index in np.ndindex(still_moving_roulette.shape)]
 
-        new_population[still_moving_indices,
-                       materials_indices] = roulette_population[follow_individual, materials_indices]
+        new_population[still_moving_indices, materials_indices] = roulette_population[follow_individual, materials_indices]
 
     return new_population
 
@@ -34,8 +31,7 @@ def move_population_roulette(population, num_steps, roulette, roulette_populatio
 def move_population_direction(population, num_steps, direction):
     new_population = np.copy(population)
 
-    step_order = np.random.rand(
-        population.shape[0], population.shape[1]).argsort()
+    step_order = np.random.rand(population.shape[0], population.shape[1]).argsort()
 
     try:
         biggest_num_steps = int(np.max(num_steps))
@@ -49,15 +45,13 @@ def move_population_direction(population, num_steps, direction):
         # TODO(andre:2018-05-28): Garantir que max_steps nunca é maior do que o numero de materiais
         materials_indices = step_order[still_moving_mask, i]
 
-        new_population[still_moving_indices,
-                       materials_indices] = direction[still_moving_indices, materials_indices]
+        new_population[still_moving_indices, materials_indices] = direction[still_moving_indices, materials_indices]
 
     return new_population
 
 def move_population_random(population, num_steps):
     directions = np.random.randint(2, size=population.shape, dtype=bool)
-    new_population = move_population_direction(
-        population, num_steps, directions)
+    new_population = move_population_direction(population, num_steps, directions)
 
     return new_population
 
@@ -66,14 +60,11 @@ def move_population_random_complement(population, num_steps, away_direction):
     complement_directions = ~directions
 
     distances = hamming_distance(directions, away_direction, axis=1)
-    complement_distances = hamming_distance(
-        complement_directions, away_direction, axis=1)
+    complement_distances = hamming_distance(complement_directions, away_direction, axis=1)
 
-    farther_directions = np.where(np.repeat((distances > complement_distances)[
-                                  :, np.newaxis], population.shape[1], axis=1), directions, complement_directions)
+    farther_directions = np.where(np.repeat((distances > complement_distances)[:, np.newaxis], population.shape[1], axis=1), directions, complement_directions)
 
-    new_population = move_population_direction(
-        population, num_steps, farther_directions)
+    new_population = move_population_direction(population, num_steps, farther_directions)
 
     return new_population
 
@@ -82,12 +73,10 @@ def move_population_local_search(population, fitness_function, max_steps, num_tr
     for i in range(num_tries):
         num_steps = np.round(max_steps * np.random.rand(population.shape[0]))
         temp_population = move_population_random(population, num_steps)
-        temp_survival_values = fitness_function(
-            temp_population, instance, timer)
+        temp_survival_values = fitness_function(temp_population, instance, timer)
 
         better_survival_values = (temp_survival_values < best_survival_values)
-        population = np.where(np.repeat(
-            better_survival_values[:, np.newaxis], population.shape[1], axis=1), temp_population, population)
-        best_survival_values = np.where(
-            better_survival_values, temp_survival_values, best_survival_values)
+        population = np.where(np.repeat(better_survival_values[:, np.newaxis], population.shape[1], axis=1), temp_population, population)
+        best_survival_values = np.where(better_survival_values, temp_survival_values, best_survival_values)
+
     return population

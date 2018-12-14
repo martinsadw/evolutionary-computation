@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from acs.objective import fitness, fitness_population
 from acs.instance import Instance, print_instance
 
-from utl.timer import Timer
-from utl.misc import sigmoid
+from utils.timer import Timer
+from utils.misc import sigmoid
 
 from pso.config import Config
 
