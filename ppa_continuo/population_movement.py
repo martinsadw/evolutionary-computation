@@ -1,6 +1,7 @@
 import numpy as np
 
-from utils.misc import hamming_distance
+from utl.misc import hamming_distance
+from utl.misc import sigmoid
 
 
 def move_population_roulette(population, num_steps, roulette, roulette_population):
@@ -55,15 +56,15 @@ def move_population_direction(population, num_steps, direction):
     return new_population
 
 def move_population_random(population, num_steps):
-    directions = np.random.randint(2, size=population.shape, dtype=bool)
+    directions = np.random.random(population.shape) 
     new_population = move_population_direction(
         population, num_steps, directions)
 
     return new_population
 
-def move_population_random_complement(population, num_steps, away_direction):
-    directions = np.random.randint(2, size=population.shape, dtype=bool)
-    complement_directions = ~directions
+def move_population_random_complement(population, num_steps, away_direction,max_steps):
+    directions = np.random.random(population.shape)
+    complement_directions = max_steps-directions
 
     distances = hamming_distance(directions, away_direction, axis=1)
     complement_distances = hamming_distance(
@@ -78,12 +79,12 @@ def move_population_random_complement(population, num_steps, away_direction):
     return new_population
 
 def move_population_local_search(population, fitness_function, max_steps, num_tries, instance, timer):
-    best_survival_values = fitness_function(population, instance, timer)
+    best_survival_values = fitness_function(generate_bin(population), instance, timer)
     for i in range(num_tries):
         num_steps = np.round(max_steps * np.random.rand(population.shape[0]))
         temp_population = move_population_random(population, num_steps)
         temp_survival_values = fitness_function(
-            temp_population, instance, timer)
+            generate_bin(temp_population), instance, timer)
 
         better_survival_values = (temp_survival_values < best_survival_values)
         population = np.where(np.repeat(
@@ -91,3 +92,10 @@ def move_population_local_search(population, fitness_function, max_steps, num_tr
         best_survival_values = np.where(
             better_survival_values, temp_survival_values, best_survival_values)
     return population
+
+def generate_bin(population):
+    pop_sigmoid = sigmoid(population)
+    pop_random = np.random.random(population.shape)
+    population_bin = (pop_sigmoid > pop_random).astype(bool)
+
+    return population_bin
