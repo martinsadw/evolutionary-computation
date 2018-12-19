@@ -19,7 +19,8 @@ from ppa_continuo.population_movement import move_population_roulette, move_popu
 def prey_predator_algorithm(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None):
     population_size = config.population_size
 
-    population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
+    population = np.random.rand(
+        population_size, instance.num_materials) * (2 * config.max_velocity) - config.max_velocity
     population_fit=generate_fit(population)
 
     timer = Timer()
