@@ -16,7 +16,7 @@ from ppa_b.config import Config
 from ppa_b.population_movement import move_population_roulette, move_population_direction, move_population_random, move_population_random_complement, move_population_local_search
 
 
-def prey_predator_algorithm(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None):
+def prey_predator_algorithm_binary(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None):
     population_size = config.population_size
 
     population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
@@ -189,7 +189,7 @@ if __name__ == "__main__":
     process_time = np.zeros((config.num_iterations + 1, num_repetitions))
 
     for i in range(num_repetitions):
-        (population, survival_values) = prey_predator_algorithm(instance, config, fitness_population, best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i])
+        (population, survival_values) = prey_predator_algorithm_binary(instance, config, fitness_population, best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i])
         timer = Timer()
         fitness(population[0], instance, timer, True)
         print('#{}\n'.format(i))
@@ -217,12 +217,12 @@ if __name__ == "__main__":
     plt.show()
 
     # timeit_globals = {
-    #     'prey_predator_algorithm': prey_predator_algorithm,
+    #     'prey_predator_algorithm_binary': prey_predator_algorithm_binary,
     #     'instance': instance,
     #     'config': config,
     #     'fitness_population': fitness_population
     # }
-    # a = timeit.Timer('prey_predator_algorithm(instance, config, fitness_population)', globals=timeit_globals).repeat(10, 1)
+    # a = timeit.Timer('prey_predator_algorithm_binary(instance, config, fitness_population)', globals=timeit_globals).repeat(10, 1)
     # b = np.array(a)
     # print('Media: ' + str(np.mean(b)))
     # print('Min: ' + str(np.min(b)))
