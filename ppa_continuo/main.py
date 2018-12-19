@@ -19,8 +19,8 @@ from ppa_continuo.population_movement import move_population_roulette, move_popu
 def prey_predator_algorithm(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None):
     population_size = config.population_size
 
-    population = np.random.rand(population_size, instance.num_materials) 
-        #* (2 * config.max_velocity) - config.max_velocity TODO:verificar os correspondentes
+    #population = np.random.uniform(config.min_steps,config.max_steps,(population_size, instance.num_materials))
+    population = np.random.rand(population_size, instance.num_materials) #* (2 * config.max_steps) - config.max_steps
     population_bin=generate_bin(population)
 
     timer = Timer()
@@ -187,7 +187,7 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 10
+    num_repetitions = 1
 
     (instance, config) = read_files(instance_config_filename, config_filename)
     # Um valor extra para salvar os valores iniciais

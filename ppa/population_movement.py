@@ -1,6 +1,6 @@
 import numpy as np
 
-from utils.misc import hamming_distance
+from utl.misc import hamming_distance
 
 # TODO(andre:2018-05-29): Fazer com que as funcoes de movimento realizem o
 # numero correto de passos. Atualmente os materiais que sao iguais aos materiais
