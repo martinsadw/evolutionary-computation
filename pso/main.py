@@ -27,13 +27,11 @@ def particle_swarm_optmization(instance, config, fitness_function, *, best_fitne
     timer = Timer()
 
     timer.add_time()
-    particle_velocity = np.random.rand(
-        num_particles, instance.num_materials) * (2 * config.max_velocity) - config.max_velocity
+    particle_velocity = np.random.rand(num_particles, instance.num_materials) * (2 * config.max_velocity) - config.max_velocity
     particle_position = generate_particle_position(particle_velocity)
 
     local_best_position = np.copy(particle_position)
-    local_best_fitness = np.apply_along_axis(
-        fitness_function, 1, local_best_position, instance, timer, data=all_fitness)
+    local_best_fitness = np.apply_along_axis(fitness_function, 1, local_best_position, instance, timer, data=all_fitness)
 
     global_best_index = np.argmin(local_best_fitness, axis=0)
     global_best_position = np.copy(local_best_position[global_best_index])
@@ -55,23 +53,18 @@ def particle_swarm_optmization(instance, config, fitness_function, *, best_fitne
 
         timer.add_time()
         # TODO(andre:2018-04-18): Atualizar velocidade
-        local_influence = np.tile(config.local_influence_parameter *
-                                  np.random.random(num_particles), (instance.num_materials, 1)).T
-        global_influence = np.tile(config.global_influence_parameter *
-                                   np.random.random(num_particles), (instance.num_materials, 1)).T
+        local_influence = np.tile(config.local_influence_parameter * np.random.random(num_particles), (instance.num_materials, 1)).T
+        global_influence = np.tile(config.global_influence_parameter * np.random.random(num_particles), (instance.num_materials, 1)).T
 
-        local_distance = local_best_position.astype(
-            int) - particle_position.astype(int)
-        global_distance = global_best_position.astype(
-            int) - particle_position.astype(int)
+        local_distance = local_best_position.astype(int) - particle_position.astype(int)
+        global_distance = global_best_position.astype(int) - particle_position.astype(int)
 
         # print(particle_velocity[0])
 
         particle_velocity = (config.inertia_parameter * particle_velocity
                              + local_influence * local_distance
                              + global_influence * global_distance)
-        particle_velocity = np.clip(
-            particle_velocity, -config.max_velocity, config.max_velocity)
+        particle_velocity = np.clip(particle_velocity, -config.max_velocity, config.max_velocity)
         timer.add_time("update_velocity")
 
         # Calcula as novas posições
@@ -79,16 +72,14 @@ def particle_swarm_optmization(instance, config, fitness_function, *, best_fitne
         timer.add_time("update_position")
 
         # Calcula os novos resultados
-        particle_new_fitness = np.apply_along_axis(
-            fitness, 1, particle_position, instance, timer, data=all_fitness)
+        particle_new_fitness = np.apply_along_axis(fitness, 1, particle_position, instance, timer, data=all_fitness)
         timer.add_time("update_fitness")
 
         # Calcula a mascara de melhores valores para cada particula
         change_mask = (particle_new_fitness < local_best_fitness)
 
         # Altera o melhor resultado de cada particula
-        local_best_position[change_mask] = np.copy(
-            particle_position[change_mask])
+        local_best_position[change_mask] = np.copy(particle_position[change_mask])
         # local_best_position[change_mask] = particle_position[change_mask]
         local_best_fitness[change_mask] = particle_new_fitness[change_mask]
 

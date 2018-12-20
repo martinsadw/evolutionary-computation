@@ -54,11 +54,13 @@ def move_population_direction(population, num_steps, direction):
 
     return new_population
 
+
 def move_population_random(population, num_steps):
     directions = np.random.randint(2, size=population.shape, dtype=bool)
     new_population = move_population_direction(population, num_steps, directions)
 
     return new_population
+
 
 def move_population_random_complement(population, num_steps, away_direction):
     directions = np.random.randint(2, size=population.shape, dtype=bool)
@@ -72,6 +74,7 @@ def move_population_random_complement(population, num_steps, away_direction):
     new_population = move_population_direction(population, num_steps, farther_directions)
 
     return new_population
+
 
 def move_population_local_search(population, fitness_function, max_steps, num_tries, instance, timer):
     best_survival_values = fitness_function(population, instance, timer)

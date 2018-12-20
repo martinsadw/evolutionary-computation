@@ -7,7 +7,7 @@ ppatosca.arg.followDistanceParameter = 1 ; distanceFactor
 ppatosca.arg.followSurvivalParameter = 1 ; survivalValueFactor
 ppatosca.arg.minSteps = 4                ; minimumStepLength
 ppatosca.arg.maxSteps = 25               ; maximumStepLength
-ppatosca.arg.stepsDistanceParameter = 1
+ppatosca.arg.stepsDistanceParameter = .1
 ppatosca.arg.localSearchTries = 5
 ppatosca.arg.followChance = 0.8          ; followUp
 

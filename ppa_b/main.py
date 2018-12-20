@@ -81,6 +81,7 @@ def prey_predator_algorithm_binary(instance, config, fitness_function, *, best_f
         timer.add_time("follow_chance")
 
         # TODO(andre:2018-05-28): Garantir que max_steps nunca é maior do que o numero de materiais
+        # TODO(andre:2018-12-20): Verificar o calculo do número de passos. Ele está usando a distância até a proxima presa e não a distância até o predador
         num_steps = np.round(config.max_steps * np.random.rand(follow_quant) / np.exp(config.steps_distance_parameter * np.array([i[-1] for i in population_distance])))
         new_population[follow_mask] = move_population_roulette(new_population[follow_mask], num_steps, roulette_array, population)
 

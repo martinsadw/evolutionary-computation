@@ -10,17 +10,15 @@ from acs.instance import Instance, print_instance
 
 from utils.timer import Timer
 from utils.roulette import Roulette
-from utils.misc import hamming_distance
-from utils.misc import sigmoid
+from utils.misc import sigmoid, vector_size, random_on_unit_sphere
 
 from ppa_c.config import Config
-from ppa_c.population_movement import move_population_roulette, move_population_direction, move_population_random, move_population_random_complement, move_population_local_search
+from ppa_c.population_movement import move_population_direction, move_population_random, move_population_random_complement, move_population_local_search
 
 def prey_predator_algorithm_continuous(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None):
     population_size = config.population_size
 
     population = np.random.rand(population_size, instance.num_materials) * (2 * config.max_position) - config.max_position
-    population_evaluation = evaluate_population(population)
 
     timer = Timer()
 
@@ -28,10 +26,13 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, *, be
     start_process_time = time.process_time()
     for iteration in range(config.num_iterations):
         timer.add_time()
+        print(vector_size(population).mean())
+        print(np.mean(np.sum(np.abs(population), axis=1)))
+        print("---------------")
+        population_evaluation = evaluate_population(population)
         survival_values = fitness_function(population_evaluation, instance, timer)
         sorted_indices = np.argsort(survival_values)
         population = population[sorted_indices]
-        # population_evaluation = population_evaluation[sorted_indices]
         survival_values = survival_values[sorted_indices]
 
         if best_fitness is not None:
@@ -67,59 +68,42 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, *, be
         follow_indices = np.where(follow_mask)[0]
         follow_quant = len(follow_indices)
 
-        print(follow_mask)
-        print(follow_indices)
-        print(survival_values[:, np.newaxis])
-        print("---------------")
+        # print(follow_mask)
+        # print(follow_indices)
+        # print(survival_values[:, np.newaxis])
+        # print(survival_values)
+        # print("---------------")
 
         tau = 1
         follow_direction = np.empty((follow_quant, instance.num_materials))
         for index in range(follow_quant):
             i = follow_indices[index]
-            population_distance = np.sqrt(np.sum((population - population[i]) ** 2, axis=1))
-            population_direction = np.exp(survival_values ** tau - population_distance)[:, np.newaxis] * (population - population[i])
-            individual_direction = np.sum(population_direction, axis=0)
-            normalized_direction = individual_direction / np.sqrt(np.sum(individual_direction ** 2))
-            follow_direction[index] = normalized_direction
+            population_distance = vector_size(population - population[i])
+            survival_ratio = survival_values / survival_values[i]
 
-        print(follow_direction)
+            population_direction = np.exp(survival_ratio ** tau - population_distance)[:, np.newaxis] * (population - population[i])
+            individual_direction = np.sum(population_direction, axis=0)
+            normalized_direction = individual_direction / vector_size(individual_direction)
+            follow_direction[index] = normalized_direction
 
         # Gerar direção multidimensional
         # https://stackoverflow.com/questions/6283080/random-unit-vector-in-multi-dimensional-space
 
-        population_distance = [[hamming_distance(population_evaluation[j], population_evaluation[i]) / instance.num_materials for j in range(i)] for i in follow_indices]
-        print(population_distance)
-        print("========================")
-        survival_ratio = [[survival_values[j] / survival_values[i] for j in range(i)] for i in follow_indices]
-        print(survival_ratio)
-        print("========================")
-        follow_chance = [[(2 - config.follow_distance_parameter * population_distance[i][j] - config.follow_survival_parameter * survival_ratio[i][j]) / 2 for j in range(follow_indices[i])] for i in range(follow_quant)]
-        print(follow_chance)
-        print("========================")
-        roulette_array = np.array([Roulette(follow_chance[i]) for i in range(follow_quant)])
+        timer.add_time("follow_calculate_direction")
+
+        # TODO(andre:2018-05-28): Garantir que max_steps nunca é maior do que o numero de materiais
+        omega = .5
+        predator_distance = survival_values[-1] - survival_values[follow_mask]
+        num_steps = config.max_steps * np.random.rand(follow_quant) / np.exp(config.steps_distance_parameter * predator_distance ** omega)
+        new_population[follow_mask] = move_population_direction(new_population[follow_mask], num_steps, follow_direction)
 
         timer.add_time("follow_direction")
 
-        # TODO(andre:2018-12-17): A roleta não será usada no metodo continuo.
-        # Calcular uma matriz utilizando a formula 3.3 (pág. 6) juntando as
-        # posições de todas as presas
-        # TODO(andre:2018-05-28): Garantir que max_steps nunca é maior do que o numero de materiais
-        num_steps = np.round(config.max_steps * np.random.rand(follow_quant) / np.exp(config.steps_distance_parameter * np.array([i[-1] for i in population_distance])))
-        new_population[follow_mask] = move_population_roulette(new_population[follow_mask], num_steps, roulette_array, population)
-
-        timer.add_time("follow_roulette")
-
-        # TODO(andre:2018-12-17): Gerar uma direção dentro de um circulo unitário
-        # e multiplicar por min_steps para determinar a direção aleatória
-        # num_steps = np.round(config.min_steps * np.random.rand(population_size))
-        # new_population = move_population_random(new_population, num_steps, follow_mask)
         num_steps = np.round(config.min_steps * np.random.rand(follow_quant))
         new_population[follow_mask] = move_population_random(new_population[follow_mask], num_steps)
 
         timer.add_time("follow_random")
 
-        # num_steps = np.round(config.max_steps * np.random.rand(population_size))
-        # new_population = move_population_random_complement(new_population, num_steps, population[-1], run_mask)
         num_steps = np.round(config.max_steps * np.random.rand(np.count_nonzero(run_mask)))
         new_population[run_mask] = move_population_random_complement(new_population[run_mask], num_steps, population[-1])
 
@@ -131,21 +115,18 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, *, be
 
         # TODO(andre:2018-12-17): Gerar uma direção dentro de um circulo unitário
         # e multiplicar por max_steps para determinar a direção aleatória
-        # num_steps = np.round(config.max_steps * np.random.rand(population_size))
-        # new_population = move_population_random(new_population, num_steps, predator_mask)
         num_steps = np.round(config.max_steps * np.random.rand(np.count_nonzero(predator_mask)))
         new_population[predator_mask] = move_population_random(new_population[predator_mask], num_steps)
 
         timer.add_time("predator_random")
 
-        # num_steps = np.round(config.min_steps * np.random.rand(population_size))
-        # worst_prey = np.repeat(population[-2][np.newaxis, :], population_size, axis=0)
-        # new_population = move_population_direction(new_population, num_steps, worst_prey, predator_mask)
         num_steps = np.round(config.min_steps * np.random.rand(np.count_nonzero(predator_mask)))
         worst_prey = np.repeat(population[-2][np.newaxis, :], np.count_nonzero(predator_mask), axis=0)
         new_population[predator_mask] = move_population_direction(new_population[predator_mask], num_steps, worst_prey)
 
         timer.add_time("predator_follow")
+
+        new_population = np.clip(new_population, -config.max_position, config.max_position)
 
         # new_survival_values = fitness_function(new_population, instance, timer)
         # print('Old population:\n{}\n'.format(population))
@@ -163,9 +144,10 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, *, be
     # print(timer.get_iteration_time())
     print("Tempo total: {}".format(timer.get_total_time()))
 
-    survival_values = fitness_function(population, instance, timer)
+    population_evaluation = evaluate_population(population)
+    survival_values = fitness_function(population_evaluation, instance, timer)
     sorted_indices = np.argsort(survival_values)
-    population = population[sorted_indices]
+    population_evaluation = population_evaluation[sorted_indices]
     survival_values = survival_values[sorted_indices]
 
     if best_fitness is not None:
@@ -177,9 +159,10 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, *, be
     if process_time is not None:
         process_time[-1] = time.process_time() - start_process_time
 
-    return (population, survival_values)
+    return (population_evaluation, survival_values)
 
 
+# TODO(andre:2018-12-20): Mover essa função para a utils
 def evaluate_population(population):
     population_sigmoid = sigmoid(population)
     population_random = np.random.random(population.shape)
@@ -215,7 +198,7 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 10
+    num_repetitions = 5
 
     (instance, config) = read_files(instance_config_filename, config_filename)
     # Um valor extra para salvar os valores iniciais

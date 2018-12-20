@@ -24,3 +24,13 @@ def get_float(array, bits_precision):
 
 def sigmoid(array):
     return 1 / (1 + np.exp(-array));
+
+
+def random_on_unit_sphere(shape, ndim):
+    coord = np.random.normal(size=(shape + (ndim,)))
+    normalized_coord = coord / vector_size(coord)[:, np.newaxis]
+    return normalized_coord
+
+
+def vector_size(vector, axis=-1):
+    return np.sqrt(np.sum(vector ** 2, axis))
