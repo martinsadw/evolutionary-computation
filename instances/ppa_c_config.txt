@@ -1,8 +1,8 @@
 [section]
 
-ppatosca.arg.numIterations = 1500         ; movementQuantity
-ppatosca.arg.populationSize = 10         ; populationSize
-ppatosca.arg.maxPosition = 6
+ppatosca.arg.maxStagnation = 100
+ppatosca.arg.populationSize = 50         ; populationSize
+ppatosca.arg.maxPosition = 10
 ppatosca.arg.followDistanceParameter = 1 ; distanceFactor
 ppatosca.arg.followSurvivalParameter = 1 ; survivalValueFactor
 ppatosca.arg.minSteps = 4                ; minimumStepLength

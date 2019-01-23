@@ -1,6 +1,6 @@
 import numpy as np
 
-from utils.misc import sigmoid, vector_size, random_on_unit_sphere
+from utils.misc import sigmoid, vector_size, random_on_unit_sphere, evaluate_population, improve_population
 
 
 def move_population_direction(population, num_steps, direction):
@@ -33,15 +33,6 @@ def move_population_random_complement(population, num_steps, away_direction):
     return new_population
 
 
-# TODO(andre:2018-12-20): Mover essa função para a utils
-def evaluate_population(population):
-    population_sigmoid = sigmoid(population)
-    population_random = np.random.random(population.shape)
-    population_evaluation = (population_sigmoid > population_random).astype(bool)
-
-    return population_evaluation
-
-
 def move_population_local_search(population, fitness_function, max_steps, num_tries, instance, timer):
     population_evaluation = evaluate_population(population)
     best_survival_values = fitness_function(population_evaluation, instance, timer)
@@ -51,8 +42,6 @@ def move_population_local_search(population, fitness_function, max_steps, num_tr
         temp_population_evaluation = evaluate_population(temp_population)
         temp_survival_values = fitness_function(temp_population_evaluation, instance, timer)
 
-        better_survival_values = (temp_survival_values < best_survival_values)
-        population = np.where(np.repeat(better_survival_values[:, np.newaxis], population.shape[1], axis=1), temp_population, population)
-        best_survival_values = np.where(better_survival_values, temp_survival_values, best_survival_values)
+        (population, best_survival_values) = improve_population(population, best_survival_values, temp_population, temp_survival_values)
 
     return population

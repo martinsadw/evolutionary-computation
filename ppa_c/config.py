@@ -3,7 +3,8 @@ import configparser
 
 class Config:
     def __init__(self):
-        self.num_iterations = 1
+        # self.num_iterations = 1
+        self.max_stagnation = 1
         self.population_size = 1
         self.max_position = 1
 
@@ -27,7 +28,8 @@ class Config:
         config_values = configparser.ConfigParser(inline_comment_prefixes=(";",))
         config_values.read_string(config_string)
 
-        config.num_iterations = int(config_values['section']['ppatosca.arg.numIterations'])
+        # config.num_iterations = int(config_values['section']['ppatosca.arg.numIterations'])
+        config.max_stagnation = int(config_values['section']['ppatosca.arg.maxStagnation'])
         config.population_size = int(config_values['section']['ppatosca.arg.populationSize'])
         config.max_position = int(config_values['section']['ppatosca.arg.maxPosition'])
 
@@ -48,7 +50,8 @@ class Config:
     def load_test(cls):
         config = cls()
 
-        config.num_iterations = 0
+        # config.num_iterations = 0
+        config.max_stagnation = 0
         config.population_size = 5
 
         config.follow_distance_parameter = 1

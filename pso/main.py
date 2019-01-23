@@ -9,16 +9,9 @@ from acs.instance import Instance, print_instance
 
 from utils.timer import Timer
 from utils.misc import sigmoid
+from utils.misc import evaluate_population
 
 from pso.config import Config
-
-
-def generate_particle_position(particle_velocity):
-    particle_sigmoid = sigmoid(particle_velocity)
-    particle_random = np.random.random(particle_velocity.shape)
-    particle_position = (particle_sigmoid > particle_random).astype(bool)
-
-    return particle_position
 
 
 def particle_swarm_optmization(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None, all_fitness=None):
@@ -28,7 +21,7 @@ def particle_swarm_optmization(instance, config, fitness_function, *, best_fitne
 
     timer.add_time()
     particle_velocity = np.random.rand(num_particles, instance.num_materials) * (2 * config.max_velocity) - config.max_velocity
-    particle_position = generate_particle_position(particle_velocity)
+    particle_position = evaluate_population(particle_velocity)
 
     local_best_position = np.copy(particle_position)
     local_best_fitness = np.apply_along_axis(fitness_function, 1, local_best_position, instance, timer, data=all_fitness)
@@ -68,7 +61,7 @@ def particle_swarm_optmization(instance, config, fitness_function, *, best_fitne
         timer.add_time("update_velocity")
 
         # Calcula as novas posições
-        particle_position = generate_particle_position(particle_velocity)
+        particle_position = evaluate_population(particle_velocity)
         timer.add_time("update_position")
 
         # Calcula os novos resultados
@@ -137,7 +130,7 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 100
+    num_repetitions = 10
 
     (instance, config) = read_files(instance_config_filename, config_filename)
     # Um valor extra para salvar os valores iniciais
@@ -183,9 +176,9 @@ if __name__ == "__main__":
     plt.plot(mean_best_fitness, 'r')
     plt.show()
 
-    fig = plt.figure()
-    fig.suptitle('PSO: materials selected')
-    plt.hist(popularity, bins=10, range=(0, num_repetitions))
-    plt.show()
+    # fig = plt.figure()
+    # fig.suptitle('PSO: materials selected')
+    # plt.hist(popularity, bins=10, range=(0, num_repetitions))
+    # plt.show()
 
     # np.savetxt("results/all_fitness.csv", all_fitness, fmt="%7.3f", delimiter=",")

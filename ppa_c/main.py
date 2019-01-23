@@ -1,6 +1,8 @@
 import sys
 import time
 import timeit
+from collections import defaultdict
+from statistics import mean, pstdev
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,40 +12,68 @@ from acs.instance import Instance, print_instance
 
 from utils.timer import Timer
 from utils.roulette import Roulette
-from utils.misc import sigmoid, vector_size, random_on_unit_sphere
+from utils.misc import sigmoid, vector_size, random_on_unit_sphere, evaluate_population, improve_population
 
 from ppa_c.config import Config
 from ppa_c.population_movement import move_population_direction, move_population_random, move_population_random_complement, move_population_local_search
 
-def prey_predator_algorithm_continuous(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None):
+
+cost_counter = 0
+def counter_fitness(population, instance, timer, print_results=False):
+    global cost_counter
+    cost_counter += population.shape[0]
+    return fitness_population(population, instance, timer, print_results)
+
+
+def prey_predator_algorithm_continuous(instance, config, fitness_function, *, out_info=None):
     population_size = config.population_size
 
-    population = np.random.rand(population_size, instance.num_materials) * (2 * config.max_position) - config.max_position
+    global cost_counter
+    cost_counter = 0
+    stagnation_counter = 0
+
+    # Um valor extra para salvar os valores iniciais
+    if out_info is not None:
+        # out_info["best_fitness"] = np.zeros((config.num_iterations + 1,))
+        # out_info["cost_value"] = np.zeros((config.num_iterations + 1,))
+        # out_info["perf_counter"] = np.zeros((config.num_iterations + 1,))
+        # out_info["process_time"] = np.zeros((config.num_iterations + 1,))
+        out_info["best_fitness"] = {}
+        out_info["perf_counter"] = {}
+        out_info["process_time"] = {}
 
     timer = Timer()
 
+    population = np.random.rand(population_size, instance.num_materials) * (2 * config.max_position) - config.max_position
+    population_best_evaluation = evaluate_population(np.array(population[0:1]))
+    population_best_fitness = fitness_function(population_best_evaluation, instance, timer)[0]
+
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
-    for iteration in range(config.num_iterations):
+    while (stagnation_counter < config.max_stagnation):
         timer.add_time()
-        print(vector_size(population).mean())
-        print(np.mean(np.sum(np.abs(population), axis=1)))
-        print("---------------")
         population_evaluation = evaluate_population(population)
         survival_values = fitness_function(population_evaluation, instance, timer)
+
         sorted_indices = np.argsort(survival_values)
         population = population[sorted_indices]
         survival_values = survival_values[sorted_indices]
 
-        if best_fitness is not None:
-            best_fitness[iteration] = survival_values[0]
-        if perf_counter is not None:
-            perf_counter[iteration] = time.perf_counter() - start_perf_counter
-        if process_time is not None:
-            process_time[iteration] = time.process_time() - start_process_time
+        if survival_values[sorted_indices[0]] < population_best_fitness:
+            population_best_evaluation = population_evaluation[sorted_indices[0]]
+            population_best_fitness = survival_values[sorted_indices[0]]
+
+            stagnation_counter = 0
+        else:
+            stagnation_counter += 1
+
+        if out_info is not None:
+            # out_info["best_fitness"].append(survival_values[0])
+            out_info["best_fitness"][cost_counter] = population_best_fitness.min()
+            out_info["perf_counter"][cost_counter] = time.perf_counter() - start_perf_counter
+            out_info["process_time"][cost_counter] = time.process_time() - start_process_time
 
         new_population = np.copy(population)
-        # new_fit=np.copy(population_evaluation)
 
         timer.add_time("creation")
 
@@ -68,20 +98,14 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, *, be
         follow_indices = np.where(follow_mask)[0]
         follow_quant = len(follow_indices)
 
-        # print(follow_mask)
-        # print(follow_indices)
-        # print(survival_values[:, np.newaxis])
-        # print(survival_values)
-        # print("---------------")
-
         tau = 1
         follow_direction = np.empty((follow_quant, instance.num_materials))
         for index in range(follow_quant):
             i = follow_indices[index]
             population_distance = vector_size(population - population[i])
-            survival_ratio = survival_values / survival_values[i]
+            survival_ratio = survival_values[i] / survival_values
 
-            population_direction = np.exp(survival_ratio ** tau - population_distance)[:, np.newaxis] * (population - population[i])
+            population_direction = np.exp(survival_ratio ** tau - population_distance * 0.05)[:, np.newaxis] * (population - population[i])
             individual_direction = np.sum(population_direction, axis=0)
             normalized_direction = individual_direction / vector_size(individual_direction)
             follow_direction[index] = normalized_direction
@@ -128,13 +152,6 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, *, be
 
         new_population = np.clip(new_population, -config.max_position, config.max_position)
 
-        # new_survival_values = fitness_function(new_population, instance, timer)
-        # print('Old population:\n{}\n'.format(population))
-        # print('New population:\n{}\n'.format(new_population))
-        # print('Comparison:\n{}\n'.format(population == new_population))
-        # print('Old survival values:\n{}\n'.format(survival_values))
-        # print('New survival values:\n{}\n'.format(new_survival_values))
-
         population = new_population
 
     print("Tempo: ")
@@ -145,30 +162,18 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, *, be
     print("Tempo total: {}".format(timer.get_total_time()))
 
     population_evaluation = evaluate_population(population)
-    survival_values = fitness_function(population_evaluation, instance, timer)
+    survival_values = fitness_function(population_evaluation, instance, timer, True)
     sorted_indices = np.argsort(survival_values)
     population_evaluation = population_evaluation[sorted_indices]
     survival_values = survival_values[sorted_indices]
 
-    if best_fitness is not None:
-        best_fitness[-1] = survival_values[0]
-        # best_fitness[-1] = np.mean(survival_values)
-        # best_fitness[-1] = survival_values[-1]
-    if perf_counter is not None:
-        perf_counter[-1] = time.perf_counter() - start_perf_counter
-    if process_time is not None:
-        process_time[-1] = time.process_time() - start_process_time
+    if out_info is not None:
+        # out_info["best_fitness"].append(survival_values[0])
+        out_info["best_fitness"][cost_counter] = population_best_fitness.min()
+        out_info["perf_counter"][cost_counter] = time.perf_counter() - start_perf_counter
+        out_info["process_time"][cost_counter] = time.process_time() - start_process_time
 
     return (population_evaluation, survival_values)
-
-
-# TODO(andre:2018-12-20): Mover essa função para a utils
-def evaluate_population(population):
-    population_sigmoid = sigmoid(population)
-    population_random = np.random.random(population.shape)
-    population_evaluation = (population_sigmoid > population_random).astype(bool)
-
-    return population_evaluation
 
 
 def read_files(instance_config_filename, config_filename):
@@ -198,25 +203,49 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 5
+    num_repetitions = 20
 
     (instance, config) = read_files(instance_config_filename, config_filename)
-    # Um valor extra para salvar os valores iniciais
-    best_fitness = np.zeros((config.num_iterations + 1, num_repetitions))
-    perf_counter = np.zeros((config.num_iterations + 1, num_repetitions))
-    process_time = np.zeros((config.num_iterations + 1, num_repetitions))
+    best_fitness = defaultdict(list)
+    perf_counter = defaultdict(list)
+    process_time = defaultdict(list)
+
+    out_info = {}
 
     for i in range(num_repetitions):
-        (population, survival_values) = prey_predator_algorithm_continuous(instance, config, fitness_population, best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i])
+        np.random.seed(i)
+        # (population, survival_values) = prey_predator_algorithm_continuous(instance, config, fitness_population, best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i])
+        (population, survival_values) = prey_predator_algorithm_continuous(instance, config, counter_fitness, out_info=out_info)
+
+        for key in out_info["best_fitness"].keys():
+            best_fitness[key].append(out_info["best_fitness"][key])
+            perf_counter[key].append(out_info["perf_counter"][key])
+            process_time[key].append(out_info["process_time"][key])
+
         timer = Timer()
         fitness(population[0], instance, timer, True)
+
         print('#{}\n'.format(i))
         print('Survival values:\n{}\n'.format(survival_values))
         print('Best Individual:\n{}\n'.format(population[0]))
 
-    mean_best_fitness = np.mean(best_fitness, axis=1)
-    mean_perf_counter = np.mean(perf_counter, axis=1)
-    mean_process_time = np.mean(process_time, axis=1)
+    num_iterations = len(best_fitness.keys())
+
+    cost_value = np.empty(num_iterations)
+    mean_best_fitness = np.empty(num_iterations)
+    deviation_best_fitness = np.empty(num_iterations)
+    mean_perf_counter = np.empty(num_iterations)
+    mean_process_time = np.empty(num_iterations)
+
+    sorted_keys = sorted(best_fitness.keys())
+    for iteration in range(num_iterations):
+        key = sorted_keys[iteration]
+
+        cost_value[iteration] = key
+        mean_best_fitness[iteration] = mean(best_fitness[key])
+        deviation_best_fitness[iteration] = pstdev(best_fitness[key], mean_best_fitness[iteration])
+        mean_perf_counter[iteration] = mean(perf_counter[key])
+        mean_process_time[iteration] = mean(process_time[key])
 
     print('Statistics:')
     print('Fitness:\n{}\n'.format(mean_best_fitness))
@@ -229,7 +258,12 @@ if __name__ == "__main__":
     # plt.plot(mean_process_time, 'b.')
     # plt.show()
 
+    # cost_value = np.arange(num_iterations)
+
     fig = plt.figure()
     fig.suptitle('PPA: best fitness')
-    plt.plot(mean_best_fitness, 'r')
+    plt.plot(cost_value, mean_best_fitness, color='r')
+    plt.plot(cost_value, mean_best_fitness+deviation_best_fitness, color='b', linewidth=0.5)
+    plt.plot(cost_value, mean_best_fitness-deviation_best_fitness, color='b', linewidth=0.5)
+    # plt.errorbar(cost_value, mean_best_fitness, yerr=deviation_best_fitness, color='r', ecolor='b')
     plt.show()

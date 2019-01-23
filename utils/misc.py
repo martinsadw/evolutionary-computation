@@ -34,3 +34,23 @@ def random_on_unit_sphere(shape, ndim):
 
 def vector_size(vector, axis=-1):
     return np.sqrt(np.sum(vector ** 2, axis))
+
+
+# def evaluate_population(population):
+#     population_sigmoid = sigmoid(population)
+#     population_random = np.random.random(population.shape)
+#     population_evaluation = (population_sigmoid > population_random).astype(bool)
+#
+#     return population_evaluation
+
+
+def evaluate_population(population):
+    return (population > 0)
+
+
+def improve_population(old_population, old_fitness, new_population, new_fitness):
+    improve_mask = (new_fitness < old_fitness)
+    best_population = np.where(improve_mask[:, np.newaxis], new_population, old_population)
+    best_fitness = np.where(improve_mask, new_fitness, old_fitness)
+
+    return (best_population, best_fitness)
