@@ -36,15 +36,15 @@ def vector_size(vector, axis=-1):
     return np.sqrt(np.sum(vector ** 2, axis))
 
 
-# def evaluate_population(population):
-#     population_sigmoid = sigmoid(population)
-#     population_random = np.random.random(population.shape)
-#     population_evaluation = (population_sigmoid > population_random).astype(bool)
-#
-#     return population_evaluation
+def evaluate_population_random(population):
+    population_sigmoid = sigmoid(population)
+    population_random = np.random.random(population.shape)
+    population_evaluation = (population_sigmoid > population_random).astype(bool)
+
+    return population_evaluation
 
 
-def evaluate_population(population):
+def evaluate_population_fixed(population):
     return (population > 0)
 
 

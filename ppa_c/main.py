@@ -12,7 +12,7 @@ from acs.instance import Instance, print_instance
 
 from utils.timer import Timer
 from utils.roulette import Roulette
-from utils.misc import sigmoid, vector_size, random_on_unit_sphere, evaluate_population, improve_population
+from utils.misc import sigmoid, vector_size, random_on_unit_sphere, evaluate_population_random, evaluate_population_fixed, improve_population
 
 from ppa_c.config import Config
 from ppa_c.population_movement import move_population_direction, move_population_random, move_population_random_complement, move_population_local_search
@@ -25,7 +25,7 @@ def counter_fitness(population, instance, timer, print_results=False):
     return fitness_population(population, instance, timer, print_results)
 
 
-def prey_predator_algorithm_continuous(instance, config, fitness_function, *, out_info=None):
+def prey_predator_algorithm_continuous(instance, config, fitness_function, evaluate_function, *, out_info=None):
     population_size = config.population_size
 
     global cost_counter
@@ -45,14 +45,14 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, *, ou
     timer = Timer()
 
     population = np.random.rand(population_size, instance.num_materials) * (2 * config.max_position) - config.max_position
-    population_best_evaluation = evaluate_population(np.array(population[0:1]))
+    population_best_evaluation = evaluate_function(np.array(population[0:1]))
     population_best_fitness = fitness_function(population_best_evaluation, instance, timer)[0]
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
     while (stagnation_counter < config.max_stagnation):
         timer.add_time()
-        population_evaluation = evaluate_population(population)
+        population_evaluation = evaluate_function(population)
         survival_values = fitness_function(population_evaluation, instance, timer)
 
         sorted_indices = np.argsort(survival_values)
@@ -133,7 +133,7 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, *, ou
 
         timer.add_time("run")
 
-        new_population[best_prey_mask] = move_population_local_search(new_population[best_prey_mask], fitness_function, config.min_steps, config.local_search_tries, instance, timer)
+        new_population[best_prey_mask] = move_population_local_search(new_population[best_prey_mask], fitness_function, evaluate_function, config.min_steps, config.local_search_tries, instance, timer)
 
         timer.add_time()
 
@@ -161,8 +161,8 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, *, ou
     # print(timer.get_iteration_time())
     print("Tempo total: {}".format(timer.get_total_time()))
 
-    population_evaluation = evaluate_population(population)
-    survival_values = fitness_function(population_evaluation, instance, timer, True)
+    population_evaluation = evaluate_function(population)
+    survival_values = fitness_function(population_evaluation, instance, timer)
     sorted_indices = np.argsort(survival_values)
     population_evaluation = population_evaluation[sorted_indices]
     survival_values = survival_values[sorted_indices]
@@ -215,7 +215,7 @@ if __name__ == "__main__":
     for i in range(num_repetitions):
         np.random.seed(i)
         # (population, survival_values) = prey_predator_algorithm_continuous(instance, config, fitness_population, best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i])
-        (population, survival_values) = prey_predator_algorithm_continuous(instance, config, counter_fitness, out_info=out_info)
+        (population, survival_values) = prey_predator_algorithm_continuous(instance, config, counter_fitness, evaluate_population_random, out_info=out_info)
 
         for key in out_info["best_fitness"].keys():
             best_fitness[key].append(out_info["best_fitness"][key])
