@@ -38,9 +38,10 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, evalu
         # out_info["cost_value"] = np.zeros((config.num_iterations + 1,))
         # out_info["perf_counter"] = np.zeros((config.num_iterations + 1,))
         # out_info["process_time"] = np.zeros((config.num_iterations + 1,))
-        out_info["best_fitness"] = {}
-        out_info["perf_counter"] = {}
-        out_info["process_time"] = {}
+        out_info["best_fitness"] = []
+        out_info["perf_counter"] = []
+        out_info["process_time"] = []
+        out_info["cost_value"] = []
 
     timer = Timer()
 
@@ -69,9 +70,10 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, evalu
 
         if out_info is not None:
             # out_info["best_fitness"].append(survival_values[0])
-            out_info["best_fitness"][cost_counter] = population_best_fitness.min()
-            out_info["perf_counter"][cost_counter] = time.perf_counter() - start_perf_counter
-            out_info["process_time"][cost_counter] = time.process_time() - start_process_time
+            out_info["best_fitness"].append(population_best_fitness.min())
+            out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
+            out_info["process_time"].append(time.process_time() - start_process_time)
+            out_info["cost_value"].append(cost_counter)
 
         new_population = np.copy(population)
 
@@ -169,9 +171,10 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, evalu
 
     if out_info is not None:
         # out_info["best_fitness"].append(survival_values[0])
-        out_info["best_fitness"][cost_counter] = population_best_fitness.min()
-        out_info["perf_counter"][cost_counter] = time.perf_counter() - start_perf_counter
-        out_info["process_time"][cost_counter] = time.process_time() - start_process_time
+        out_info["best_fitness"].append(population_best_fitness.min())
+        out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
+        out_info["process_time"].append(time.process_time() - start_process_time)
+        out_info["cost_value"].append(cost_counter)
 
     return (population_evaluation, survival_values)
 
@@ -203,49 +206,60 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 20
+    num_repetitions = 10
 
     (instance, config) = read_files(instance_config_filename, config_filename)
-    best_fitness = defaultdict(list)
-    perf_counter = defaultdict(list)
-    process_time = defaultdict(list)
+    best_fitness = []
+    perf_counter = []
+    process_time = []
+    cost_value = []
 
     out_info = {}
 
+    popularity = np.zeros((instance.num_materials,))
+
     for i in range(num_repetitions):
         np.random.seed(i)
-        # (population, survival_values) = prey_predator_algorithm_continuous(instance, config, fitness_population, best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i])
-        (population, survival_values) = prey_predator_algorithm_continuous(instance, config, counter_fitness, evaluate_population_random, out_info=out_info)
+        (population, survival_values) = prey_predator_algorithm_continuous(instance, config, counter_fitness, evaluate_population_fixed, out_info=out_info)
 
-        for key in out_info["best_fitness"].keys():
-            best_fitness[key].append(out_info["best_fitness"][key])
-            perf_counter[key].append(out_info["perf_counter"][key])
-            process_time[key].append(out_info["process_time"][key])
+        best_fitness.append(out_info["best_fitness"])
+        perf_counter.append(out_info["perf_counter"])
+        process_time.append(out_info["process_time"])
+
+        if len(out_info["cost_value"]) > len(cost_value):
+            new_cost_values = out_info["cost_value"][len(cost_value):]
+            cost_value.extend(new_cost_values)
 
         timer = Timer()
         fitness(population[0], instance, timer, True)
+
+        popularity += population[0]
 
         print('#{}\n'.format(i))
         print('Survival values:\n{}\n'.format(survival_values))
         print('Best Individual:\n{}\n'.format(population[0]))
 
-    num_iterations = len(best_fitness.keys())
+    num_iterations = len(cost_value)
 
-    cost_value = np.empty(num_iterations)
-    mean_best_fitness = np.empty(num_iterations)
-    deviation_best_fitness = np.empty(num_iterations)
-    mean_perf_counter = np.empty(num_iterations)
-    mean_process_time = np.empty(num_iterations)
+    best_fitness_array = np.zeros((num_repetitions, num_iterations))
+    perf_counter_array = np.zeros((num_repetitions, num_iterations))
+    process_time_array = np.zeros((num_repetitions, num_iterations))
 
-    sorted_keys = sorted(best_fitness.keys())
-    for iteration in range(num_iterations):
-        key = sorted_keys[iteration]
+    for i in range(num_repetitions):
+        repetition_len = len(best_fitness[i])
 
-        cost_value[iteration] = key
-        mean_best_fitness[iteration] = mean(best_fitness[key])
-        deviation_best_fitness[iteration] = pstdev(best_fitness[key], mean_best_fitness[iteration])
-        mean_perf_counter[iteration] = mean(perf_counter[key])
-        mean_process_time[iteration] = mean(process_time[key])
+        best_fitness_array[i, :repetition_len] = best_fitness[i]
+        perf_counter_array[i, :repetition_len] = perf_counter[i]
+        process_time_array[i, :repetition_len] = process_time[i]
+
+        best_fitness_array[i, repetition_len:] = best_fitness_array[i, repetition_len - 1]
+        perf_counter_array[i, repetition_len:] = perf_counter_array[i, repetition_len - 1]
+        process_time_array[i, repetition_len:] = process_time_array[i, repetition_len - 1]
+
+    mean_best_fitness = np.mean(best_fitness_array, axis=0)
+    deviation_best_fitness = np.std(best_fitness_array, axis=0)
+    mean_perf_counter = np.mean(perf_counter_array, axis=0)
+    mean_process_time = np.mean(process_time_array, axis=0)
 
     print('Statistics:')
     print('Fitness:\n{}\n'.format(mean_best_fitness))
@@ -267,3 +281,8 @@ if __name__ == "__main__":
     plt.plot(cost_value, mean_best_fitness-deviation_best_fitness, color='b', linewidth=0.5)
     # plt.errorbar(cost_value, mean_best_fitness, yerr=deviation_best_fitness, color='r', ecolor='b')
     plt.show()
+
+    # fig = plt.figure()
+    # fig.suptitle('PPA: materials selected')
+    # plt.hist(popularity, bins=10, range=(0, num_repetitions))
+    # plt.show()
