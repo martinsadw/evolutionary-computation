@@ -1,8 +1,5 @@
 import sys
 import time
-import timeit
-from collections import defaultdict
-from statistics import mean, pstdev
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -25,7 +22,7 @@ def counter_fitness(population, instance, timer, print_results=False):
     return fitness_population(population, instance, timer, print_results)
 
 
-def prey_predator_algorithm_continuous(instance, config, fitness_function, evaluate_function, *, out_info=None):
+def prey_predator_algorithm_continuous(instance, config, fitness_function, evaluate_function, out_info=None):
     population_size = config.population_size
 
     global cost_counter
@@ -34,10 +31,6 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, evalu
 
     # Um valor extra para salvar os valores iniciais
     if out_info is not None:
-        # out_info["best_fitness"] = np.zeros((config.num_iterations + 1,))
-        # out_info["cost_value"] = np.zeros((config.num_iterations + 1,))
-        # out_info["perf_counter"] = np.zeros((config.num_iterations + 1,))
-        # out_info["process_time"] = np.zeros((config.num_iterations + 1,))
         out_info["best_fitness"] = []
         out_info["perf_counter"] = []
         out_info["process_time"] = []
@@ -60,9 +53,9 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, evalu
         population = population[sorted_indices]
         survival_values = survival_values[sorted_indices]
 
-        if survival_values[sorted_indices[0]] < population_best_fitness:
+        if survival_values[0] < population_best_fitness:
             population_best_evaluation = population_evaluation[sorted_indices[0]]
-            population_best_fitness = survival_values[sorted_indices[0]]
+            population_best_fitness = survival_values[0]
 
             stagnation_counter = 0
         else:
@@ -70,7 +63,7 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, evalu
 
         if out_info is not None:
             # out_info["best_fitness"].append(survival_values[0])
-            out_info["best_fitness"].append(population_best_fitness.min())
+            out_info["best_fitness"].append(population_best_fitness)
             out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
             out_info["process_time"].append(time.process_time() - start_process_time)
             out_info["cost_value"].append(cost_counter)
@@ -171,7 +164,7 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, evalu
 
     if out_info is not None:
         # out_info["best_fitness"].append(survival_values[0])
-        out_info["best_fitness"].append(population_best_fitness.min())
+        out_info["best_fitness"].append(population_best_fitness)
         out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
         out_info["process_time"].append(time.process_time() - start_process_time)
         out_info["cost_value"].append(cost_counter)
@@ -206,7 +199,7 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 10
+    num_repetitions = 5
 
     (instance, config) = read_files(instance_config_filename, config_filename)
     best_fitness = []

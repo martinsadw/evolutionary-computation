@@ -142,8 +142,7 @@ if __name__ == "__main__":
     popularity = np.zeros((instance.num_materials,))
 
     for i in range(num_repetitions):
-        (population, survival_values) = particle_swarm_optmization(instance, config, fitness,
-                                                                   best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i], all_fitness=all_fitness)
+        (population, survival_values) = particle_swarm_optmization(instance, config, fitness, best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i], all_fitness=all_fitness)
         timer = Timer()
         fitness(population, instance, timer, True)
         popularity += population
