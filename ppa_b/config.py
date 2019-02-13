@@ -3,7 +3,6 @@ import configparser
 
 class Config:
     def __init__(self):
-        # self.num_iterations = 1
         self.max_stagnation = 1
         self.population_size = 1
 

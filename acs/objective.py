@@ -168,7 +168,7 @@ def learning_style_function(individual, instance):
     return (objective_active_reflexive + objective_sensory_intuitive + objective_visual_verbal + objective_sequential_global) / 4
 
 
-def fitness(individual, instance, timer, print_results=False, *, data=None):
+def fitness(individual, instance, timer, print_results=False, data=None):
     timer.add_time()
     concepts_covered_objective = concepts_covered_function(individual, instance, timer)
     timer.add_time()

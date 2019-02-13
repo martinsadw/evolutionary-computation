@@ -5,7 +5,7 @@ class Config:
     def __init__(self):
         self.max_velocity = 1
 
-        self.num_iterations = 1
+        self.max_stagnation = 1
         self.num_particles = 1
 
         self.inertia_parameter = 1
@@ -18,24 +18,17 @@ class Config:
 
         with open(config_filename, 'r') as config_file:
             config_string = config_file.read()
-        config_values = configparser.ConfigParser(
-            inline_comment_prefixes=(";",))
+        config_values = configparser.ConfigParser(inline_comment_prefixes=(";",))
         config_values.read_string(config_string)
 
-        config.max_velocity = float(
-            config_values['section']['acs.pso.maxVelocity'])
+        config.max_velocity = float(config_values['section']['acs.pso.maxVelocity'])
 
-        config.num_iterations = int(
-            config_values['section']['acs.pso.numIterations'])
-        config.num_particles = int(
-            config_values['section']['acs.pso.numParticles'])
+        config.max_stagnation = int(config_values['section']['acs.pso.maxStagnation'])
+        config.num_particles = int(config_values['section']['acs.pso.numParticles'])
 
-        config.inertia_parameter = float(
-            config_values['section']['acs.pso.inertiaParameter'])
-        config.local_influence_parameter = float(
-            config_values['section']['acs.pso.localInfluenceParameter'])
-        config.global_influence_parameter = float(
-            config_values['section']['acs.pso.globalInfluenceParameter'])
+        config.inertia_parameter = float(config_values['section']['acs.pso.inertiaParameter'])
+        config.local_influence_parameter = float(config_values['section']['acs.pso.localInfluenceParameter'])
+        config.global_influence_parameter = float(config_values['section']['acs.pso.globalInfluenceParameter'])
 
         return config
 
@@ -45,7 +38,7 @@ class Config:
 
         config.max_velocity = 2
 
-        config.num_iterations = 500
+        config.max_stagnation = 500
         config.num_particles = 30
 
         config.inertia_parameter = 1.0

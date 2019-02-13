@@ -30,7 +30,6 @@ def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=
     cost_counter = 0
     stagnation_counter = 0
 
-    # Um valor extra para salvar os valores iniciais
     if out_info is not None:
         out_info["best_fitness"] = []
         out_info["perf_counter"] = []

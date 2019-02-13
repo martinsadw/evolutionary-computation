@@ -8,23 +8,39 @@ from acs.objective import fitness, fitness_population
 from acs.instance import Instance, print_instance
 
 from utils.timer import Timer
-from utils.misc import sigmoid
-from utils.misc import evaluate_population
+from utils.misc import sigmoid, evaluate_population_random, evaluate_population_fixed
 
 from pso.config import Config
 
 
-def particle_swarm_optmization(instance, config, fitness_function, *, best_fitness=None, perf_counter=None, process_time=None, all_fitness=None):
+cost_counter = 0
+def counter_fitness(individual, instance, timer, print_results=False, data=None):
+    global cost_counter
+    cost_counter += 1
+    return fitness(individual, instance, timer, print_results, data=data)
+
+
+def particle_swarm_optmization(instance, config, fitness_function, evaluate_function, out_info=None):
     num_particles = config.num_particles
+
+    global cost_counter
+    cost_counter = 0
+    stagnation_counter = 0
+
+    if out_info is not None:
+        out_info["best_fitness"] = []
+        out_info["perf_counter"] = []
+        out_info["process_time"] = []
+        out_info["cost_value"] = []
 
     timer = Timer()
 
     timer.add_time()
     particle_velocity = np.random.rand(num_particles, instance.num_materials) * (2 * config.max_velocity) - config.max_velocity
-    particle_position = evaluate_population(particle_velocity)
+    particle_position = evaluate_function(particle_velocity)
 
     local_best_position = np.copy(particle_position)
-    local_best_fitness = np.apply_along_axis(fitness_function, 1, local_best_position, instance, timer, data=all_fitness)
+    local_best_fitness = np.apply_along_axis(fitness_function, 1, local_best_position, instance, timer)
 
     global_best_index = np.argmin(local_best_fitness, axis=0)
     global_best_position = np.copy(local_best_position[global_best_index])
@@ -34,15 +50,14 @@ def particle_swarm_optmization(instance, config, fitness_function, *, best_fitne
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
-    for iteration in range(config.num_iterations):
-        if best_fitness is not None:
-            best_fitness[iteration] = global_best_fitness
-            # best_fitness[iteration] = np.mean(survival_values)
-            # best_fitness[iteration] = survival_values[-1]
-        if perf_counter is not None:
-            perf_counter[iteration] = time.perf_counter() - start_perf_counter
-        if process_time is not None:
-            process_time[iteration] = time.process_time() - start_process_time
+    while (stagnation_counter < config.max_stagnation):
+        old_global_best_fitness = global_best_fitness
+
+        if out_info is not None:
+            out_info["best_fitness"].append(global_best_fitness)
+            out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
+            out_info["process_time"].append(time.process_time() - start_process_time)
+            out_info["cost_value"].append(cost_counter)
 
         timer.add_time()
         # TODO(andre:2018-04-18): Atualizar velocidade
@@ -61,11 +76,11 @@ def particle_swarm_optmization(instance, config, fitness_function, *, best_fitne
         timer.add_time("update_velocity")
 
         # Calcula as novas posições
-        particle_position = evaluate_population(particle_velocity)
+        particle_position = evaluate_function(particle_velocity)
         timer.add_time("update_position")
 
         # Calcula os novos resultados
-        particle_new_fitness = np.apply_along_axis(fitness, 1, particle_position, instance, timer, data=all_fitness)
+        particle_new_fitness = np.apply_along_axis(fitness_function, 1, particle_position, instance, timer)
         timer.add_time("update_fitness")
 
         # Calcula a mascara de melhores valores para cada particula
@@ -80,6 +95,12 @@ def particle_swarm_optmization(instance, config, fitness_function, *, best_fitne
         global_best_index = np.argmin(local_best_fitness)
         global_best_position = np.copy(local_best_position[global_best_index])
         global_best_fitness = local_best_fitness[global_best_index]
+
+        if global_best_fitness < old_global_best_fitness:
+            stagnation_counter = 0
+        else:
+            stagnation_counter += 1
+
         timer.add_time("update_best")
 
     print("Tempo: ")
@@ -88,17 +109,14 @@ def particle_swarm_optmization(instance, config, fitness_function, *, best_fitne
     print(timer.get_iterations())
     # print(timer.get_iteration_time())
     print("Tempo total: {}".format(timer.get_total_time()))
+    print("Número de iterações: {}".format(len(out_info["cost_value"])))
 
-    if best_fitness is not None:
-        best_fitness[-1] = global_best_fitness
-        # best_fitness[iteration] = np.mean(survival_values)
-        # best_fitness[iteration] = survival_values[-1]
-    if perf_counter is not None:
-        perf_counter[-1] = time.perf_counter() - start_perf_counter
-    if process_time is not None:
-        process_time[-1] = time.process_time() - start_process_time
-
-    # fitness_function(global_best_position, instance, timer, True)
+    if out_info is not None:
+        # out_info["best_fitness"].append(survival_values[0])
+        out_info["best_fitness"].append(global_best_fitness)
+        out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
+        out_info["process_time"].append(time.process_time() - start_process_time)
+        out_info["cost_value"].append(cost_counter)
 
     return (global_best_position, global_best_fitness)
 
@@ -130,39 +148,67 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 10
+    num_repetitions = 100
 
     (instance, config) = read_files(instance_config_filename, config_filename)
-    # Um valor extra para salvar os valores iniciais
-    best_fitness = np.zeros((config.num_iterations + 1, num_repetitions))
-    perf_counter = np.zeros((config.num_iterations + 1, num_repetitions))
-    process_time = np.zeros((config.num_iterations + 1, num_repetitions))
-    all_fitness = []
+    best_fitness = []
+    perf_counter = []
+    process_time = []
+    cost_value = []
+
+    out_info = {}
 
     popularity = np.zeros((instance.num_materials,))
 
     for i in range(num_repetitions):
-        (population, survival_values) = particle_swarm_optmization(instance, config, fitness, best_fitness=best_fitness[:, i], perf_counter=perf_counter[:, i], process_time=process_time[:, i], all_fitness=all_fitness)
+        np.random.seed(i)
+        (population, survival_values) = particle_swarm_optmization(instance, config, counter_fitness, evaluate_population_fixed, out_info)
+
+        best_fitness.append(out_info["best_fitness"])
+        perf_counter.append(out_info["perf_counter"])
+        process_time.append(out_info["process_time"])
+
+        if len(out_info["cost_value"]) > len(cost_value):
+            new_cost_values = out_info["cost_value"][len(cost_value):]
+            cost_value.extend(new_cost_values)
+
         timer = Timer()
         fitness(population, instance, timer, True)
+
         popularity += population
+
         print('#{}\n'.format(i))
         print('Survival values:\n{}\n'.format(survival_values))
         print('Best Individual:\n{}\n'.format(population))
-        print('Popularity:\n{}\n'.format(popularity))
         # array = np.asarray(all_fitness)
         # print('All Fitness:\n{}\n'.format(array))
 
-    mean_best_fitness = np.mean(best_fitness, axis=1)
-    mean_perf_counter = np.mean(perf_counter, axis=1)
-    mean_process_time = np.mean(process_time, axis=1)
+    num_iterations = len(cost_value)
+
+    best_fitness_array = np.zeros((num_repetitions, num_iterations))
+    perf_counter_array = np.zeros((num_repetitions, num_iterations))
+    process_time_array = np.zeros((num_repetitions, num_iterations))
+
+    for i in range(num_repetitions):
+        repetition_len = len(best_fitness[i])
+
+        best_fitness_array[i, :repetition_len] = best_fitness[i]
+        perf_counter_array[i, :repetition_len] = perf_counter[i]
+        process_time_array[i, :repetition_len] = process_time[i]
+
+        best_fitness_array[i, repetition_len:] = best_fitness_array[i, repetition_len - 1]
+        perf_counter_array[i, repetition_len:] = perf_counter_array[i, repetition_len - 1]
+        process_time_array[i, repetition_len:] = process_time_array[i, repetition_len - 1]
+
+    mean_best_fitness = np.mean(best_fitness_array, axis=0)
+    deviation_best_fitness = np.std(best_fitness_array, axis=0)
+    mean_perf_counter = np.mean(perf_counter_array, axis=0)
+    mean_process_time = np.mean(process_time_array, axis=0)
 
     print('Statistics:')
     print('Fitness:\n{}\n'.format(mean_best_fitness))
     print('perf_counter:\n{}\n'.format(mean_perf_counter))
     print('process_time:\n{}\n'.format(mean_process_time))
-
-    print('Popularity:\n{}\n'.format(popularity))
 
     # fig = plt.figure()
     # fig.suptitle('PSO: perf_counter vs. process_time')
@@ -172,12 +218,15 @@ if __name__ == "__main__":
 
     fig = plt.figure()
     fig.suptitle('PSO: best fitness')
-    plt.plot(mean_best_fitness, 'r')
+    plt.plot(cost_value, mean_best_fitness, color='r')
+    plt.plot(cost_value, mean_best_fitness+deviation_best_fitness, color='b', linewidth=0.5)
+    plt.plot(cost_value, mean_best_fitness-deviation_best_fitness, color='b', linewidth=0.5)
+    # plt.errorbar(cost_value, mean_best_fitness, yerr=deviation_best_fitness, color='r', ecolor='b')
     plt.show()
 
-    # fig = plt.figure()
-    # fig.suptitle('PSO: materials selected')
-    # plt.hist(popularity, bins=10, range=(0, num_repetitions))
-    # plt.show()
+    fig = plt.figure()
+    fig.suptitle('PSO: materials selected')
+    plt.hist(popularity, bins=10, range=(0, num_repetitions))
+    plt.show()
 
     # np.savetxt("results/all_fitness.csv", all_fitness, fmt="%7.3f", delimiter=",")

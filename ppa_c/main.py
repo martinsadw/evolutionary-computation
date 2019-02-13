@@ -29,7 +29,6 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, evalu
     cost_counter = 0
     stagnation_counter = 0
 
-    # Um valor extra para salvar os valores iniciais
     if out_info is not None:
         out_info["best_fitness"] = []
         out_info["perf_counter"] = []
@@ -155,6 +154,7 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, evalu
     print(timer.get_iterations())
     # print(timer.get_iteration_time())
     print("Tempo total: {}".format(timer.get_total_time()))
+    print("Número de iterações: {}".format(len(out_info["cost_value"])))
 
     population_evaluation = evaluate_function(population)
     survival_values = fitness_function(population_evaluation, instance, timer)
@@ -268,7 +268,7 @@ if __name__ == "__main__":
     # cost_value = np.arange(num_iterations)
 
     fig = plt.figure()
-    fig.suptitle('PPA: best fitness')
+    fig.suptitle('PPAC: best fitness')
     plt.plot(cost_value, mean_best_fitness, color='r')
     plt.plot(cost_value, mean_best_fitness+deviation_best_fitness, color='b', linewidth=0.5)
     plt.plot(cost_value, mean_best_fitness-deviation_best_fitness, color='b', linewidth=0.5)
