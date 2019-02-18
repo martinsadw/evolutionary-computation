@@ -148,7 +148,7 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 100
+    num_repetitions = 10
 
     (instance, config) = read_files(instance_config_filename, config_filename)
     best_fitness = []
@@ -162,7 +162,7 @@ if __name__ == "__main__":
 
     for i in range(num_repetitions):
         np.random.seed(i)
-        (population, survival_values) = particle_swarm_optmization(instance, config, counter_fitness, evaluate_population_fixed, out_info)
+        (population, survival_values) = particle_swarm_optmization(instance, config, counter_fitness, evaluate_population_random, out_info=out_info)
 
         best_fitness.append(out_info["best_fitness"])
         perf_counter.append(out_info["perf_counter"])

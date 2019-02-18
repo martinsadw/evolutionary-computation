@@ -264,13 +264,13 @@ if __name__ == "__main__":
     print('process_time:\n{}\n'.format(mean_process_time))
 
     # fig = plt.figure()
-    # fig.suptitle('PPA: perf_counter vs. process_time')
+    # fig.suptitle('PPAB: perf_counter vs. process_time')
     # plt.plot(mean_perf_counter, 'r.')
     # plt.plot(mean_process_time, 'b.')
     # plt.show()
 
     fig = plt.figure()
-    fig.suptitle('PPA: best fitness')
+    fig.suptitle('PPAB: best fitness')
     plt.plot(cost_value, mean_best_fitness, color='r')
     plt.plot(cost_value, mean_best_fitness+deviation_best_fitness, color='b', linewidth=0.5)
     plt.plot(cost_value, mean_best_fitness-deviation_best_fitness, color='b', linewidth=0.5)
@@ -278,7 +278,7 @@ if __name__ == "__main__":
     plt.show()
 
     fig = plt.figure()
-    fig.suptitle('PPA: materials selected')
+    fig.suptitle('PPAB: materials selected')
     plt.hist(popularity, bins=10, range=(0, num_repetitions))
     plt.show()
 

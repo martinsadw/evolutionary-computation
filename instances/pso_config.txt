@@ -2,7 +2,7 @@
 
 acs.pso.maxVelocity = 6
 acs.pso.maxStagnation = 100
-acs.pso.numParticles = 30
+acs.pso.numParticles = 50
 acs.pso.inertiaParameter = 1.0
 acs.pso.localInfluenceParameter = 0.2
 acs.pso.globalInfluenceParameter = 0.1

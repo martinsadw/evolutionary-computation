@@ -17,7 +17,7 @@ class Config:
         self.crossover_method = Crossover.TWO_POINT_CROSSOVER
         self.mutation_method = Mutation.MULTI_BIT_INVERSION_MUTATION
 
-        self.num_iterations = 1
+        self.max_stagnation = 1
         self.population_size = 1
 
         self.top_selection_ratio = 0.1
@@ -38,35 +38,23 @@ class Config:
             inline_comment_prefixes=(";",))
         config_values.read_string(config_string)
 
-        config.copying_method = Copying[config_values['section']
-                                        ['acs.ga.copyingMethod']]
-        config.local_search_method = LocalSearch[config_values['section']
-                                                 ['acs.ga.localSearchMethod']]
+        config.copying_method = Copying[config_values['section']['acs.ga.copyingMethod']]
+        config.local_search_method = LocalSearch[config_values['section']['acs.ga.localSearchMethod']]
 
-        config.selection_method = Selection[config_values['section']
-                                            ['acs.ga.selectionMethod']]
-        config.crossover_method = Crossover[config_values['section']
-                                            ['acs.ga.crossoverMethod']]
-        config.mutation_method = Mutation[config_values['section']
-                                          ['acs.ga.mutationMethod']]
+        config.selection_method = Selection[config_values['section']['acs.ga.selectionMethod']]
+        config.crossover_method = Crossover[config_values['section']['acs.ga.crossoverMethod']]
+        config.mutation_method = Mutation[config_values['section']['acs.ga.mutationMethod']]
 
-        config.population_size = int(
-            config_values['section']['acs.ga.populationSize'])
-        config.num_iterations = int(
-            config_values['section']['acs.ga.numIterations'])
+        config.max_stagnation = int(config_values['section']['acs.ga.maxStagnation'])
+        config.population_size = int(config_values['section']['acs.ga.populationSize'])
 
-        config.top_selection_ratio = float(
-            config_values['section']['acs.ga.topSelectionRatio'])
-        config.bottom_selection_ratio = float(
-            config_values['section']['acs.ga.bottomSelectionRatio'])
-        config.mutation_chance = float(
-            config_values['section']['acs.ga.mutationChance'])
+        config.top_selection_ratio = float(config_values['section']['acs.ga.topSelectionRatio'])
+        config.bottom_selection_ratio = float(config_values['section']['acs.ga.bottomSelectionRatio'])
+        config.mutation_chance = float(config_values['section']['acs.ga.mutationChance'])
 
         config.use_local_search = config_values['section']['acs.ga.useLocalSearch'] == "True"
-        config.local_search_step = float(
-            config_values['section']['acs.ga.localSearchStep'])
-        config.local_search_quant = int(
-            config_values['section']['acs.ga.localSearchQuant'])
+        config.local_search_step = float(config_values['section']['acs.ga.localSearchStep'])
+        config.local_search_quant = int(config_values['section']['acs.ga.localSearchQuant'])
 
         return config
 
@@ -81,7 +69,7 @@ class Config:
         config.crossover_method = Crossover.TWO_POINT_CROSSOVER
         config.mutation_method = Mutation.MULTI_BIT_INVERSION_MUTATION
 
-        config.num_iterations = 100
+        config.max_stagnation = 100
         config.population_size = 20
 
         config.top_selection_ratio = 0.2

@@ -199,7 +199,7 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 5
+    num_repetitions = 10
 
     (instance, config) = read_files(instance_config_filename, config_filename)
     best_fitness = []
@@ -260,7 +260,7 @@ if __name__ == "__main__":
     print('process_time:\n{}\n'.format(mean_process_time))
 
     # fig = plt.figure()
-    # fig.suptitle('PPA: perf_counter vs. process_time')
+    # fig.suptitle('PPAC: perf_counter vs. process_time')
     # plt.plot(mean_perf_counter, 'r.')
     # plt.plot(mean_process_time, 'b.')
     # plt.show()
@@ -276,6 +276,6 @@ if __name__ == "__main__":
     plt.show()
 
     # fig = plt.figure()
-    # fig.suptitle('PPA: materials selected')
+    # fig.suptitle('PPAC: materials selected')
     # plt.hist(popularity, bins=10, range=(0, num_repetitions))
     # plt.show()
