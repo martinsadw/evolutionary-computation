@@ -69,7 +69,7 @@ def differential_evolution(instance, config, fitness_function, out_info=None):
                 cross_points[np.random.randint(0, population_size)] = True
             s = np.where(cross_points, mutant, population[p])
             if survival_values[p]>fitness_function(s,instance,timer):
-                new_population[p]=s
+                new_population[p]=np.copy(s)
         #--end de
         population = new_population
 
@@ -166,7 +166,7 @@ if __name__ == "__main__":
     print('process_time:\n{}\n'.format(mean_process_time))
 
     fig = plt.figure()
-    fig.suptitle('PPAC: best fitness')
+    fig.suptitle('DE: best fitness')
     plt.plot(cost_value, mean_best_fitness, color='r')
     plt.plot(cost_value, mean_best_fitness+deviation_best_fitness, color='b', linewidth=0.5)
     plt.plot(cost_value, mean_best_fitness-deviation_best_fitness, color='b', linewidth=0.5)

@@ -1,0 +1,8 @@
+[section]
+
+
+acs.de.maxStagnation = 100
+acs.de.populationSize = 50
+
+acs.de.mutation_chance = 0.8
+acs.de.crossover_rate = 0.9
