@@ -19,13 +19,6 @@ def counter_fitness(population, instance, timer, print_results=False):
     cost_counter += population.shape[0]
     return fitness_population(population, instance, timer, print_results)
 
-def new_sample(index,population,config):
-    idxs = [idx for idx in range(config.population_size) if idx != index]
-    a, b, c = population[np.random.choice(idxs, 3, replace = False)]
-    cross_points = np.random.rand(config.population_size)
-
-    mutant = np.clip(a + config.mutation_chance * (b - c), 0, 1)
-
 def differential_evolution(instance, config, fitness_function, out_info=None):
     population_size = config.population_size
 
@@ -65,13 +58,19 @@ def differential_evolution(instance, config, fitness_function, out_info=None):
             out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
             out_info["process_time"].append(time.process_time() - start_process_time)
             out_info["cost_value"].append(cost_counter)
-
         new_population = np.copy(population)
         #--de
         for p in range(population_size):
-            s=new_sample(p,population,config)
+            idxs = [idx for idx in range(config.population_size) if idx != p]
+            a, b, c = population[np.random.choice(idxs, 3, replace = False)]
+            mutant = np.clip(a + config.mutation_chance * (b - c), 0, 1)
+            cross_points = np.random.rand(population_size) < config.crossover_rate
+            if not np.any(cross_points):
+                cross_points[np.random.randint(0, population_size)] = True
+            s = np.where(cross_points, mutant, population[p])
+            if survival_values[p]>fitness_function(s,instance,timer):
+                new_population[p]=s
         #--end de
-        #new_population = np.append(new_population, mutated[:remaining_spots], axis=0)
         population = new_population
 
     if out_info is not None:
