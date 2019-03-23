@@ -6,6 +6,7 @@ class Config:
         self.population_size = 1
         self.mutation_chance=0.8
         self.crossover_rate=0.9
+        self.num_repetitions=10
     
     @classmethod
     def load_from_file(cls, config_filename):
@@ -20,7 +21,7 @@ class Config:
         config.population_size = int(config_values['section']['acs.de.populationSize'])
         config.mutation_chance = float(config_values['section']['acs.de.mutationChance'])
         config.crossover_rate = float(config_values['section']['acs.de.crossoverRate'])
-
+        config.num_repetitions = int(config_values['section']['acs.de.numRepetitions'])
 
         return config
 
@@ -32,5 +33,6 @@ class Config:
         config.population_size = 20
         config.mutation_chance = 0.8
         config.crossover_rate=0.9
+        config.num_repetitions=10
 
         return config

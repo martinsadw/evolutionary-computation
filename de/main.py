@@ -70,13 +70,14 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
             idxs = [idx for idx in range(population_size) if idx != p]
             a, b, c = population[np.random.choice(idxs, 3, replace = False)]
             mutant = np.clip(a + config.mutation_chance * (b - c), 0, 1)
-            cross_points = np.random.rand(population_size) < config.crossover_rate
+            cross_points = np.random.rand(population_size*2) < config.crossover_rate
             if not np.any(cross_points):
                 cross_points[np.random.randint(0, population_size)] = True
+
             applicant = np.where(cross_points, mutant, population[p])
             applicant_evaluation=evaluate_function(applicant)
-            
-            if survival_values[p]>fitness_function(applicant,instance,timer):
+            applicant_fit=fitness(applicant_evaluation,instance,timer)
+            if survival_values[p]>applicant_fit:
                 new_population[p]=applicant
         #--end de
         population = new_population
@@ -87,7 +88,13 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
         out_info["process_time"].append(time.process_time() - start_process_time)
         out_info["cost_value"].append(cost_counter)
 
-    return (population, survival_values)
+    population_evaluation = evaluate_function(population)
+    survival_values = fitness_function(population_evaluation, instance, timer)
+    sorted_indices = np.argsort(survival_values)
+    population_evaluation = population_evaluation[sorted_indices]
+    survival_values = survival_values[sorted_indices]
+
+    return (population_evaluation, survival_values)
 
 def read_files(instance_config_filename, config_filename):
     if instance_config_filename is None:
@@ -112,7 +119,6 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 10
 
     (instance, config) = read_files(instance_config_filename, config_filename)
     best_fitness = []
@@ -121,6 +127,8 @@ if __name__ == "__main__":
     cost_value = []
 
     out_info = {}
+
+    num_repetitions = config.num_repetitions
 
     popularity = np.zeros((instance.num_materials,))
 
