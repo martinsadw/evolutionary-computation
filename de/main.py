@@ -9,6 +9,8 @@ from acs.objective import fitness, fitness_population
 from acs.instance import Instance, print_instance
 
 from utils.timer import Timer
+from utils.misc import  evaluate_population_fixed
+
 
 from de.config import Config
 
@@ -19,7 +21,7 @@ def counter_fitness(population, instance, timer, print_results=False):
     cost_counter += population.shape[0]
     return fitness_population(population, instance, timer, print_results)
 
-def differential_evolution(instance, config, fitness_function, out_info=None):
+def differential_evolution(instance, config, fitness_function, evaluate_function, out_info=None):
     population_size = config.population_size
 
     global cost_counter
@@ -34,19 +36,23 @@ def differential_evolution(instance, config, fitness_function, out_info=None):
 
     timer = Timer()
 
-    population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
-    population_best_fitness = fitness_function(population[0], instance, timer)
+    population = np.random.rand(population_size, instance.num_materials)
+    population_best_evaluation = evaluate_function(np.array(population[0:1]))
+    population_best_fitness = fitness_function(population_best_evaluation, instance, timer)[0]
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
     while (stagnation_counter < config.max_stagnation):
         timer.add_time()
-        survival_values = np.apply_along_axis(fitness_function, 1, population, instance, timer)
+
+        population_evaluation = evaluate_function(population)
+        survival_values = fitness_function(population_evaluation, instance, timer)
         sorted_indices = np.argsort(survival_values)
         population = population[sorted_indices]
         survival_values = survival_values[sorted_indices]
 
         if survival_values[0] < population_best_fitness:
+            population_best_evaluation = population_evaluation[sorted_indices[0]]
             population_best_fitness = survival_values[0]
 
             stagnation_counter = 0
@@ -61,15 +67,17 @@ def differential_evolution(instance, config, fitness_function, out_info=None):
         new_population = np.copy(population)
         #--de
         for p in range(population_size):
-            idxs = [idx for idx in range(config.population_size) if idx != p]
+            idxs = [idx for idx in range(population_size) if idx != p]
             a, b, c = population[np.random.choice(idxs, 3, replace = False)]
             mutant = np.clip(a + config.mutation_chance * (b - c), 0, 1)
             cross_points = np.random.rand(population_size) < config.crossover_rate
             if not np.any(cross_points):
                 cross_points[np.random.randint(0, population_size)] = True
-            s = np.where(cross_points, mutant, population[p])
-            if survival_values[p]>fitness_function(s,instance,timer):
-                new_population[p]=np.copy(s)
+            applicant = np.where(cross_points, mutant, population[p])
+            applicant_evaluation=evaluate_function(applicant)
+            
+            if survival_values[p]>fitness_function(applicant,instance,timer):
+                new_population[p]=applicant
         #--end de
         population = new_population
 
@@ -118,7 +126,7 @@ if __name__ == "__main__":
 
     for i in range(num_repetitions):
         np.random.seed(i)
-        (population, survival_values) = differential_evolution(instance, config, counter_fitness, out_info=out_info)
+        (population, survival_values) = differential_evolution(instance, config, counter_fitness, evaluate_population_fixed, out_info=out_info)
 
 
         best_fitness.append(out_info["best_fitness"])

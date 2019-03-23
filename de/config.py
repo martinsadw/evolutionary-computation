@@ -1,5 +1,4 @@
 import configparser
-from enum import Enum
 
 class Config:
     def __init__(self):
@@ -19,8 +18,8 @@ class Config:
 
         config.max_stagnation = int(config_values['section']['acs.de.maxStagnation'])
         config.population_size = int(config_values['section']['acs.de.populationSize'])
-        config.mutation_chance = float(config_values['section']['acs.de.mutation_chance'])
-        config.crossover_rate = float(config_values['section']['acs.de.crossover_rate'])
+        config.mutation_chance = float(config_values['section']['acs.de.mutationChance'])
+        config.crossover_rate = float(config_values['section']['acs.de.crossoverRate'])
 
 
         return config
