@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from acs.objective import fitness, fitness_population
-from acs.instance import Instance, print_instance
+from acs.instance import Instance
 
 from utils.timer import Timer
 from utils.misc import  evaluate_population_fixed
@@ -52,9 +52,7 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
         survival_values = survival_values[sorted_indices]
 
         if survival_values[0] < population_best_fitness:
-            population_best_evaluation = population_evaluation[sorted_indices[0]]
             population_best_fitness = survival_values[0]
-
             stagnation_counter = 0
         else:
             stagnation_counter += 1
@@ -64,6 +62,7 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
             out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
             out_info["process_time"].append(time.process_time() - start_process_time)
             out_info["cost_value"].append(cost_counter)
+        
         new_population = np.copy(population)
 
         #--de
@@ -74,14 +73,15 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
 
             mutant = np.clip(a + config.mutation_chance * (b - c), 0, 1)
             
-            cross_points = np.random.rand(population_size * 2) < config.crossover_rate
+            cross_points = np.random.rand(instance.num_materials) < config.crossover_rate
             if not np.any(cross_points):
-                cross_points[np.random.randint(0, population_size)] = True
+                cross_points[np.random.randint(0, instance.num_materials)] = True
 
             applicant = np.where(cross_points, mutant, population[p])
             applicant_evaluation = evaluate_function(applicant)
+            applicant_fit = fitness(applicant_evaluation,instance,timer)
 
-            if survival_values[p] > fitness(applicant_evaluation,instance,timer):
+            if survival_values[p] > applicant_fit:
                 new_population[p] = applicant
         #--end de
         
