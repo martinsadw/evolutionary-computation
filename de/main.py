@@ -16,6 +16,11 @@ from de.config import Config
 
 
 cost_counter = 0
+def cf(individual, instance, timer, print_results=False, data=None):
+    global cost_counter
+    cost_counter += 1
+    return fitness(individual, instance, timer, print_results, data=data)
+
 def counter_fitness(population, instance, timer, print_results=False):
     global cost_counter
     cost_counter += population.shape[0]
@@ -39,14 +44,15 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
     population = np.random.rand(population_size, instance.num_materials)
     population_best_evaluation = evaluate_function(np.array(population[0:1]))
     population_best_fitness = fitness_function(population_best_evaluation, instance, timer)[0]
+    population_evaluation = evaluate_function(population)
+    survival_values = fitness_function(population_evaluation, instance, timer)
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
     while (stagnation_counter < config.max_stagnation):
         timer.add_time()
 
-        population_evaluation = evaluate_function(population)
-        survival_values = fitness_function(population_evaluation, instance, timer)
+        
         sorted_indices = np.argsort(survival_values)
         population = population[sorted_indices]
         survival_values = survival_values[sorted_indices]
@@ -79,10 +85,11 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
 
             applicant = np.where(cross_points, mutant, population[p])
             applicant_evaluation = evaluate_function(applicant)
-            applicant_fit = fitness(applicant_evaluation,instance,timer)
+            applicant_fit = cf(applicant_evaluation,instance,timer)
 
             if survival_values[p] > applicant_fit:
                 new_population[p] = applicant
+                survival_values[p] = applicant_fit
         #--end de
         
         population = new_population
@@ -94,7 +101,6 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
         out_info["cost_value"].append(cost_counter)
 
     population_evaluation = evaluate_function(population)
-    survival_values = fitness_function(population_evaluation, instance, timer)
     sorted_indices = np.argsort(survival_values)
     population_evaluation = population_evaluation[sorted_indices]
     survival_values = survival_values[sorted_indices]
