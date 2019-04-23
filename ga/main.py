@@ -18,18 +18,14 @@ from ga.crossover import crossover_gene, Crossover
 from ga.mutation import mutation_gene
 
 
-cost_counter = 0
-def counter_fitness(population, instance, timer, print_results=False, data=None):
-    global cost_counter
-    cost_counter += 1
-    return fitness(population, instance, timer, print_results, data=data)
-
-
 def genetic_algorithm(instance, config, fitness_function, out_info=None):
     population_size = config.population_size
 
-    global cost_counter
     cost_counter = 0
+    def counter_fitness(population, instance, timer, print_results=False, data=None):
+        nonlocal cost_counter
+        cost_counter += 1
+        return fitness_function(population, instance, timer, print_results, data=data)
     stagnation_counter = 0
 
     if out_info is not None:
@@ -42,14 +38,14 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
 
     population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
     population_best_individual = population[0]
-    population_best_fitness = fitness_function(population[0], instance, timer)
+    population_best_fitness = counter_fitness(population[0], instance, timer)
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
     while (stagnation_counter < config.max_stagnation):
         timer.add_time()
         # print('==========================' + str(iteration))
-        survival_values = np.apply_along_axis(fitness_function, 1, population, instance, timer)
+        survival_values = np.apply_along_axis(counter_fitness, 1, population, instance, timer)
         sorted_indices = np.argsort(survival_values)
         population = population[sorted_indices]
         survival_values = survival_values[sorted_indices]
@@ -73,7 +69,7 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
         new_population = copying_gene(population, config.copying_method, config)
 
         if config.use_local_search:
-            new_population = local_search_gene(new_population, fitness_function, config.local_search_method, config)
+            new_population = local_search_gene(new_population, counter_fitness, config.local_search_method, config)
 
         remaining_spots = np.random.randint(2, size=(population_size - new_population.shape[0], instance.num_materials), dtype=bool)
         remaining_spots = population_size - len(new_population)
@@ -124,7 +120,7 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 10
+    num_repetitions = 1
 
     (instance, config) = read_files(instance_config_filename, config_filename)
     best_fitness = []
@@ -138,7 +134,7 @@ if __name__ == "__main__":
 
     for i in range(num_repetitions):
         np.random.seed(i)
-        (population, survival_values) = genetic_algorithm(instance, config, counter_fitness, out_info=out_info)
+        (population, survival_values) = genetic_algorithm(instance, config, fitness, out_info=out_info)
 
         best_fitness.append(out_info["best_fitness"])
         perf_counter.append(out_info["perf_counter"])

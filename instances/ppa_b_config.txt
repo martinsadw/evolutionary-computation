@@ -1,7 +1,7 @@
 [section]
 
 ppatosca.arg.maxStagnation = 100
-ppatosca.arg.populationSize = 50         ; populationSize
+ppatosca.arg.populationSize = 10         ; populationSize
 ppatosca.arg.followDistanceParameter = 1 ; distanceFactor
 ppatosca.arg.followSurvivalParameter = 1 ; survivalValueFactor
 ppatosca.arg.minSteps = 4                ; minimumStepLength

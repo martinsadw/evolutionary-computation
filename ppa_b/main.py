@@ -16,18 +16,15 @@ from ppa_b.config import Config
 from ppa_b.population_movement import move_population_roulette, move_population_direction, move_population_random, move_population_random_complement, move_population_local_search
 
 
-cost_counter = 0
-def counter_fitness(population, instance, timer, print_results=False):
-    global cost_counter
-    cost_counter += population.shape[0]
-    return fitness_population(population, instance, timer, print_results)
-
-
 def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=None):
     population_size = config.population_size
 
-    global cost_counter
     cost_counter = 0
+    def counter_fitness(population, instance, timer, print_results=False):
+        nonlocal cost_counter
+        cost_counter += population.shape[0]
+        return fitness_function(population, instance, timer, print_results)
+
     stagnation_counter = 0
 
     if out_info is not None:
@@ -39,15 +36,16 @@ def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=
     timer = Timer()
 
     population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
+
     population_best_individual = population[0]
-    population_best_fitness = fitness_function(population[0:1], instance, timer)[0]
+    population_best_fitness = counter_fitness(population[0:1], instance, timer)[0]
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
     while (stagnation_counter < config.max_stagnation):
         timer.add_time()
         # print('==========================' + str(iteration))
-        survival_values = fitness_function(population, instance, timer)
+        survival_values = counter_fitness(population, instance, timer)
         sorted_indices = np.argsort(survival_values)
         population = population[sorted_indices]
         survival_values = survival_values[sorted_indices]
@@ -125,7 +123,7 @@ def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=
 
         timer.add_time("run")
 
-        new_population[best_prey_mask] = move_population_local_search(new_population[best_prey_mask], fitness_function, config.min_steps, config.local_search_tries, instance, timer)
+        new_population[best_prey_mask] = move_population_local_search(new_population[best_prey_mask], counter_fitness, config.min_steps, config.local_search_tries, instance, timer)
 
         timer.add_time()
 
@@ -145,7 +143,7 @@ def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=
 
         timer.add_time("predator_follow")
 
-        # new_survival_values = fitness_function(new_population, instance, timer)
+        # new_survival_values = counter_fitness(new_population, instance, timer)
         # print('Old population:\n{}\n'.format(population))
         # print('New population:\n{}\n'.format(new_population))
         # print('Comparison:\n{}\n'.format(population == new_population))
@@ -162,7 +160,7 @@ def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=
     print("Tempo total: {}".format(timer.get_total_time()))
     print("Número de iterações: {}".format(len(out_info["cost_value"])))
 
-    survival_values = fitness_function(population, instance, timer)
+    survival_values = counter_fitness(population, instance, timer)
     sorted_indices = np.argsort(survival_values)
     population = population[sorted_indices]
     survival_values = survival_values[sorted_indices]
@@ -203,7 +201,7 @@ if __name__ == "__main__":
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
 
-    num_repetitions = 10
+    num_repetitions = 1
 
     (instance, config) = read_files(instance_config_filename, config_filename)
     best_fitness = []
@@ -217,7 +215,7 @@ if __name__ == "__main__":
 
     for i in range(num_repetitions):
         np.random.seed(i)
-        (population, survival_values) = prey_predator_algorithm_binary(instance, config, counter_fitness, out_info=out_info)
+        (population, survival_values) = prey_predator_algorithm_binary(instance, config, fitness_population, out_info=out_info)
 
         best_fitness.append(out_info["best_fitness"])
         perf_counter.append(out_info["perf_counter"])

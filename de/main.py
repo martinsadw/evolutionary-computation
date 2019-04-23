@@ -11,7 +11,6 @@ from acs.instance import Instance
 from utils.timer import Timer
 from utils.misc import  evaluate_population_fixed
 
-
 from de.config import Config
 
 
@@ -29,8 +28,6 @@ def counter_fitness(population, instance, timer, print_results=False):
 def differential_evolution(instance, config, fitness_function, evaluate_function, out_info=None):
     population_size = config.population_size
 
-    global cost_counter
-    cost_counter = 0
     stagnation_counter = 0
 
     if out_info is not None:
@@ -52,7 +49,7 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
     while (stagnation_counter < config.max_stagnation):
         timer.add_time()
 
-        
+
         sorted_indices = np.argsort(survival_values)
         population = population[sorted_indices]
         survival_values = survival_values[sorted_indices]
@@ -68,7 +65,7 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
             out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
             out_info["process_time"].append(time.process_time() - start_process_time)
             out_info["cost_value"].append(cost_counter)
-        
+
         new_population = np.copy(population)
 
         #--de
@@ -78,7 +75,7 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
             a, b, c = population[np.random.choice(idxs, 3, replace = False)]
 
             mutant = np.clip(a + config.mutation_chance * (b - c), 0, 1)
-            
+
             cross_points = np.random.rand(instance.num_materials) < config.crossover_rate
             if not np.any(cross_points):
                 cross_points[np.random.randint(0, instance.num_materials)] = True
@@ -91,7 +88,7 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
                 new_population[p] = applicant
                 survival_values[p] = applicant_fit
         #--end de
-        
+
         population = new_population
 
     if out_info is not None:
@@ -129,7 +126,6 @@ if __name__ == "__main__":
     config_filename = None
     if (len(sys.argv) >= 3):
         config_filename = sys.argv[2]
-
 
     (instance, config) = read_files(instance_config_filename, config_filename)
     best_fitness = []
