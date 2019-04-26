@@ -88,20 +88,26 @@ if __name__ == "__main__":
     config_ga = ga.config.Config.load_from_file("instances/ga_config.txt")
     config_de = de.config.Config.load_from_file("instances/de_config.txt")
 
-    num_repetitions = 1
+    num_repetitions = 10
 
     results_ppa_b = run_method(prey_predator_algorithm_binary, fitness_population, instance, config_ppa_b, num_repetitions)
-    results_ppa_c = run_method(prey_predator_algorithm_continuous, fitness_population, instance, config_ppa_c, num_repetitions, evaluate_function=evaluate_population_random)
-    results_pso = run_method(particle_swarm_optmization, fitness, instance, config_pso, num_repetitions, evaluate_function=evaluate_population_random)
+    results_ppa_c_random = run_method(prey_predator_algorithm_continuous, fitness_population, instance, config_ppa_c, num_repetitions, evaluate_function=evaluate_population_random)
+    results_ppa_c_fixed = run_method(prey_predator_algorithm_continuous, fitness_population, instance, config_ppa_c, num_repetitions, evaluate_function=evaluate_population_fixed)
+    results_pso_random = run_method(particle_swarm_optmization, fitness, instance, config_pso, num_repetitions, evaluate_function=evaluate_population_random)
+    results_pso_fixed = run_method(particle_swarm_optmization, fitness, instance, config_pso, num_repetitions, evaluate_function=evaluate_population_fixed)
     results_ga = run_method(genetic_algorithm, fitness, instance, config_ga, num_repetitions)
-    results_de = run_method(differential_evolution, fitness_population, instance, config_de, num_repetitions, evaluate_function=evaluate_population_random)
+    results_de_random = run_method(differential_evolution, fitness_population, instance, config_de, num_repetitions, evaluate_function=evaluate_population_random)
+    results_de_fixed = run_method(differential_evolution, fitness_population, instance, config_de, num_repetitions, evaluate_function=evaluate_population_fixed)
 
     fig = plt.figure()
     fig.suptitle('PPAC: best fitness')
     plt.plot(results_ppa_b[0], results_ppa_b[1], label="PPAB")
-    plt.plot(results_ppa_c[0], results_ppa_c[1], label="PPAC")
-    plt.plot(results_pso[0], results_pso[1], label="PSO")
+    plt.plot(results_ppa_c_random[0], results_ppa_c_random[1], label="PPAC Random")
+    plt.plot(results_ppa_c_fixed[0], results_ppa_c_fixed[1], label="PPAC Fixed")
+    plt.plot(results_pso_random[0], results_pso_random[1], label="PSO Random")
+    plt.plot(results_pso_fixed[0], results_pso_fixed[1], label="PSO Fixed")
     plt.plot(results_ga[0], results_ga[1], label="GA")
-    plt.plot(results_de[0], results_de[1], label="DE")
+    plt.plot(results_de_random[0], results_de_random[1], label="DE Random")
+    plt.plot(results_de_fixed[0], results_de_fixed[1], label="DE Fixed")
     plt.legend(loc=1)
     plt.show()

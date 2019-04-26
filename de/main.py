@@ -9,24 +9,24 @@ from acs.objective import fitness, fitness_population
 from acs.instance import Instance
 
 from utils.timer import Timer
-from utils.misc import  evaluate_population_fixed
+from utils.misc import evaluate_population_fixed
 
 from de.config import Config
 
 
-cost_counter = 0
-def cf(individual, instance, timer, print_results=False, data=None):
-    global cost_counter
-    cost_counter += 1
-    return fitness(individual, instance, timer, print_results, data=data)
-
-def counter_fitness(population, instance, timer, print_results=False):
-    global cost_counter
-    cost_counter += population.shape[0]
-    return fitness_population(population, instance, timer, print_results)
-
 def differential_evolution(instance, config, fitness_function, evaluate_function, out_info=None):
     population_size = config.population_size
+
+    cost_counter = 0
+    def cf(individual, instance, timer, print_results=False, data=None):
+        nonlocal cost_counter
+        cost_counter += 1
+        return fitness(individual, instance, timer, print_results, data=data)
+
+    def counter_fitness(population, instance, timer, print_results=False):
+        nonlocal cost_counter
+        cost_counter += population.shape[0]
+        return fitness_function(population, instance, timer, print_results)
 
     stagnation_counter = 0
 
@@ -39,16 +39,18 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
     timer = Timer()
 
     population = np.random.rand(population_size, instance.num_materials)
+    # TODO(andre: 2019-04-25): Testar utilizar um valor limite para os valores
+    # dos individuos, similar ao PSO e ao PPA_C
+    population = np.random.rand(population_size, instance.num_materials) * 2 - 1
     population_best_evaluation = evaluate_function(np.array(population[0:1]))
-    population_best_fitness = fitness_function(population_best_evaluation, instance, timer)[0]
+    population_best_fitness = counter_fitness(population_best_evaluation, instance, timer)[0]
     population_evaluation = evaluate_function(population)
-    survival_values = fitness_function(population_evaluation, instance, timer)
+    survival_values = counter_fitness(population_evaluation, instance, timer)
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
     while (stagnation_counter < config.max_stagnation):
         timer.add_time()
-
 
         sorted_indices = np.argsort(survival_values)
         population = population[sorted_indices]

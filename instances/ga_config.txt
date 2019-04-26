@@ -8,7 +8,7 @@ acs.ga.crossoverMethod = TWO_POINT_CROSSOVER
 acs.ga.mutationMethod = SINGLE_BIT_INVERSION_MUTATION
 
 acs.ga.maxStagnation = 100
-acs.ga.populationSize = 10
+acs.ga.populationSize = 30
 
 acs.ga.topSelectionRatio = 0.2
 acs.ga.bottomSelectionRatio = 0.1
