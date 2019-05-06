@@ -81,3 +81,27 @@ class Config:
         config.local_search_quant = 10
 
         return config
+
+    @classmethod
+    def load_args(cls, args):
+        config = cls()
+
+        config.copying_method = args.copying
+        config.local_search_method = LocalSearch.PER_VARIABLE_LOCAL_SEARCH
+
+        config.selection_method = args.selection
+        config.crossover_method = args.crossover
+        config.mutation_method = args.mutation
+
+        config.max_stagnation = 100
+        config.population_size = args.population
+
+        config.top_selection_ratio = args.top
+        config.bottom_selection_ratio = args.bottom
+        config.mutation_chance = args.mutation_chance
+
+        config.use_local_search = True
+        config.local_search_step = 0.5
+        config.local_search_quant = 10
+
+        return config

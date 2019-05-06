@@ -152,13 +152,13 @@ def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=
 
         population = new_population
 
-    print("Tempo: ")
-    print(timer.get_time())
-    print("Iterações: ")
-    print(timer.get_iterations())
+    # print("Tempo: ")
+    # print(timer.get_time())
+    # print("Iterações: ")
+    # print(timer.get_iterations())
     # print(timer.get_iteration_time())
-    print("Tempo total: {}".format(timer.get_total_time()))
-    print("Número de iterações: {}".format(len(out_info["cost_value"])))
+    # print("Tempo total: {}".format(timer.get_total_time()))
+    # print("Número de iterações: {}".format(len(out_info["cost_value"])))
 
     survival_values = counter_fitness(population, instance, timer)
     sorted_indices = np.argsort(survival_values)
