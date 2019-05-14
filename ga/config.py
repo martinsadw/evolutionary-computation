@@ -86,12 +86,12 @@ class Config:
     def load_args(cls, args):
         config = cls()
 
-        config.copying_method = args.copying
+        config.copying_method = Copying[args.copying + '_COPYING']
         config.local_search_method = LocalSearch.PER_VARIABLE_LOCAL_SEARCH
 
-        config.selection_method = args.selection
-        config.crossover_method = args.crossover
-        config.mutation_method = args.mutation
+        config.selection_method = Selection[args.selection + '_SELECTION']
+        config.crossover_method = Crossover[args.crossover + '_CROSSOVER']
+        config.mutation_method = Mutation[args.mutation + '_MUTATION']
 
         config.max_stagnation = 100
         config.population_size = args.population

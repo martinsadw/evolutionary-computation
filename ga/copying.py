@@ -1,4 +1,3 @@
-import random
 from enum import Enum
 
 import numpy as np
@@ -33,10 +32,10 @@ def _elitism_copying_gene(population, config):
 
 def _permissive_copying_gene(population, config):
     top_selection_size = (int)(len(population) * config.top_selection_ratio)
-    bottom_selection_size = (int)(
-        len(population) * config.bottom_selection_ratio)
+    bottom_selection_size = (int)(len(population) * config.bottom_selection_ratio)
 
-    return np.concatenate((population[:top_selection_size], population[-bottom_selection_size:]))
+    # GAMBIARRA!!!!!!!!!
+    return np.concatenate((population[:top_selection_size], population[-bottom_selection_size-1:]))
 
 
 def _no_copying_gene(population, args):

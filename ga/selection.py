@@ -30,7 +30,6 @@ def _random_selection_gene(population, quant):
 
     return parents
 
-
 def _roulette_selection_gene(population, survival_values, quant):
     # TODO(andre:2018-08-17): Rever a forma como as chances de escolher um gene são calculadas
     roulette = Roulette(1 / survival_values)

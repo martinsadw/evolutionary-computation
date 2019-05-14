@@ -1,0 +1,5 @@
+maxExperiments = 1000
+trainInstancesDir = "../"
+trainInstancesFile = "instances.txt"
+parameterFile = "parameters.txt"
+targetRunner = "test.bat"
