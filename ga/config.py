@@ -17,7 +17,9 @@ class Config:
         self.crossover_method = Crossover.TWO_POINT_CROSSOVER
         self.mutation_method = Mutation.MULTI_BIT_INVERSION_MUTATION
 
-        self.max_stagnation = 1
+        # self.cost_budget = 1
+        # self.num_iterations = 1
+        # self.max_stagnation = 1
         self.population_size = 1
 
         self.top_selection_ratio = 0.1
@@ -45,7 +47,15 @@ class Config:
         config.crossover_method = Crossover[config_values['section']['acs.ga.crossoverMethod']]
         config.mutation_method = Mutation[config_values['section']['acs.ga.mutationMethod']]
 
-        config.max_stagnation = int(config_values['section']['acs.ga.maxStagnation'])
+        if config_values.has_option('section', 'acs.ga.costBudget'):
+            config.cost_budget = int(config_values['section']['acs.ga.costBudget'])
+
+        if config_values.has_option('section', 'acs.ga.numIterations'):
+            config.num_iterations = int(config_values['section']['acs.ga.numIterations'])
+
+        if config_values.has_option('section', 'acs.ga.maxStagnation'):
+            config.max_stagnation = int(config_values['section']['acs.ga.maxStagnation'])
+
         config.population_size = int(config_values['section']['acs.ga.populationSize'])
 
         config.top_selection_ratio = float(config_values['section']['acs.ga.topSelectionRatio'])

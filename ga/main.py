@@ -27,6 +27,8 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
         nonlocal cost_counter
         cost_counter += 1
         return fitness_function(population, instance, timer, print_results, data=data)
+
+    iteration_counter = 0
     stagnation_counter = 0
 
     if out_info is not None:
@@ -43,7 +45,9 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
-    while (stagnation_counter < config.max_stagnation):
+    while (hasattr(config, 'cost_budget') and cost_counter < config.cost_budget or
+           hasattr(config, 'num_iterations') and iteration_counter < config.num_iterations or
+           hasattr(config, 'max_stagnation') and stagnation_counter < config.max_stagnation):
         timer.add_time()
         # print('==========================' + str(iteration))
         survival_values = np.apply_along_axis(counter_fitness, 1, population, instance, timer)
@@ -52,6 +56,9 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
         survival_values = survival_values[sorted_indices]
         # print(survival_values)
 
+        print(iteration_counter, cost_counter)
+
+        iteration_counter += 1
         if survival_values[0] < population_best_fitness:
             population_best_individual = population[0]
             population_best_fitness = survival_values[0]

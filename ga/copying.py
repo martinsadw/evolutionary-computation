@@ -34,9 +34,8 @@ def _permissive_copying_gene(population, config):
     top_selection_size = (int)(len(population) * config.top_selection_ratio)
     bottom_selection_size = (int)(len(population) * config.bottom_selection_ratio)
 
-    # GAMBIARRA!!!!!!!!!
-    return np.concatenate((population[:top_selection_size], population[-bottom_selection_size-1:]))
+    return np.concatenate((population[:top_selection_size], population[population.shape[0] - bottom_selection_size:]))
 
 
 def _no_copying_gene(population, args):
-    return np.empty(0)
+    return np.copy(population[:0])
