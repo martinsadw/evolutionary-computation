@@ -17,9 +17,9 @@ class Config:
         self.crossover_method = Crossover.TWO_POINT_CROSSOVER
         self.mutation_method = Mutation.MULTI_BIT_INVERSION_MUTATION
 
-        # self.cost_budget = 1
-        # self.num_iterations = 1
-        # self.max_stagnation = 1
+        self.cost_budget = None
+        self.num_iterations = None
+        self.max_stagnation = None
         self.population_size = 1
 
         self.top_selection_ratio = 0.1
@@ -103,7 +103,9 @@ class Config:
         config.crossover_method = Crossover[args.crossover + '_CROSSOVER']
         config.mutation_method = Mutation[args.mutation + '_MUTATION']
 
-        config.max_stagnation = 100
+        config.cost_budget = args.cost_budget
+        config.num_iterations = args.num_iterations
+        config.max_stagnation = args.max_stagnation
         config.population_size = args.population
 
         config.top_selection_ratio = args.top

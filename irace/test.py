@@ -35,10 +35,13 @@ if __name__ == '__main__':
     parser_ga.add_argument('--top', type=float, default=0.2)
     parser_ga.add_argument('--bottom', type=float, default=0.1)
     parser_ga.add_argument('-d', '--copying', choices=['ELITISM', 'PERMISSIVE', 'NO'], default='ELITISM')
-    parser_ga.add_argument('-s', '--selection', choices=['RANDOM', 'ROULETTE'], default='ROULETTE')
+    parser_ga.add_argument('-f', '--selection', choices=['RANDOM', 'ROULETTE'], default='ROULETTE')
     parser_ga.add_argument('-c', '--crossover', choices=['SINGLE_POINT', 'TWO_POINT', 'THREE_PARENT', 'UNIFORM'], default='TWO_POINT')
     parser_ga.add_argument('-m', '--mutation', choices=['SINGLE_BIT_INVERSION', 'MULTI_BIT_INVERSION'], default='SINGLE_BIT_INVERSION')
     parser_ga.add_argument('-r', '--repetitions', type=int, default=1)
+    parser_ga.add_argument('-b', '--cost-budget', type=int)
+    parser_ga.add_argument('-s', '--max-stagnation', type=int)
+    parser_ga.add_argument('-i', '--num-iterations', type=int)
 
     args = parser.parse_args()
 
@@ -47,6 +50,9 @@ if __name__ == '__main__':
         config = ga.config.Config.load_from_file(args.config)
     else:
         config = ga.config.Config().load_args(args)
+
+    if not args.cost_budget and not args.max_stagnation and not args.num_iterations:
+        raise Exception("No end conditions")
 
     results = np.empty((args.repetitions,))
     for i in range(args.repetitions):

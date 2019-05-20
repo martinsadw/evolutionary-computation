@@ -45,9 +45,9 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
-    while (hasattr(config, 'cost_budget') and cost_counter < config.cost_budget or
-           hasattr(config, 'num_iterations') and iteration_counter < config.num_iterations or
-           hasattr(config, 'max_stagnation') and stagnation_counter < config.max_stagnation):
+    while ((not config.cost_budget or cost_counter < config.cost_budget) and
+           (not config.num_iterations or iteration_counter < config.num_iterations) and
+           (not config.max_stagnation or stagnation_counter < config.max_stagnation)):
         timer.add_time()
         # print('==========================' + str(iteration))
         survival_values = np.apply_along_axis(counter_fitness, 1, population, instance, timer)
@@ -55,8 +55,6 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
         population = population[sorted_indices]
         survival_values = survival_values[sorted_indices]
         # print(survival_values)
-
-        print(iteration_counter, cost_counter)
 
         iteration_counter += 1
         if survival_values[0] < population_best_fitness:

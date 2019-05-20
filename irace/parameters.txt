@@ -1,5 +1,5 @@
-population      "--population "       i  (9, 10)
-mutationchance  "--mutation-chance "  r  (0.0, 1.0)
+population      "--population "       i  (1, 30)
+mutationchance  "--mutation-chance "  r  (0.0, 1.0)                                        |  mutation != 'SINGLE_BIT_INVERSION'
 copying         "--copying "          c  (ELITISM, PERMISSIVE, NO)
 selection       "--selection "        c  (RANDOM, ROULETTE)
 crossover       "--crossover "        c  (SINGLE_POINT, TWO_POINT, THREE_PARENT, UNIFORM)
