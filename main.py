@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 from acs.objective import fitness, fitness_population
 from acs.instance import Instance, print_instance
 
-from utils.misc import  evaluate_population_random, evaluate_population_fixed
+from utils.misc import evaluate_population_fixed, evaluate_population_random
+from utils.runner import run_method
 
 from ppa_b.main import prey_predator_algorithm_binary
 from ppa_c.main import prey_predator_algorithm_continuous
@@ -21,57 +22,7 @@ import ga.config
 import de.config
 
 
-def run_method(method_function, fitness_function, instance, config, num_repetitions, **kwargs):
-    best_fitness = []
-    perf_counter = []
-    process_time = []
-    cost_value = []
-
-    out_info = {}
-
-    popularity = np.zeros((instance.num_materials,))
-
-    for i in range(num_repetitions):
-        np.random.seed(i)
-        (population, survival_values) = method_function(instance, config, fitness_function, out_info=out_info, **kwargs)
-
-        best_fitness.append(out_info["best_fitness"])
-        perf_counter.append(out_info["perf_counter"])
-        process_time.append(out_info["process_time"])
-
-        if len(out_info["cost_value"]) > len(cost_value):
-            new_cost_values = out_info["cost_value"][len(cost_value):]
-            cost_value.extend(new_cost_values)
-
-        popularity += population[0]
-
-    num_iterations = len(cost_value)
-
-    best_fitness_array = np.zeros((num_repetitions, num_iterations))
-    perf_counter_array = np.zeros((num_repetitions, num_iterations))
-    process_time_array = np.zeros((num_repetitions, num_iterations))
-
-    for i in range(num_repetitions):
-        repetition_len = len(best_fitness[i])
-
-        best_fitness_array[i, :repetition_len] = best_fitness[i]
-        perf_counter_array[i, :repetition_len] = perf_counter[i]
-        process_time_array[i, :repetition_len] = process_time[i]
-
-        best_fitness_array[i, repetition_len:] = best_fitness_array[i, repetition_len - 1]
-        perf_counter_array[i, repetition_len:] = perf_counter_array[i, repetition_len - 1]
-        process_time_array[i, repetition_len:] = process_time_array[i, repetition_len - 1]
-
-    mean_best_fitness = np.mean(best_fitness_array, axis=0)
-    deviation_best_fitness = np.std(best_fitness_array, axis=0)
-    mean_perf_counter = np.mean(perf_counter_array, axis=0)
-    mean_process_time = np.mean(process_time_array, axis=0)
-
-    print(cost_value)
-
-    return (cost_value, mean_best_fitness, deviation_best_fitness, mean_perf_counter, mean_process_time)
-
-
+# TODO(andre: 2019-05-20): Testar se esse código ainda está funcionando
 if __name__ == "__main__":
     instance_config_filename = None
     if (len(sys.argv) >= 2):

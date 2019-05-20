@@ -100,7 +100,7 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
         out_info["process_time"].append(time.process_time() - start_process_time)
         out_info["cost_value"].append(cost_counter)
 
-    return (population, survival_values)
+    return (population_best_individual, population_best_fitness)
 
 
 def read_files(instance_config_filename, config_filename):
@@ -140,7 +140,7 @@ if __name__ == "__main__":
 
     for i in range(num_repetitions):
         np.random.seed(i)
-        (population, survival_values) = genetic_algorithm(instance, config, fitness, out_info=out_info)
+        (individual, survival_value) = genetic_algorithm(instance, config, fitness, out_info=out_info)
 
         best_fitness.append(out_info["best_fitness"])
         perf_counter.append(out_info["perf_counter"])
@@ -151,13 +151,13 @@ if __name__ == "__main__":
             cost_value.extend(new_cost_values)
 
         timer = Timer()
-        fitness(population[0], instance, timer, True)
+        fitness(individual, instance, timer, True)
 
-        popularity += population[0]
+        popularity += individual
 
         print('#{}\n'.format(i))
-        print('Survival values:\n{}\n'.format(survival_values))
-        print('Best Individual:\n{}\n'.format(population[0]))
+        print('Survival values:\n{}\n'.format(survival_value))
+        print('Best Individual:\n{}\n'.format(individual))
 
     num_iterations = len(cost_value)
 
