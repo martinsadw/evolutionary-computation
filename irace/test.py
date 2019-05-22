@@ -57,13 +57,11 @@ if __name__ == '__main__':
 
     parser_pso = subparsers.add_parser('pso')
     create_base_parser(parser_pso)
-    parser_pso.add_argument('--mutation-chance', type=float, default=0.01)
-    parser_pso.add_argument('--top', type=float, default=0.2)
-    parser_pso.add_argument('--bottom', type=float, default=0.1)
-    parser_pso.add_argument('-d', '--copying', choices=['ELITISM', 'PERMISSIVE', 'NO'], default='ELITISM')
-    parser_pso.add_argument('-f', '--selection', choices=['RANDOM', 'ROULETTE'], default='ROULETTE')
-    parser_pso.add_argument('-c', '--crossover', choices=['SINGLE_POINT', 'TWO_POINT', 'THREE_PARENT', 'UNIFORM'], default='TWO_POINT')
-    parser_pso.add_argument('-m', '--mutation', choices=['SINGLE_BIT_INVERSION', 'MULTI_BIT_INVERSION'], default='SINGLE_BIT_INVERSION')
+    parser_pso.add_argument('-v', '--max-velocity', type=float, default=6)
+    parser_pso.add_argument('-n', '--inertia', type=float, default=1)
+    parser_pso.add_argument('-l', '--local-influence', type=float, default=1)
+    parser_pso.add_argument('-g', '--global-influence', type=float, default=1)
+    parser_pso.add_argument('-e', '--evaluator', choices=['RANDOM', 'FIXED'], default='RANDOM')
 
     args = parser.parse_args()
 
@@ -84,10 +82,8 @@ if __name__ == '__main__':
         results = run_method(prey_predator_algorithm_continuous, fitness_population, instance, config, args.repetitions, seed=args.seed, evaluate_function=evaluate_population_random)
     elif args.algorithm == 'ppa_c_fixed':
         results = run_method(prey_predator_algorithm_continuous, fitness_population, instance, config, args.repetitions, seed=args.seed, evaluate_function=evaluate_population_fixed)
-    elif args.algorithm == 'pso_random':
-        results = run_method(particle_swarm_optmization, fitness, instance, config, args.repetitions, seed=args.seed, evaluate_function=evaluate_population_random)
-    elif args.algorithm == 'pso_fixed':
-        results = run_method(particle_swarm_optmization, fitness, instance, config, args.repetitions, seed=args.seed, evaluate_function=evaluate_population_fixed)
+    elif args.algorithm == 'pso':
+        results = run_method(particle_swarm_optmization, fitness, instance, config, args.repetitions, seed=args.seed)
     elif args.algorithm == 'ga':
         results = run_method(genetic_algorithm, fitness, instance, config, args.repetitions, seed=args.seed)
     elif args.algorithm == 'de_random':

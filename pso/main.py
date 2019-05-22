@@ -10,17 +10,24 @@ from acs.instance import Instance, print_instance
 from utils.timer import Timer
 from utils.misc import sigmoid, evaluate_population_random, evaluate_population_fixed
 
-from pso.config import Config
+from pso.config import Config, Evaluator
 
 
-def particle_swarm_optmization(instance, config, fitness_function, evaluate_function, out_info=None):
+def particle_swarm_optmization(instance, config, fitness_function, out_info=None):
     num_particles = config.num_particles
+
+    if config.evaluator == Evaluator.FIXED_EVALUATOR:
+        evaluate_function = evaluate_population_fixed
+    else:
+        evaluate_function = evaluate_population_random
 
     cost_counter = 0
     def counter_fitness(individual, instance, timer, print_results=False, data=None):
         nonlocal cost_counter
         cost_counter += 1
         return fitness_function(individual, instance, timer, print_results, data=data)
+
+    iteration_counter = 0
     stagnation_counter = 0
 
     if out_info is not None:
@@ -46,7 +53,9 @@ def particle_swarm_optmization(instance, config, fitness_function, evaluate_func
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
-    while (stagnation_counter < config.max_stagnation):
+    while ((not config.cost_budget or cost_counter < config.cost_budget) and
+           (not config.num_iterations or iteration_counter < config.num_iterations) and
+           (not config.max_stagnation or stagnation_counter < config.max_stagnation)):
         old_global_best_fitness = global_best_fitness
 
         if out_info is not None:
@@ -92,6 +101,7 @@ def particle_swarm_optmization(instance, config, fitness_function, evaluate_func
         global_best_position = np.copy(local_best_position[global_best_index])
         global_best_fitness = local_best_fitness[global_best_index]
 
+        iteration_counter += 1
         if global_best_fitness < old_global_best_fitness:
             stagnation_counter = 0
         else:
@@ -99,13 +109,13 @@ def particle_swarm_optmization(instance, config, fitness_function, evaluate_func
 
         timer.add_time("update_best")
 
-    print("Tempo: ")
-    print(timer.get_time())
-    print("Iterações: ")
-    print(timer.get_iterations())
+    # print("Tempo: ")
+    # print(timer.get_time())
+    # print("Iterações: ")
+    # print(timer.get_iterations())
     # print(timer.get_iteration_time())
-    print("Tempo total: {}".format(timer.get_total_time()))
-    print("Número de iterações: {}".format(len(out_info["cost_value"])))
+    # print("Tempo total: {}".format(timer.get_total_time()))
+    # print("Número de iterações: {}".format(len(out_info["cost_value"])))
 
     if out_info is not None:
         # out_info["best_fitness"].append(survival_values[0])
@@ -158,7 +168,7 @@ if __name__ == "__main__":
 
     for i in range(num_repetitions):
         np.random.seed(i)
-        (population, survival_values) = particle_swarm_optmization(instance, config, fitness, evaluate_population_random, out_info=out_info)
+        (population, survival_values) = particle_swarm_optmization(instance, config, fitness, out_info=out_info)
 
         best_fitness.append(out_info["best_fitness"])
         perf_counter.append(out_info["perf_counter"])
