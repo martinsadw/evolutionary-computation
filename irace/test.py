@@ -11,13 +11,13 @@ from utils.misc import evaluate_population_fixed, evaluate_population_random
 from utils.runner import run_method
 
 from ppa_b.main import prey_predator_algorithm_binary
-# from ppa_c.main import prey_predator_algorithm_continuous
+from ppa_c.main import prey_predator_algorithm_continuous
 from pso.main import particle_swarm_optmization
 from ga.main import genetic_algorithm
 # from de.main import differential_evolution
 
 import ppa_b.config
-# import ppa_c.config
+import ppa_c.config
 import pso.config
 import ga.config
 # import de.config
@@ -46,6 +46,7 @@ if __name__ == '__main__':
         'ga': ga.config.Config,
         'pso': pso.config.Config,
         'ppa_b': ppa_b.config.Config,
+        'ppa_c': ppa_c.config.Config,
     }
 
     parser_ga = subparsers.add_parser('ga')
@@ -76,6 +77,18 @@ if __name__ == '__main__':
     parser_ppa_b.add_argument('-l', '--local-search', type=int, default=5)
     parser_ppa_b.add_argument('-c', '--follow-chance', type=float, default=0.8)
 
+    parser_ppa_c = subparsers.add_parser('ppa_c')
+    create_base_parser(parser_ppa_c)
+    parser_ppa_c.add_argument('-v', '--max-velocity', type=float, default=6)
+    parser_ppa_c.add_argument('-d', '--distance-influence', type=float, default=1)
+    parser_ppa_c.add_argument('-f', '--survival-influence', type=float, default=1)
+    parser_ppa_c.add_argument('-n', '--min-steps', type=int, default=4)
+    parser_ppa_c.add_argument('-x', '--max-steps', type=int, default=25)
+    parser_ppa_c.add_argument('-t', '--steps-distance', type=float, default=0.1)
+    parser_ppa_c.add_argument('-l', '--local-search', type=int, default=5)
+    parser_ppa_c.add_argument('-c', '--follow-chance', type=float, default=0.8)
+    parser_ppa_c.add_argument('-e', '--evaluator', choices=['RANDOM', 'FIXED'], default='RANDOM')
+
     args = parser.parse_args()
 
     if not args.cost_budget and not args.max_stagnation and not args.num_iterations:
@@ -92,12 +105,9 @@ if __name__ == '__main__':
     if args.algorithm == 'ppa_b':
         label = 'PPAB'
         results = run_method(prey_predator_algorithm_binary, fitness_population, instance, config, args.repetitions, seed=args.seed)
-    elif args.algorithm == 'ppa_c_random':
+    elif args.algorithm == 'ppa_c':
         label = 'PPAC'
-        # results = run_method(prey_predator_algorithm_continuous, fitness_population, instance, config, args.repetitions, seed=args.seed, evaluate_function=evaluate_population_random)
-    elif args.algorithm == 'ppa_c_fixed':
-        label = 'PPAC'
-        # results = run_method(prey_predator_algorithm_continuous, fitness_population, instance, config, args.repetitions, seed=args.seed, evaluate_function=evaluate_population_fixed)
+        results = run_method(prey_predator_algorithm_continuous, fitness_population, instance, config, args.repetitions, seed=args.seed)
     elif args.algorithm == 'pso':
         label = 'PSO'
         results = run_method(particle_swarm_optmization, fitness, instance, config, args.repetitions, seed=args.seed)

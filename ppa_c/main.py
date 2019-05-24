@@ -11,18 +11,25 @@ from utils.timer import Timer
 from utils.roulette import Roulette
 from utils.misc import sigmoid, vector_size, random_on_unit_sphere, evaluate_population_random, evaluate_population_fixed, improve_population
 
-from ppa_c.config import Config
+from ppa_c.config import Config, Evaluator
 from ppa_c.population_movement import move_population_direction, move_population_random, move_population_random_complement, move_population_local_search
 
 
-def prey_predator_algorithm_continuous(instance, config, fitness_function, evaluate_function, out_info=None):
+def prey_predator_algorithm_continuous(instance, config, fitness_function, out_info=None):
     population_size = config.population_size
+
+    if config.evaluator == Evaluator.FIXED_EVALUATOR:
+        evaluate_function = evaluate_population_fixed
+    else:
+        evaluate_function = evaluate_population_random
 
     cost_counter = 0
     def counter_fitness(population, instance, timer, print_results=False):
         nonlocal cost_counter
         cost_counter += population.shape[0]
         return fitness_function(population, instance, timer, print_results)
+
+    iteration_counter = 0
     stagnation_counter = 0
 
     if out_info is not None:
@@ -39,7 +46,9 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, evalu
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
-    while (stagnation_counter < config.max_stagnation):
+    while ((not config.cost_budget or cost_counter < config.cost_budget) and
+           (not config.num_iterations or iteration_counter < config.num_iterations) and
+           (not config.max_stagnation or stagnation_counter < config.max_stagnation)):
         timer.add_time()
         population_evaluation = evaluate_function(population)
         survival_values = counter_fitness(population_evaluation, instance, timer)
@@ -48,6 +57,7 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, evalu
         population = population[sorted_indices]
         survival_values = survival_values[sorted_indices]
 
+        iteration_counter += 1
         if survival_values[0] < population_best_fitness:
             population_best_evaluation = population_evaluation[sorted_indices[0]]
             population_best_fitness = survival_values[0]
@@ -165,7 +175,7 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, evalu
         out_info["process_time"].append(time.process_time() - start_process_time)
         out_info["cost_value"].append(cost_counter)
 
-    return (population_evaluation, survival_values)
+    return (population_best_evaluation, population_best_fitness)
 
 
 def read_files(instance_config_filename, config_filename):
@@ -209,7 +219,7 @@ if __name__ == "__main__":
 
     for i in range(num_repetitions):
         np.random.seed(i)
-        (population, survival_values) = prey_predator_algorithm_continuous(instance, config, fitness_population, evaluate_population_fixed, out_info=out_info)
+        (individual, survival_value) = prey_predator_algorithm_continuous(instance, config, fitness_population, out_info=out_info)
 
         best_fitness.append(out_info["best_fitness"])
         perf_counter.append(out_info["perf_counter"])
@@ -220,13 +230,13 @@ if __name__ == "__main__":
             cost_value.extend(new_cost_values)
 
         timer = Timer()
-        fitness(population[0], instance, timer, True)
+        fitness(individual, instance, timer, True)
 
-        popularity += population[0]
+        popularity += individual
 
         print('#{}\n'.format(i))
-        print('Survival values:\n{}\n'.format(survival_values))
-        print('Best Individual:\n{}\n'.format(population[0]))
+        print('Survival values:\n{}\n'.format(survival_value))
+        print('Best Individual:\n{}\n'.format(individual))
 
     num_iterations = len(cost_value)
 

@@ -1,17 +1,20 @@
 [section]
 
-ppatosca.arg.maxStagnation = 100
-ppatosca.arg.populationSize = 30         ; populationSize
-ppatosca.arg.maxPosition = 10
-ppatosca.arg.followDistanceParameter = 1 ; distanceFactor
-ppatosca.arg.followSurvivalParameter = 1 ; survivalValueFactor
-ppatosca.arg.minSteps = 4                ; minimumStepLength
-ppatosca.arg.maxSteps = 25               ; maximumStepLength
-ppatosca.arg.stepsDistanceParameter = .1
-ppatosca.arg.localSearchTries = 5
-ppatosca.arg.followChance = 0.8          ; followUp
+acs.ppac.costBudget = 100
+acs.ppac.numIterations = 100
+acs.ppac.maxStagnation = 100
+acs.ppac.populationSize = 30         ; populationSize
+acs.ppac.maxPosition = 10
+acs.ppac.followDistanceParameter = 1 ; distanceFactor
+acs.ppac.followSurvivalParameter = 1 ; survivalValueFactor
+acs.ppac.minSteps = 4                ; minimumStepLength
+acs.ppac.maxSteps = 25               ; maximumStepLength
+acs.ppac.stepsDistanceParameter = .1
+acs.ppac.localSearchTries = 5
+acs.ppac.followChance = 0.8          ; followUp
+acs.ppac.evaluator = RANDOM_EVALUATOR
 
-ppatosca.arg.followedPreysQuantity = 1
-ppatosca.arg.quantityBestRandomPreys = 1
-ppatosca.arg.maxPredatorQuantity = 1
-ppatosca.arg.maxBestPreyQuantity = 1
+acs.ppac.followedPreysQuantity = 1
+acs.ppac.quantityBestRandomPreys = 1
+acs.ppac.maxPredatorQuantity = 1
+acs.ppac.maxBestPreyQuantity = 1

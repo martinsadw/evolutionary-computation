@@ -42,8 +42,7 @@ if __name__ == "__main__":
     num_repetitions = 10
 
     results_ppa_b = run_method(prey_predator_algorithm_binary, fitness_population, instance, config_ppa_b, num_repetitions)
-    results_ppa_c_random = run_method(prey_predator_algorithm_continuous, fitness_population, instance, config_ppa_c, num_repetitions, evaluate_function=evaluate_population_random)
-    results_ppa_c_fixed = run_method(prey_predator_algorithm_continuous, fitness_population, instance, config_ppa_c, num_repetitions, evaluate_function=evaluate_population_fixed)
+    results_ppa_c = run_method(prey_predator_algorithm_continuous, fitness_population, instance, config_ppa_c, num_repetitions)
     results_pso = run_method(particle_swarm_optmization, fitness, instance, config_pso, num_repetitions)
     results_ga = run_method(genetic_algorithm, fitness, instance, config_ga, num_repetitions)
     results_de_random = run_method(differential_evolution, fitness_population, instance, config_de, num_repetitions, evaluate_function=evaluate_population_random)
@@ -52,8 +51,7 @@ if __name__ == "__main__":
     fig = plt.figure()
     fig.suptitle('PPAC: best fitness')
     plt.plot(results_ppa_b[0], results_ppa_b[1], label="PPAB")
-    plt.plot(results_ppa_c_random[0], results_ppa_c_random[1], label="PPAC Random")
-    plt.plot(results_ppa_c_fixed[0], results_ppa_c_fixed[1], label="PPAC Fixed")
+    plt.plot(results_ppa_c[0], results_ppa_c[1], label="PPAC")
     plt.plot(results_pso[0], results_pso[1], label="PSO")
     plt.plot(results_ga[0], results_ga[1], label="GA")
     plt.plot(results_de_random[0], results_de_random[1], label="DE Random")
