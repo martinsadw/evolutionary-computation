@@ -25,6 +25,7 @@ def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=
         cost_counter += population.shape[0]
         return fitness_function(population, instance, timer, print_results)
 
+    iteration_counter = 0
     stagnation_counter = 0
 
     if out_info is not None:
@@ -42,7 +43,9 @@ def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
-    while (stagnation_counter < config.max_stagnation):
+    while ((not config.cost_budget or cost_counter < config.cost_budget) and
+           (not config.num_iterations or iteration_counter < config.num_iterations) and
+           (not config.max_stagnation or stagnation_counter < config.max_stagnation)):
         timer.add_time()
         # print('==========================' + str(iteration))
         survival_values = counter_fitness(population, instance, timer)
@@ -51,6 +54,7 @@ def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=
         survival_values = survival_values[sorted_indices]
         # print('Survival values:\n{}\n'.format(survival_values))
 
+        iteration_counter += 1
         if survival_values[0] < population_best_fitness:
             population_best_individual = population[0]
             population_best_fitness = survival_values[0]
@@ -171,7 +175,7 @@ def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=
         out_info["process_time"].append(time.process_time() - start_process_time)
         out_info["cost_value"].append(cost_counter)
 
-    return (population, survival_values)
+    return (population_best_individual, population_best_fitness)
 
 
 def read_files(instance_config_filename, config_filename):
@@ -215,7 +219,7 @@ if __name__ == "__main__":
 
     for i in range(num_repetitions):
         np.random.seed(i)
-        (population, survival_values) = prey_predator_algorithm_binary(instance, config, fitness_population, out_info=out_info)
+        (individual, survival_value) = prey_predator_algorithm_binary(instance, config, fitness_population, out_info=out_info)
 
         best_fitness.append(out_info["best_fitness"])
         perf_counter.append(out_info["perf_counter"])
@@ -226,13 +230,13 @@ if __name__ == "__main__":
             cost_value.extend(new_cost_values)
 
         timer = Timer()
-        fitness(population[0], instance, timer, True)
+        fitness(individual, instance, timer, True)
 
-        popularity += population[0]
+        popularity += individual
 
         print('#{}\n'.format(i))
-        print('Survival values:\n{}\n'.format(survival_values))
-        print('Best Individual:\n{}\n'.format(population[0]))
+        print('Survival values:\n{}\n'.format(survival_value))
+        print('Best Individual:\n{}\n'.format(individual))
 
     num_iterations = len(cost_value)
 

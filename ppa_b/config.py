@@ -3,7 +3,10 @@ import configparser
 
 class Config:
     def __init__(self):
-        self.max_stagnation = 1
+        self.cost_budget = None
+        self.num_iterations = None
+        self.max_stagnation = None
+
         self.population_size = 1
 
         self.follow_distance_parameter = 1
@@ -26,20 +29,27 @@ class Config:
         config_values = configparser.ConfigParser(inline_comment_prefixes=(";",))
         config_values.read_string(config_string)
 
-        # config.num_iterations = int(config_values['section']['ppatosca.arg.numIterations'])
-        config.max_stagnation = int(config_values['section']['ppatosca.arg.maxStagnation'])
-        config.population_size = int(config_values['section']['ppatosca.arg.populationSize'])
+        if config_values.has_option('section', 'acs.ppab.costBudget'):
+            config.cost_budget = int(config_values['section']['acs.ppab.costBudget'])
 
-        config.follow_distance_parameter = float(config_values['section']['ppatosca.arg.followDistanceParameter'])
-        config.follow_survival_parameter = float(config_values['section']['ppatosca.arg.followSurvivalParameter'])
+        if config_values.has_option('section', 'acs.ppab.numIterations'):
+            config.num_iterations = int(config_values['section']['acs.ppab.numIterations'])
 
-        config.min_steps = int(config_values['section']['ppatosca.arg.minSteps'])
-        config.max_steps = int(config_values['section']['ppatosca.arg.maxSteps'])
-        config.steps_distance_parameter = float(config_values['section']['ppatosca.arg.stepsDistanceParameter'])
+        if config_values.has_option('section', 'acs.ppab.maxStagnation'):
+            config.max_stagnation = int(config_values['section']['acs.ppab.maxStagnation'])
 
-        config.local_search_tries = int(config_values['section']['ppatosca.arg.localSearchTries'])
+        config.population_size = int(config_values['section']['acs.ppab.populationSize'])
 
-        config.follow_chance = float(config_values['section']['ppatosca.arg.followChance'])
+        config.follow_distance_parameter = float(config_values['section']['acs.ppab.followDistanceParameter'])
+        config.follow_survival_parameter = float(config_values['section']['acs.ppab.followSurvivalParameter'])
+
+        config.min_steps = int(config_values['section']['acs.ppab.minSteps'])
+        config.max_steps = int(config_values['section']['acs.ppab.maxSteps'])
+        config.steps_distance_parameter = float(config_values['section']['acs.ppab.stepsDistanceParameter'])
+
+        config.local_search_tries = int(config_values['section']['acs.ppab.localSearchTries'])
+
+        config.follow_chance = float(config_values['section']['acs.ppab.followChance'])
 
         return config
 
@@ -47,8 +57,7 @@ class Config:
     def load_test(cls):
         config = cls()
 
-        # config.num_iterations = 0
-        config.max_stagnation = 0
+        config.max_stagnation = 500
         config.population_size = 5
 
         config.follow_distance_parameter = 1
@@ -61,5 +70,27 @@ class Config:
         config.local_search_tries = 5
 
         config.follow_chance = 0.8
+
+        return config
+
+    @classmethod
+    def load_args(cls, args):
+        config = cls()
+
+        config.cost_budget = args.cost_budget
+        config.num_iterations = args.num_iterations
+        config.max_stagnation = args.max_stagnation
+        config.population_size = args.population
+
+        config.follow_distance_parameter = args.distance_influence
+        config.follow_survival_parameter = args.survival_influence
+
+        config.min_steps = args.min_steps
+        config.max_steps = args.max_steps
+        config.steps_distance_parameter = args.steps_distance
+
+        config.local_search_tries = args.local_search
+
+        config.follow_chance = args.follow_chance
 
         return config
