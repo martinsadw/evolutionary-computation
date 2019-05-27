@@ -14,13 +14,13 @@ from ppa_b.main import prey_predator_algorithm_binary
 from ppa_c.main import prey_predator_algorithm_continuous
 from pso.main import particle_swarm_optmization
 from ga.main import genetic_algorithm
-# from de.main import differential_evolution
+from de.main import differential_evolution
 
 import ppa_b.config
 import ppa_c.config
 import pso.config
 import ga.config
-# import de.config
+import de.config
 
 
 def create_base_parser(parser):
@@ -47,6 +47,7 @@ if __name__ == '__main__':
         'pso': pso.config.Config,
         'ppa_b': ppa_b.config.Config,
         'ppa_c': ppa_c.config.Config,
+        'de': de.config.Config,
     }
 
     parser_ga = subparsers.add_parser('ga')
@@ -89,6 +90,12 @@ if __name__ == '__main__':
     parser_ppa_c.add_argument('-c', '--follow-chance', type=float, default=0.8)
     parser_ppa_c.add_argument('-e', '--evaluator', choices=['RANDOM', 'FIXED'], default='RANDOM')
 
+    parser_de = subparsers.add_parser('de')
+    create_base_parser(parser_de)
+    parser_de.add_argument('-m', '--mutation-chance', type=float, default=0.1)
+    parser_de.add_argument('-c', '--crossover-rate', type=float, default=0.5)
+    parser_de.add_argument('-e', '--evaluator', choices=['RANDOM', 'FIXED'], default='RANDOM')
+
     args = parser.parse_args()
 
     if not args.cost_budget and not args.max_stagnation and not args.num_iterations:
@@ -114,12 +121,9 @@ if __name__ == '__main__':
     elif args.algorithm == 'ga':
         label = 'GA'
         results = run_method(genetic_algorithm, fitness, instance, config, args.repetitions, seed=args.seed)
-    elif args.algorithm == 'de_random':
+    elif args.algorithm == 'de':
         label = 'DE'
-        # results = run_method(differential_evolution, fitness_population, instance, config, args.repetitions, seed=args.seed, evaluate_function=evaluate_population_random)
-    elif args.algorithm == 'de_fixed':
-        label = 'DE'
-        # results = run_method(differential_evolution, fitness_population, instance, config, args.repetitions, seed=args.seed, evaluate_function=evaluate_population_fixed)
+        results = run_method(differential_evolution, fitness_population, instance, config, args.repetitions, seed=args.seed)
 
     print(results[1][-1])
 

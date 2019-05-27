@@ -154,13 +154,13 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, out_i
 
         population = new_population
 
-    print("Tempo: ")
-    print(timer.get_time())
-    print("Iterações: ")
-    print(timer.get_iterations())
+    # print("Tempo: ")
+    # print(timer.get_time())
+    # print("Iterações: ")
+    # print(timer.get_iterations())
     # print(timer.get_iteration_time())
-    print("Tempo total: {}".format(timer.get_total_time()))
-    print("Número de iterações: {}".format(len(out_info["cost_value"])))
+    # print("Tempo total: {}".format(timer.get_total_time()))
+    # print("Número de iterações: {}".format(len(out_info["cost_value"])))
 
     population_evaluation = evaluate_function(population)
     survival_values = counter_fitness(population_evaluation, instance, timer)

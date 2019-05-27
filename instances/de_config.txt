@@ -1,9 +1,12 @@
 [section]
 
 
+acs.de.costBudget = 12000
+acs.de.numIterations = 600
 acs.de.maxStagnation = 100
 acs.de.populationSize = 30
-acs.de.numRepetitions = 1
 
 acs.de.mutationChance = 0.8
 acs.de.crossoverRate = 0.9
+
+acs.de.evaluator = RANDOM_EVALUATOR

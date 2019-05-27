@@ -9,13 +9,18 @@ from acs.objective import fitness, fitness_population
 from acs.instance import Instance
 
 from utils.timer import Timer
-from utils.misc import evaluate_population_fixed
+from utils.misc import evaluate_population_random, evaluate_population_fixed
 
-from de.config import Config
+from de.config import Config, Evaluator
 
 
-def differential_evolution(instance, config, fitness_function, evaluate_function, out_info=None):
+def differential_evolution(instance, config, fitness_function, out_info=None):
     population_size = config.population_size
+
+    if config.evaluator == Evaluator.FIXED_EVALUATOR:
+        evaluate_function = evaluate_population_fixed
+    else:
+        evaluate_function = evaluate_population_random
 
     cost_counter = 0
     def cf(individual, instance, timer, print_results=False, data=None):
@@ -28,6 +33,7 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
         cost_counter += population.shape[0]
         return fitness_function(population, instance, timer, print_results)
 
+    iteration_counter = 0
     stagnation_counter = 0
 
     if out_info is not None:
@@ -49,13 +55,16 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
-    while (stagnation_counter < config.max_stagnation):
+    while ((not config.cost_budget or cost_counter < config.cost_budget) and
+           (not config.num_iterations or iteration_counter < config.num_iterations) and
+           (not config.max_stagnation or stagnation_counter < config.max_stagnation)):
         timer.add_time()
 
         sorted_indices = np.argsort(survival_values)
         population = population[sorted_indices]
         survival_values = survival_values[sorted_indices]
 
+        iteration_counter += 1
         if survival_values[0] < population_best_fitness:
             population_best_fitness = survival_values[0]
             stagnation_counter = 0
@@ -72,7 +81,6 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
 
         #--de
         for p in range(population_size):
-
             idxs = [idx for idx in range(population_size) if idx != p]
             a, b, c = population[np.random.choice(idxs, 3, replace = False)]
 
@@ -104,7 +112,8 @@ def differential_evolution(instance, config, fitness_function, evaluate_function
     population_evaluation = population_evaluation[sorted_indices]
     survival_values = survival_values[sorted_indices]
 
-    return (population_evaluation, survival_values)
+    return (population_evaluation[0], survival_values[0])
+
 
 def read_files(instance_config_filename, config_filename):
     if instance_config_filename is None:
@@ -137,14 +146,14 @@ if __name__ == "__main__":
 
     out_info = {}
 
-    num_repetitions = config.num_repetitions
+    # num_repetitions = config.num_repetitions
+    num_repetitions = 1
 
     popularity = np.zeros((instance.num_materials,))
 
     for i in range(num_repetitions):
         np.random.seed(i)
-        (population, survival_values) = differential_evolution(instance, config, counter_fitness, evaluate_population_fixed, out_info=out_info)
-
+        (individual, survival_value) = differential_evolution(instance, config, counter_fitness, out_info=out_info)
 
         best_fitness.append(out_info["best_fitness"])
         perf_counter.append(out_info["perf_counter"])
@@ -155,13 +164,13 @@ if __name__ == "__main__":
             cost_value.extend(new_cost_values)
 
         timer = Timer()
-        fitness(population[0], instance, timer, True)
+        fitness(individual, instance, timer, True)
 
-        popularity += population[0]
+        popularity += individual
 
         print('#{}\n'.format(i))
-        print('Survival values:\n{}\n'.format(survival_values))
-        print('Best Individual:\n{}\n'.format(population[0]))
+        print('Survival values:\n{}\n'.format(survival_value))
+        print('Best Individual:\n{}\n'.format(individual))
 
     num_iterations = len(cost_value)
 

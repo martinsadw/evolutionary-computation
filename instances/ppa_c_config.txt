@@ -1,7 +1,7 @@
 [section]
 
-acs.ppac.costBudget = 100
-acs.ppac.numIterations = 100
+acs.ppac.costBudget = 12000
+acs.ppac.numIterations = 600
 acs.ppac.maxStagnation = 100
 acs.ppac.populationSize = 30         ; populationSize
 acs.ppac.maxPosition = 10
