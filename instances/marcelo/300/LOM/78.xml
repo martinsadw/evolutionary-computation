@@ -7,13 +7,14 @@
 	</identifier>
 </general>
 <technical><format>video/mp4</format></technical>
+<educational>
 <typicalLearningTime><duration>PT116M15S</duration>
 </typicalLearningTime>
 <interactivityLevel><source>LOMv1.0</source>
 <value>low</value></interactivityLevel>
 <difficulty><source>LOMv1.0</source>
 <value>medium</value></difficulty>
-<educational><interactivityType><source>LOMv1.0</source>
+<interactivityType><source>LOMv1.0</source>
 <value>mixed</value></interactivityType>
 <learningResourceType><source>LOMv1.0</source>
 <value>simulation</value></learningResourceType>

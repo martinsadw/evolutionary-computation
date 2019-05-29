@@ -55,7 +55,7 @@ if __name__ == "__main__":
 
     fig = plt.figure()
     # fig.suptitle('PPAC: best fitness')
-    plt.xlabel('# execution of fitness function')
+    plt.xlabel('# executions of fitness function')
     plt.ylabel('fitness value')
     plt.plot(results_ppa_b[0], results_ppa_b[1], label="PPAD")
     plt.plot(results_ppa_c[0], results_ppa_c[1], label="PPAC")
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     plt.show()
 
     fig = plt.figure()
-    plt.xlabel('# execution of fitness function')
+    plt.xlabel('# executions of fitness function')
     plt.ylabel('fitness value')
     plt.plot(results_pso[0], results_pso[1], color='g', label="PSO")
     plt.plot(results_pso[0], results_pso[1] - results_pso[2], linestyle='--', color='g', linewidth=0.5)
