@@ -1,16 +1,16 @@
 [section]
 
 acs.ppab.costBudget = 12000
-acs.ppab.numIterations = 600
-acs.ppab.maxStagnation = 100
-acs.ppab.populationSize = 30         ; populationSize
-acs.ppab.followDistanceParameter = 1 ; distanceFactor
-acs.ppab.followSurvivalParameter = 1 ; survivalValueFactor
-acs.ppab.minSteps = 4                ; minimumStepLength
-acs.ppab.maxSteps = 25               ; maximumStepLength
-acs.ppab.stepsDistanceParameter = .1
-acs.ppab.localSearchTries = 5
-acs.ppab.followChance = 0.8          ; followUp
+;acs.ppab.numIterations = 600
+;acs.ppab.maxStagnation = 100
+acs.ppab.populationSize = 30           ; populationSize
+acs.ppab.followDistanceParameter = 0.5 ; distanceFactor
+acs.ppab.followSurvivalParameter = 0.8 ; survivalValueFactor
+acs.ppab.minSteps = 3                  ; minimumStepLength
+acs.ppab.maxSteps = 75                 ; maximumStepLength
+acs.ppab.stepsDistanceParameter = 0.3
+acs.ppab.localSearchTries = 8
+acs.ppab.followChance = 1            ; followUp
 
 acs.ppab.followedPreysQuantity = 1
 acs.ppab.quantityBestRandomPreys = 1
