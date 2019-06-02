@@ -190,11 +190,11 @@ def fitness(individual, instance, timer, print_results=False, data=None):
     timer.add_time("fitness_sum")
 
     if data is not None:
-        new_data = (concepts_covered_objective,
-                    difficulty_objective,
-                    total_time_objective,
-                    materials_balancing_objective,
-                    learning_style_objective)
+        new_data = (instance.concepts_covered_weight * concepts_covered_objective,
+                    instance.difficulty_weight * difficulty_objective,
+                    instance.total_time_weight * total_time_objective,
+                    instance.materials_balancing_weight * materials_balancing_objective,
+                    instance.learning_style_weight * learning_style_objective)
 
         data.append(new_data)
 
@@ -212,12 +212,12 @@ def fitness(individual, instance, timer, print_results=False, data=None):
     return sum_objective
 
 
-def fitness_population(population, instance, timer, print_results=False):
+def fitness_population(population, instance, timer, print_results=False, data=None):
     population_size = population.shape[0]
     survival_values = np.empty(population_size)
 
     for i in range(population_size):
         # Calcula o valor de sobrevivencia do individuo i
-        survival_values[i] = fitness(population[i], instance, timer, print_results)
+        survival_values[i] = fitness(population[i], instance, timer, print_results, data)
 
     return survival_values

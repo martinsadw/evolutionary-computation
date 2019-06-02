@@ -3,7 +3,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 
-from acs.objective import fitness, fitness_population
+from acs.objective import fitness
 from acs.instance import Instance, print_instance
 
 from utils.misc import evaluate_population_fixed, evaluate_population_random
@@ -39,40 +39,52 @@ if __name__ == "__main__":
     config_ga = ga.config.Config.load_from_file("instances/ga_config.txt")
     config_de = de.config.Config.load_from_file("instances/de_config.txt")
 
-    # config_ppa_b.cost_budget = 2000
-    # config_ppa_c.cost_budget = 2000
-    # config_pso.cost_budget = 2000
-    # config_ga.cost_budget = 2000
-    # config_de.cost_budget = 2000
+    config_ppa_b.cost_budget = 2000
+    config_ppa_c.cost_budget = 2000
+    config_pso.cost_budget = 2000
+    config_ga.cost_budget = 2000
+    config_de.cost_budget = 2000
 
-    num_repetitions = 100
+    num_repetitions = 3
 
-    results_ppa_b = run_method(prey_predator_algorithm_binary, fitness_population, instance, config_ppa_b, num_repetitions)
-    results_ppa_c = run_method(prey_predator_algorithm_continuous, fitness_population, instance, config_ppa_c, num_repetitions)
+    results_ppa_b = run_method(prey_predator_algorithm_binary, fitness, instance, config_ppa_b, num_repetitions)
+    results_ppa_c = run_method(prey_predator_algorithm_continuous, fitness, instance, config_ppa_c, num_repetitions)
     results_pso = run_method(particle_swarm_optmization, fitness, instance, config_pso, num_repetitions)
     results_ga = run_method(genetic_algorithm, fitness, instance, config_ga, num_repetitions)
-    results_de = run_method(differential_evolution, fitness_population, instance, config_de, num_repetitions)
+    results_de = run_method(differential_evolution, fitness, instance, config_de, num_repetitions)
+
+    mean_ppa_b = np.mean(results_ppa_b[1], axis=0)
+    mean_ppa_c = np.mean(results_ppa_c[1], axis=0)
+    mean_pso = np.mean(results_pso[1], axis=0)
+    mean_ga = np.mean(results_ga[1], axis=0)
+    mean_de = np.mean(results_de[1], axis=0)
+
+    deviation_ppa_b = np.std(results_ppa_b[1], axis=0)
+    deviation_ppa_c = np.std(results_ppa_c[1], axis=0)
+    deviation_pso = np.std(results_pso[1], axis=0)
+    deviation_ga = np.std(results_ga[1], axis=0)
+    deviation_de = np.std(results_de[1], axis=0)
 
     fig = plt.figure()
     # fig.suptitle('PPAC: best fitness')
     plt.xlabel('# executions of fitness function')
     plt.ylabel('fitness value')
-    plt.plot(results_ppa_b[0], results_ppa_b[1], label="PPAD")
-    plt.plot(results_ppa_c[0], results_ppa_c[1], label="PPAC")
-    plt.plot(results_pso[0], results_pso[1], label="PSO")
-    plt.plot(results_ga[0], results_ga[1], label="GA")
-    plt.plot(results_de[0], results_de[1], label="DE")
+    plt.plot(results_ppa_b[0], mean_ppa_b, label="PPAD")
+    plt.plot(results_ppa_c[0], mean_ppa_c, label="PPAC")
+    plt.plot(results_pso[0], mean_pso, label="PSO")
+    plt.plot(results_ga[0], mean_ga, label="GA")
+    plt.plot(results_de[0], mean_de, label="DE")
     plt.legend(loc=1)
     plt.show()
 
     fig = plt.figure()
     plt.xlabel('# executions of fitness function')
     plt.ylabel('fitness value')
-    plt.plot(results_pso[0], results_pso[1], color='g', label="PSO")
-    plt.plot(results_pso[0], results_pso[1] - results_pso[2], linestyle='--', color='g', linewidth=0.5)
-    plt.plot(results_pso[0], results_pso[1] + results_pso[2], linestyle='--', color='g', linewidth=0.5)
-    plt.plot(results_ga[0], results_ga[1], color='r', label="GA")
-    plt.plot(results_ga[0], results_ga[1] + results_ga[2], linestyle='--', color='r', linewidth=0.5)
-    plt.plot(results_ga[0], results_ga[1] - results_ga[2], linestyle='--', color='r', linewidth=0.5)
+    plt.plot(results_pso[0], mean_pso, color='g', label="PSO")
+    plt.plot(results_pso[0], mean_pso - deviation_pso, linestyle='--', color='g', linewidth=0.5)
+    plt.plot(results_pso[0], mean_pso + deviation_pso, linestyle='--', color='g', linewidth=0.5)
+    plt.plot(results_ga[0], mean_ga, color='r', label="GA")
+    plt.plot(results_ga[0], mean_ga + deviation_ga, linestyle='--', color='r', linewidth=0.5)
+    plt.plot(results_ga[0], mean_ga - deviation_ga, linestyle='--', color='r', linewidth=0.5)
     plt.legend(loc=1)
     plt.show()

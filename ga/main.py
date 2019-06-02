@@ -23,19 +23,20 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
     population_size = config.population_size
 
     cost_counter = 0
-    def counter_fitness(population, instance, timer, print_results=False, data=None):
+    def counter_fitness(individual, instance, timer, print_results=False, data=None):
         nonlocal cost_counter
         cost_counter += 1
-        return fitness_function(population, instance, timer, print_results, data=data)
+        return fitness_function(individual, instance, timer, print_results, data=data)
 
     iteration_counter = 0
     stagnation_counter = 0
 
     if out_info is not None:
-        out_info["best_fitness"] = []
-        out_info["perf_counter"] = []
-        out_info["process_time"] = []
-        out_info["cost_value"] = []
+        out_info['best_fitness'] = []
+        out_info['partial_fitness'] = []
+        out_info['perf_counter'] = []
+        out_info['process_time'] = []
+        out_info['cost_value'] = []
 
     timer = Timer()
 
@@ -66,11 +67,12 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
             stagnation_counter += 1
 
         if out_info is not None:
-            # out_info["best_fitness"].append(survival_values[0])
-            out_info["best_fitness"].append(population_best_fitness)
-            out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
-            out_info["process_time"].append(time.process_time() - start_process_time)
-            out_info["cost_value"].append(cost_counter)
+            # out_info['best_fitness'].append(survival_values[0])
+            out_info['best_fitness'].append(population_best_fitness)
+            fitness_function(population_best_individual, instance, timer, data=out_info['partial_fitness'])
+            out_info['perf_counter'].append(time.perf_counter() - start_perf_counter)
+            out_info['process_time'].append(time.process_time() - start_process_time)
+            out_info['cost_value'].append(cost_counter)
 
         new_population = copying_gene(population, config.copying_method, config)
 
@@ -94,11 +96,12 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
         population = new_population
 
     if out_info is not None:
-        # out_info["best_fitness"].append(survival_values[0])
-        out_info["best_fitness"].append(population_best_fitness)
-        out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
-        out_info["process_time"].append(time.process_time() - start_process_time)
-        out_info["cost_value"].append(cost_counter)
+        # out_info['best_fitness'].append(survival_values[0])
+        out_info['best_fitness'].append(population_best_fitness)
+        fitness_function(population_best_individual, instance, timer, data=out_info['partial_fitness'])
+        out_info['perf_counter'].append(time.perf_counter() - start_perf_counter)
+        out_info['process_time'].append(time.process_time() - start_process_time)
+        out_info['cost_value'].append(cost_counter)
 
     return (population_best_individual, population_best_fitness)
 
@@ -117,7 +120,7 @@ def read_files(instance_config_filename, config_filename):
     return (instance, config)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     instance_config_filename = None
     if (len(sys.argv) >= 2):
         instance_config_filename = sys.argv[1]
@@ -142,12 +145,12 @@ if __name__ == "__main__":
         np.random.seed(i)
         (individual, survival_value) = genetic_algorithm(instance, config, fitness, out_info=out_info)
 
-        best_fitness.append(out_info["best_fitness"])
-        perf_counter.append(out_info["perf_counter"])
-        process_time.append(out_info["process_time"])
+        best_fitness.append(out_info['best_fitness'])
+        perf_counter.append(out_info['perf_counter'])
+        process_time.append(out_info['process_time'])
 
-        if len(out_info["cost_value"]) > len(cost_value):
-            new_cost_values = out_info["cost_value"][len(cost_value):]
+        if len(out_info['cost_value']) > len(cost_value):
+            new_cost_values = out_info['cost_value'][len(cost_value):]
             cost_value.extend(new_cost_values)
 
         timer = Timer()

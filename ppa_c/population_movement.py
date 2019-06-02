@@ -35,12 +35,13 @@ def move_population_random_complement(population, num_steps, away_direction):
 
 def move_population_local_search(population, fitness_function, evaluate_function, max_steps, num_tries, instance, timer):
     population_evaluation = evaluate_function(population)
-    best_survival_values = fitness_function(population_evaluation, instance, timer)
+    best_survival_values = np.apply_along_axis(fitness_function, 1, population_evaluation, instance, timer)
+
     for i in range(num_tries):
         num_steps = np.round(max_steps * np.random.rand(population.shape[0]))
         temp_population = move_population_random(population, num_steps)
         temp_population_evaluation = evaluate_function(temp_population)
-        temp_survival_values = fitness_function(temp_population_evaluation, instance, timer)
+        temp_survival_values = np.apply_along_axis(fitness_function, 1, temp_population_evaluation, instance, timer)
 
         (population, best_survival_values) = improve_population(population, best_survival_values, temp_population, temp_survival_values)
 

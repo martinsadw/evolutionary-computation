@@ -4,7 +4,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-from acs.objective import fitness, fitness_population
+from acs.objective import fitness
 from acs.instance import Instance
 
 from utils.misc import evaluate_population_fixed, evaluate_population_random
@@ -111,10 +111,10 @@ if __name__ == '__main__':
 
     if args.algorithm == 'ppa_b':
         label = 'PPAB'
-        results = run_method(prey_predator_algorithm_binary, fitness_population, instance, config, args.repetitions, seed=args.seed)
+        results = run_method(prey_predator_algorithm_binary, fitness, instance, config, args.repetitions, seed=args.seed)
     elif args.algorithm == 'ppa_c':
         label = 'PPAC'
-        results = run_method(prey_predator_algorithm_continuous, fitness_population, instance, config, args.repetitions, seed=args.seed)
+        results = run_method(prey_predator_algorithm_continuous, fitness, instance, config, args.repetitions, seed=args.seed)
     elif args.algorithm == 'pso':
         label = 'PSO'
         results = run_method(particle_swarm_optmization, fitness, instance, config, args.repetitions, seed=args.seed)
@@ -123,13 +123,28 @@ if __name__ == '__main__':
         results = run_method(genetic_algorithm, fitness, instance, config, args.repetitions, seed=args.seed)
     elif args.algorithm == 'de':
         label = 'DE'
-        results = run_method(differential_evolution, fitness_population, instance, config, args.repetitions, seed=args.seed)
+        results = run_method(differential_evolution, fitness, instance, config, args.repetitions, seed=args.seed)
 
-    print(results[1][-1])
+    mean_best_fitness = np.mean(results[1], axis=0)
+    mean_partial_fitness = np.mean(results[2], axis=0)
+    print(mean_best_fitness[-1])
+    print(mean_partial_fitness[-1])
+
+    # if args.show:
+    #     fig = plt.figure()
+    #     fig.suptitle('%s: best fitness' % label)
+    #     plt.plot(results[0], mean_best_fitness, label=label)
+    #     plt.legend(loc=1)
+    #     plt.show()
 
     if args.show:
         fig = plt.figure()
         fig.suptitle('%s: best fitness' % label)
-        plt.plot(results[0], results[1], label=label)
+        plt.plot(results[0], mean_best_fitness, label="Total")
+        plt.plot(results[0], mean_partial_fitness[:, 0], label="Coverage")
+        plt.plot(results[0], mean_partial_fitness[:, 1], label="Difficulty")
+        plt.plot(results[0], mean_partial_fitness[:, 2], label="Time")
+        plt.plot(results[0], mean_partial_fitness[:, 3], label="Balance")
+        plt.plot(results[0], mean_partial_fitness[:, 4], label="Style")
         plt.legend(loc=1)
         plt.show()

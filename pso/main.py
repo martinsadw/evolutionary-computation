@@ -32,6 +32,7 @@ def particle_swarm_optmization(instance, config, fitness_function, out_info=None
 
     if out_info is not None:
         out_info["best_fitness"] = []
+        out_info["partial_fitness"] = []
         out_info["perf_counter"] = []
         out_info["process_time"] = []
         out_info["cost_value"] = []
@@ -60,6 +61,7 @@ def particle_swarm_optmization(instance, config, fitness_function, out_info=None
 
         if out_info is not None:
             out_info["best_fitness"].append(global_best_fitness)
+            fitness_function(global_best_position, instance, timer, data=out_info["partial_fitness"])
             out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
             out_info["process_time"].append(time.process_time() - start_process_time)
             out_info["cost_value"].append(cost_counter)
@@ -120,6 +122,7 @@ def particle_swarm_optmization(instance, config, fitness_function, out_info=None
     if out_info is not None:
         # out_info["best_fitness"].append(survival_values[0])
         out_info["best_fitness"].append(global_best_fitness)
+        fitness_function(global_best_position, instance, timer, data=out_info["partial_fitness"])
         out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
         out_info["process_time"].append(time.process_time() - start_process_time)
         out_info["cost_value"].append(cost_counter)
