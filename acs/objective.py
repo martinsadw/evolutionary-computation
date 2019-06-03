@@ -11,18 +11,20 @@ def concepts_covered_function(individual, instance, timer):
     missing_concepts_coeficient = instance.missing_concepts_coeficient
     timer.add_time("fitness_concept_start")
 
-    # covered_concepts = np.any(concepts_materials[:, individual], axis=1)
-    covered_concepts = np.any(concepts_materials & individual, axis=1)
+    # covered_concepts = np.any(concepts_materials & individual, axis=1)
+    covered_concepts = np.sum(concepts_materials & individual, axis=1)
 
     timer.add_time("fitness_concept_lists1")
-    over_covered_test = ~objectives & covered_concepts
-    under_covered_test = objectives & ~covered_concepts
+    # over_covered_test = ~objectives & covered_concepts
+    # under_covered_test = objectives & ~covered_concepts
+    over_covered_test = np.copy(covered_concepts)
+    over_covered_test[objectives] = 0
+    under_covered_test = objectives & (covered_concepts == 0)
     timer.add_time("fitness_concept_lists2")
 
     # print("Conceitos adicionais: {}".format(over_covered_test.sum()))
     # print("Conceitos não cobertos: {}".format(under_covered_test.sum()))
 
-    # return over_covered_test.sum() + missing_concepts_coeficient * under_covered_test.sum()
     result = over_covered_test.sum() + missing_concepts_coeficient * under_covered_test.sum()
 
     timer.add_time("fitness_concept_result")
