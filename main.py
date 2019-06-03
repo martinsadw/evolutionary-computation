@@ -1,4 +1,5 @@
 import sys
+import pickle
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -39,19 +40,40 @@ if __name__ == "__main__":
     config_ga = ga.config.Config.load_from_file("instances/ga_config.txt")
     config_de = de.config.Config.load_from_file("instances/de_config.txt")
 
-    config_ppa_b.cost_budget = 2000
-    config_ppa_c.cost_budget = 2000
-    config_pso.cost_budget = 2000
-    config_ga.cost_budget = 2000
-    config_de.cost_budget = 2000
+    # config_ppa_b.cost_budget = 2000
+    # config_ppa_c.cost_budget = 2000
+    # config_pso.cost_budget = 2000
+    # config_ga.cost_budget = 2000
+    # config_de.cost_budget = 2000
 
-    num_repetitions = 3
+    num_repetitions = 100
 
-    results_ppa_b = run_method(prey_predator_algorithm_binary, fitness, instance, config_ppa_b, num_repetitions)
-    results_ppa_c = run_method(prey_predator_algorithm_continuous, fitness, instance, config_ppa_c, num_repetitions)
-    results_pso = run_method(particle_swarm_optmization, fitness, instance, config_pso, num_repetitions)
-    results_ga = run_method(genetic_algorithm, fitness, instance, config_ga, num_repetitions)
-    results_de = run_method(differential_evolution, fitness, instance, config_de, num_repetitions)
+    if False:
+        results_ppa_b = run_method(prey_predator_algorithm_binary, fitness, instance, config_ppa_b, num_repetitions)
+        results_ppa_c = run_method(prey_predator_algorithm_continuous, fitness, instance, config_ppa_c, num_repetitions)
+        results_pso = run_method(particle_swarm_optmization, fitness, instance, config_pso, num_repetitions)
+        results_ga = run_method(genetic_algorithm, fitness, instance, config_ga, num_repetitions)
+        results_de = run_method(differential_evolution, fitness, instance, config_de, num_repetitions)
+
+        results = {
+            'ppa_b': results_ppa_b,
+            'ppa_c': results_ppa_c,
+            'pso': results_pso,
+            'ga': results_ga,
+            'de': results_de,
+        }
+        with open('results/results_300.pickle', 'wb') as file:
+            pickle.dump(results, file)
+    else:
+        with open('results/results_300.pickle', 'rb') as file:
+            results = pickle.load(file)
+
+        results_ppa_b = results['ppa_b']
+        results_ppa_c = results['ppa_c']
+        results_pso = results['pso']
+        results_ga = results['ga']
+        results_de = results['de']
+
 
     mean_ppa_b = np.mean(results_ppa_b[1], axis=0)
     mean_ppa_c = np.mean(results_ppa_c[1], axis=0)
@@ -64,6 +86,12 @@ if __name__ == "__main__":
     deviation_pso = np.std(results_pso[1], axis=0)
     deviation_ga = np.std(results_ga[1], axis=0)
     deviation_de = np.std(results_de[1], axis=0)
+
+    mean_partial_ppa_b = np.min(results_ppa_b[2], axis=0)
+    mean_partial_ppa_c = np.min(results_ppa_c[2], axis=0)
+    mean_partial_pso = np.min(results_pso[2], axis=0)
+    mean_partial_ga = np.min(results_ga[2], axis=0)
+    mean_partial_de = np.min(results_de[2], axis=0)
 
     fig = plt.figure()
     # fig.suptitle('PPAC: best fitness')
@@ -86,5 +114,17 @@ if __name__ == "__main__":
     plt.plot(results_ga[0], mean_ga, color='r', label="GA")
     plt.plot(results_ga[0], mean_ga + deviation_ga, linestyle='--', color='r', linewidth=0.5)
     plt.plot(results_ga[0], mean_ga - deviation_ga, linestyle='--', color='r', linewidth=0.5)
+    plt.legend(loc=1)
+    plt.show()
+
+    fig = plt.figure()
+    plt.xlabel('# executions of fitness function')
+    plt.ylabel('fitness value')
+    plt.plot(results_ga[0], mean_ga, label="Total")
+    plt.plot(results_ga[0], mean_partial_ga[:, 0], label="Coverage")
+    plt.plot(results_ga[0], mean_partial_ga[:, 1], label="Difficulty")
+    plt.plot(results_ga[0], mean_partial_ga[:, 2], label="Time")
+    plt.plot(results_ga[0], mean_partial_ga[:, 3], label="Balance")
+    plt.plot(results_ga[0], mean_partial_ga[:, 4], label="Style")
     plt.legend(loc=1)
     plt.show()

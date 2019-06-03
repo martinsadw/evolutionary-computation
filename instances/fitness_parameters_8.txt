@@ -1,0 +1,34 @@
+[section]
+ppatosca.fitness.missingConceptsCoeficient = 2
+ppatosca.fitness.conceptsCoveredWeight = 1
+ppatosca.fitness.difficultyWeight = 1
+ppatosca.fitness.totalTimeWeight = 0.00166666666666666666666666666667 ; (1 / 600)
+ppatosca.fitness.materialsBalancingWeight = 1
+ppatosca.fitness.learningStyleWeight = 1
+
+# 100 Materiais
+[section]
+ppatosca.fitness.missingConceptsCoeficient = 2
+ppatosca.fitness.conceptsCoveredWeight = 1
+ppatosca.fitness.difficultyWeight = 0.76923
+ppatosca.fitness.totalTimeWeight = 0.000208
+ppatosca.fitness.materialsBalancingWeight = 0.03704
+ppatosca.fitness.learningStyleWeight = 0.5
+
+# 200 Materiais
+[section]
+ppatosca.fitness.missingConceptsCoeficient = 2
+ppatosca.fitness.conceptsCoveredWeight = 1
+ppatosca.fitness.difficultyWeight = 0.76923
+ppatosca.fitness.totalTimeWeight = 0.0000064599
+ppatosca.fitness.materialsBalancingWeight = 0.0232558
+ppatosca.fitness.learningStyleWeight = 0.5
+
+# 300 Materiais
+[section]
+ppatosca.fitness.missingConceptsCoeficient = 2
+ppatosca.fitness.conceptsCoveredWeight = 1
+ppatosca.fitness.difficultyWeight = 0.76923
+ppatosca.fitness.totalTimeWeight = 0.0000032299
+ppatosca.fitness.materialsBalancingWeight = 0.0193798
+ppatosca.fitness.learningStyleWeight = 0.5

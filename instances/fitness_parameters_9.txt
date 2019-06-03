@@ -2,7 +2,6 @@
 ppatosca.fitness.missingConceptsCoeficient = 2
 ppatosca.fitness.conceptsCoveredWeight = 1
 ppatosca.fitness.difficultyWeight = 1
-# ppatosca.fitness.totalTimeWeight = 1
 ppatosca.fitness.totalTimeWeight = 0.00166666666666666666666666666667 ; (1 / 600)
 ppatosca.fitness.materialsBalancingWeight = 1
 ppatosca.fitness.learningStyleWeight = 1
