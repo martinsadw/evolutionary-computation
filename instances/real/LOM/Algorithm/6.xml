@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>6</entry>
+</identifier>
+<title><string language="pt-BR">Definição de Algoritmo e Exemplos Heurísticos</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">O material define o que é um algoritmo, qual a difereça entre um algoritmo exato e aproximado (heurístico) de maneira simplificada, quem pode executar um algoritmo e ainda aborda dois exemplos simplificados de algoritmos heurísticos.</string>
+</description>
+<keyword><string language="pt-BR">algoritmo</string>
+<string language="pt-BR">algoritmo exato</string>
+<string language="pt-BR">algoritmo aproximado</string>
+<string language="pt-BR">algoritmo heurístico</string>
+<string language="pt-BR">sequência</string>
+<string language="pt-BR">complexo</string>
+<string language="pt-BR">computador</string>
+<string language="pt-BR">definição de algoritmo</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>30663</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>very difficult</value></difficulty>
+<typicalLearningTime><duration>PT8M6S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

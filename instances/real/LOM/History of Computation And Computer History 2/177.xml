@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>177</entry>
+</identifier>
+<title><string language="pt-BR">Você sabe o que é Big Data</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material é um vídeo sobre a revolução dos dados, o que é Big Data e as mudanças que a sociedade está sofrendo.</string>
+</description>
+<keyword><string language="pt-BR">big data</string>
+<string language="pt-BR">mercado do big data</string>
+<string language="pt-BR">análise de dados</string>
+<string language="pt-BR">grande volume de dados</string>
+<string language="pt-BR">velocidade</string>
+<string language="pt-BR">variedade</string>
+<string language="pt-BR">dados não estruturados</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>55839901</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>difficult</value></difficulty>
+<typicalLearningTime><duration>PT5M8S</duration>
+</typicalLearningTime>
+<language>eng-US</language>
+</educational>
+</lom>

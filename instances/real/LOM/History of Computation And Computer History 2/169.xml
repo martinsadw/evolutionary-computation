@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>169</entry>
+</identifier>
+<title><string language="pt-BR">O que é Big Data e para que ele serve</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Neste material é apresentado o que é Big Data, o conceito dos V's, a estruturação dos dados, os tipos de dados, a análise de dados, o mercado de Big Data e outros conceitos.</string>
+</description>
+<keyword><string language="pt-BR">big data</string>
+<string language="pt-BR">dados estruturados</string>
+<string language="eng-US">dados não estruturados</string>
+<string language="pt-BR">análise de dados</string>
+<string language="pt-BR">analytics</string>
+<string language="pt-BR">grande volume de dados</string>
+<string language="pt-BR">velocidade</string>
+<string language="pt-BR">variedade</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>218273</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<typicalLearningTime><duration>PT30M50S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

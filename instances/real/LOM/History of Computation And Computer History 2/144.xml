@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>144</entry>
+</identifier>
+<title><string language="pt-BR">Início da História dos Computadores</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">O seguinte material é um vídeo que aborda alguns dos principais precursores dos primeiros computadores e grandes nomes que revolucionaram a computação.</string>
+</description>
+<keyword><string language="pt-BR">história dos computadores</string>
+<string language="pt-BR">ábaco</string>
+<string language="pt-BR">babbage</string>
+<string language="pt-BR">ada</string>
+<string language="pt-BR">ada lovelace</string>
+<string language="pt-BR">hollerith</string>
+<string language="pt-BR">boole</string>
+<string language="pt-BR">álgebra booleana</string>
+<string language="pt-BR">máquina tabuladora</string>
+<string language="pt-BR">máquina analítica</string>
+<string language="pt-BR">computador</string>
+<string language="pt-BR">máquina</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>100014410</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>easy</value></difficulty>
+<typicalLearningTime><duration>PT10M12S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

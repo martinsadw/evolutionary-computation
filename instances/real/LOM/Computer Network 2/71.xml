@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>71</entry>
+</identifier>
+<title><string language="pt-BR">Principais Protocolos</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material aborda um tema relevante para o estudo de redes de coputadores, que é protocolo.</string>
+</description>
+<keyword><string language="pt-BR">redes de computadores</string>
+<string language="pt-BR">redes</string>
+<string language="pt-BR">tcp/ip</string>
+<string language="pt-BR">tcp</string>
+<string language="pt-BR">ip</string>
+<string language="pt-BR">http</string>
+<string language="pt-BR">camada</string>
+<string language="pt-BR">https</string>
+<string language="pt-BR">dns</string>
+<string language="pt-BR">imap</string>
+<string language="pt-BR">smtp</string>
+<string language="pt-BR">pop3</string>
+<string language="pt-BR">udp</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>309865106</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>mixed</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>exercise</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>medium</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>easy</value></difficulty>
+<typicalLearningTime><duration>PT25M33S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

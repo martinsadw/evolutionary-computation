@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>127</entry>
+</identifier>
+<title><string language="pt-BR">Análise e Especificação de Requisitos - Avançado</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material aborda alguns tópicos da Engenharia de Requisitos, como:  técnicas de elicitação de requisitos e tipos de requisitos, técnicas para descrever o domínio, usuários e tarefas, especificar requisitos funcionais utilizando casos de uso, especificar requisitos não funcionais e  documento de especificação de requisitos.</string>
+</description>
+<keyword><string language="pt-BR">engenharia de software</string>
+<string language="pt-BR">engenharia de requisitos</string>
+<string language="pt-BR">requisitos</string>
+<string language="pt-BR">requisitos não funcionais</string>
+<string language="pt-BR">requisitos funcionais</string>
+<string language="pt-BR">técnicas de análise de requisitos</string>
+<string language="pt-BR">elicitação de requisitos</string>
+<string language="pt-BR">etapas da análise de requisitos</string>
+<string language="pt-BR">especificação de requisitos funcionais</string>
+<string language="pt-BR">especificação de requisitos não funcionais</string>
+<string language="pt-BR">especificação de requisitos</string>
+<string language="pt-BR">modelo de tarefa</string>
+<string language="pt-BR">diagrama de caso de uso</string>
+<string language="pt-BR">documento de especificação de requisitos</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>303510</size>
+</technical>
+<educational>
+<interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<typicalLearningTime><duration>PT1H28M39S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+</educational>
+</lom>

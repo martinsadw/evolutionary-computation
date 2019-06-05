@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>77</entry>
+</identifier>
+<title><string language="pt-BR">BD - Aspectos Basicos</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material é uma apostila que introduz uma série de aspectos básicos relacionados a banco de dados, desde a diferença entre dado, informação e conhecimento até utilização de triggers em um SGBD.</string>
+</description>
+<keyword><string language="pt-BR">banco de dados</string>
+<string language="pt-BR">dados</string>
+<string language="pt-BR">informação</string>
+<string language="pt-BR">sgbd</string>
+<string language="pt-BR">sistema de gerência de banco de dados</string>
+<string language="pt-BR">sistema de banco de dados</string>
+<string language="pt-BR">sistema</string>
+<string language="pt-BR">gerência</string>
+<string language="pt-BR">sbd</string>
+<string language="pt-BR">modelos de dados</string>
+<string language="pt-BR">modelos</string>
+<string language="pt-BR">nível de arquitetura</string>
+<string language="pt-BR">níveis de arquitetura</string>
+<string language="pt-BR">modelo de dado</string>
+<string language="pt-BR">modelo conceitual</string>
+<string language="pt-BR">modelo lógico</string>
+<string language="pt-BR">modelo</string>
+<string language="pt-BR">modelo físico</string>
+<string language="pt-BR">modelo relacional</string>
+<string language="pt-BR">dicionário de dados</string>
+<string language="pt-BR">integridade relacional</string>
+<string language="pt-BR">codd</string>
+<string language="pt-BR">banco de dados relacional</string>
+<string language="pt-BR">relacional</string>
+<string language="pt-BR">visões</string>
+<string language="eng-US">view</string>
+<string language="eng-US">trigger</string>
+<string language="eng-US">triggers</string>
+<string language="pt-BR">restrições de integridade</string>
+<string language="pt-BR">integridade</string>
+<string language="pt-BR">regras</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>515450</size>
+</technical>
+<educational>
+	<interactivityType><source>LOMv1.0</source>
+<value>mixed</value></interactivityType>
+	<learningResourceType><source>LOMv1.0</source>
+	<value>narrative text</value></learningResourceType>
+	<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>table</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>questionnaire</value></learningResourceType>
+	<typicalLearningTime><duration>PT2H52M44S</duration>
+</typicalLearningTime>
+<difficulty><source>LOMv1.0</source>
+<value>difficult</value></difficulty>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<language>pt-BR</language>
+</educational>
+</lom>

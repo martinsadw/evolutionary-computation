@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>149</entry>
+</identifier>
+<title><string language="pt-BR">Das toneladas aos microchips</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Neste material é abordado as gerações dos coputadores, as tecnologias usadas em cada uma delas e alguns exemplos de computadores existentes na época. O início da computação moderna é exposta no documento.</string>
+</description>
+<keyword><string language="pt-BR">história dos computadores</string>
+<string language="pt-BR">1ª geração</string>
+<string language="pt-BR">2ª geração</string>
+<string language="pt-BR">3ª geração</string>
+<string language="pt-BR">4ª geração</string>
+<string language="pt-BR">eniac</string>
+<string language="pt-BR">válvula</string>
+<string language="pt-BR">transistor</string>
+<string language="pt-BR">circuito integrado</string>
+<string language="pt-BR">microprocessador</string>
+<string language="pt-BR">pc</string>
+<string language="pt-BR">ibm</string>
+<string language="pt-BR">mark 1</string>
+<string language="pt-BR">5ª geração</string>
+<string language="pt-BR">processamento verde</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>1102863</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>easy</value></difficulty>
+<typicalLearningTime><duration>PT20M17S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

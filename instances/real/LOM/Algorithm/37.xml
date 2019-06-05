@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>37</entry>
+</identifier>
+<title><string language="pt-BR">Linguagem de Programação e Paradigmas de Programação</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material apresenta o que é uma linguagem de programação, para que servem, o que são linguagens de alto e  baixo nível, o que são linguagens compiladas e interpretadas, o que é paradigma de programação, seus tipos, ou seja, paradigma imperativo, orientado a objetos, estruturado, funcional e lógico.</string>
+</description>
+<keyword><string language="pt-BR">algoritmo</string>
+<string language="pt-BR">linguagem de programação</string>
+<string language="pt-BR">paradigma de programação</string>
+<string language="pt-BR">programação</string>
+<string language="pt-BR">paradigma</string>
+<string language="pt-BR">linguagem</string>
+<string language="pt-BR">paradigma estruturado</string>
+<string language="pt-BR">paradigma orientado a objetos</string>
+<string language="pt-BR">paradigma funcional</string>
+<string language="pt-BR">paradigma lógico</string>
+<string language="pt-BR">paradigma estruturado</string>
+<string language="pt-BR">paradigma imperativo</string>
+<string language="pt-BR">linguagem compilada</string>
+<string language="pt-BR">linguagem interpretada</string>
+<string language="pt-BR">linguagem de alto nível</string>
+<string language="pt-BR">linguagem de baixo nível</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>511193</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>difficult</value></difficulty>
+<typicalLearningTime><duration>PT16M31S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

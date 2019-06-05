@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>264</entry>
+</identifier>
+<title><string language="pt-BR">Funções do SO e Gerência de Recursos</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material aborda conceitos relacionados com sistema operacional, alguns tópicos abordados são: funções do sistema operacional, definição e detalhes sobre a gerência de recursos (processador, memória e entrada/saída).</string>
+</description>
+<keyword><string language="pt-BR">sistema operacional</string>
+<string language="pt-BR">so</string>
+<string language="pt-BR">os</string>
+<string language="pt-BR">funções do so</string>
+<string language="pt-BR">funções</string>
+<string language="pt-BR">característica do so</string>
+<string language="pt-BR">definição</string>
+<string language="pt-BR">gerenciador</string>
+<string language="pt-BR">gerenciador de recursos</string>
+<string language="pt-BR">gerenciador de processos</string>
+<string language="pt-BR">gerenciador de memória</string>
+<string language="pt-BR">gerenciador de E/S</string>
+<string language="pt-BR">processo</string>
+<string language="pt-BR">memória</string>
+<string language="pt-BR">entrada e saída</string>
+<string language="pt-BR">sistema</string>
+<string language="pt-BR">escalonamento</string>
+<string language="pt-BR">estado do processo</string>
+<string language="eng-US">threads</string>
+<string language="eng-US">deadlock</string>
+<string language="eng-US">overlay</string>
+<string language="pt-BR">memória virtual</string>
+<string language="pt-BR">paginação</string>
+<string language="eng-US">swapping</string>
+<string language="pt-BR">fragmentação</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>3008725</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>table</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>very difficult</value></difficulty>
+<typicalLearningTime><duration>PT2H57M17S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>91</entry>
+</identifier>
+<title><string language="pt-BR">Modelo Relacional, SQL e MER</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material aborda a definição de modelo relacional, quando foi criado, suas características, linguagem estruturada de consulta (SQL), linguagem de definição de dados (DDL), linguagem de manipulação de dados (DML). restrições de integridade, chaves, consultas em uma base de dados, transações, modelo entidade relacionamento (MER), visões, independência dos dados e segurança.</string>
+</description>
+<keyword><string language="pt-BR">banco de dados</string>
+<string language="pt-BR">modelo relacional</string>
+<string language="pt-BR">banco de dados relacional</string>
+<string language="pt-BR">relacional</string>
+<string language="pt-BR">codd</string>
+<string language="pt-BR">chaves</string>
+<string language="pt-BR">chave primária</string>
+<string language="pt-BR">chave estrangeira</string>
+<string language="pt-BR">chave</string>
+<string language="pt-BR">restrições de integridade</string>
+<string language="pt-BR">integridade</string>
+<string language="pt-BR">linguagem estruturada de consulta</string>
+<string language="pt-BR">SQL</string>
+<string language="pt-BR">linguagem de definição de dados</string>
+<string language="pt-BR">DDL</string>
+<string language="pt-BR">linguagem de manipulação de dados</string>
+<string language="pt-BR">DML</string>
+<string language="pt-BR">consultas</string>
+<string language="pt-BR">visões</string>
+<string language="pt-BR">independência dos dados</string>
+<string language="pt-BR">transações</string>
+<string language="pt-BR">segurança</string>
+<string language="pt-BR">modelo entidade relacionamento</string>
+<string language="pt-BR">MER</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>208103</size>
+</technical>
+<educational>
+	<interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+	<value>narrative text</value></learningResourceType>
+	<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>table</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>problems declaration</value></learningResourceType>
+	<typicalLearningTime><duration>PT54M59S</duration>
+</typicalLearningTime>
+<difficulty><source>LOMv1.0</source>
+<value>difficult</value></difficulty>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<language>pt-BR</language>
+</educational>
+</lom>

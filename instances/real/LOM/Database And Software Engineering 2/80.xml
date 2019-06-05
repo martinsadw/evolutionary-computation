@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>80</entry>
+</identifier>
+<title><string language="pt-BR">Fundamentos BD</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material é uma vídeo aula do professor André Santanchè sobre introdução a banco de dados. São abordadas as motivações, aplicações, histórico e definição  de banco de dados e definição de sistema gerenciador de banco de dados.</string>
+</description>
+<keyword><string language="pt-BR">banco de dados</string>
+<string language="pt-BR">dados</string>
+<string language="pt-BR">sgbd</string>
+<string language="pt-BR">sistema gerenciador de banco de dados</string>
+<string language="pt-BR">sistema</string>
+<string language="pt-BR">gerência</string>
+<string language="pt-BR">histórico</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>117042714</size>
+</technical>
+<educational>
+<interactivityType><source>LOMv1.0</source>
+<value>mixed</value></interactivityType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>medium</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>exercise</value></learningResourceType>
+<typicalLearningTime><duration>PT51M15S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

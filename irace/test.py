@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
-    if not args.cost_budget and not args.max_stagnation and not args.num_iterations:
+    if not args.config and not args.cost_budget and not args.max_stagnation and not args.num_iterations:
         raise Exception("No end conditions")
 
     instance = Instance.load_from_file(args.instance_file)

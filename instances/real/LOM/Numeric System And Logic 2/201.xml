@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>201</entry>
+</identifier>
+<title><string language="pt-BR">Fundamentos Matemáticos da Computação_ Lógica proposicional</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este vídeo tem como objetivo introduzir a Lógica Proposicional e para isso os seguintes assuntos são tratados: proposição, proposição composta e conectivos lógicos, tabela verdade, operações lógicas, precedência de conectivos e equivalência.</string>
+</description>
+<keyword><string language="pt-BR">lógica</string>
+<string language="pt-BR">lógica para computação</string>
+<string language="pt-BR">lógica matemática</string>
+<string language="pt-BR">lógica proposicional</string>
+<string language="pt-BR">cálculo proposicional</string>
+<string language="pt-BR">proposição</string>
+<string language="pt-BR">proposição composta</string>
+<string language="pt-BR">conectivos lógios</string>
+<string language="pt-BR">tabela verdade</string>
+<string language="pt-BR">operações lógicas</string>
+<string language="pt-BR">equivalência</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>231315698</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>mixed</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>exercise</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>table</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>medium</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<typicalLearningTime><duration>PT38M53S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

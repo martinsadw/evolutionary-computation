@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>117</entry>
+</identifier>
+<title><string language="pt-BR">Introducao a Engenharia de Software</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material apresenta uma introdução à Engenharia de Software, abordando os seguintes conceitos: software, engenharia de software, qualidade de software, modelos de processo, ciclo de vida, gerência de projeto de software, UML e exemplos de diagramas da UML.</string>
+</description>
+<keyword><string language="pt-BR">engenharia de software</string>
+<string language="pt-BR">software</string>
+<string language="pt-BR">modelos de processos</string>
+<string language="pt-BR">processo</string>
+<string language="pt-BR">ciclo de vida</string>
+<string language="pt-BR">processo de software</string>
+<string language="pt-BR">gerência de projeto de software</string>
+<string language="pt-BR">gerência de projeto</string>
+<string language="pt-BR">uml</string>
+<string language="pt-BR">mitos do desenvolvimento de software</string>
+<string language="pt-BR">modelo cascata</string>
+<string language="pt-BR">modelo incremental</string>
+<string language="pt-BR">modelo evolucionário</string>
+<string language="pt-BR">prototipação</string>
+<string language="pt-BR">modelo espiral</string>
+<string language="pt-BR">diagramas uml</string>
+<string language="pt-BR">diagrama</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>992299</size>
+</technical>
+<educational>
+<interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<difficulty><source>LOMv1.0</source>
+<value>difficult</value></difficulty>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<typicalLearningTime><duration>PT35M5S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>table</value></learningResourceType>
+</educational>
+</lom>

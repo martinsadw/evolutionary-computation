@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>199</entry>
+</identifier>
+<title><string language="pt-BR">Noções de Lógica Proposicional</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material tem como objetivo introduzir Lógica Proposicional e para isso os seguintes assuntos são tratados: proposição, proposição composta, conectivos lógicos, princípios fundamentais da Lógica,  tabela verdade, operações lógicas, prioridade dos conectivos lógicos.</string>
+</description>
+<keyword><string language="pt-BR">lógica</string>
+<string language="pt-BR">lógica para computação</string>
+<string language="pt-BR">lógica matemática</string>
+<string language="pt-BR">lógica proposicional</string>
+<string language="pt-BR">cálculo proposicional</string>
+<string language="pt-BR">proposição</string>
+<string language="pt-BR">proposição composta</string>
+<string language="pt-BR">conectivos lógios</string>
+<string language="pt-BR">tabela verdade</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>230368</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>table</value></learningResourceType>
+<difficulty><source>LOMv1.0</source>
+<value>difficult</value></difficulty>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<typicalLearningTime><duration>PT9M41S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>225</entry>
+</identifier>
+<title><string language="pt-BR">Introdução à Sistemas Numéricos</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material introduz Sistemas Numéricos abordando os seguintes temas: sistema numérico posicional, não posicional, sistema decimal, sistema binário, sistema octal, sistema hexadecimal, conversões entre os principais sistemas numéricos abordados por três métodos (pelo teorema fundamental da numeração, determinando os valores de posições e multiplicando e somando), o que é bit, byte, word (palavra) e unidades de medida de armazenamento, operações aritméticas (adição, subtração, multiplicação e divisão), aritmética complementar (complemento, subtração e divisão).</string>
+</description>
+<keyword><string language="pt-BR">sistemas numéricos</string>
+<string language="pt-BR">posicional</string>
+<string language="pt-BR">não posicional</string>
+<string language="pt-BR">decimal</string>
+<string language="pt-BR">binário</string>
+<string language="pt-BR">hexadecimal</string>
+<string language="pt-BR">conversões</string>
+<string language="pt-BR">sistema numérico</string>
+<string language="pt-BR">conversão</string>
+<string language="pt-BR">bit</string>
+<string language="pt-BR">byte</string>
+<string language="pt-BR">word</string>
+<string language="pt-BR">palavra</string>
+<string language="pt-BR">unidades de medida de armazenamento</string>
+<string language="pt-BR">octal</string>
+<string language="pt-BR">teorema fundamental da numeração</string>
+<string language="pt-BR">determinando os valores de posições</string>
+<string language="pt-BR">multiplicando e somando</string>
+<string language="pt-BR">aritmética complementar</string>
+<string language="pt-BR">operações aritméticas</string>
+<string language="pt-BR">adição</string>
+<string language="pt-BR">subtração</string>
+<string language="pt-BR">multiplicação</string>
+<string language="pt-BR">divisão</string>
+<string language="pt-BR">complemento</string>
+<string language="pt-BR">soma</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>291774</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>mixed</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>exercise</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>high</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<typicalLearningTime><duration>PT30M31S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

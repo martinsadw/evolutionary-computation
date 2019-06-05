@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>192</entry>
+</identifier>
+<title><string language="pt-BR">O que é Inteligência Artificial, Aplicações e Impactos</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Neste material há uma definição do que é inteligência artificial, alguns exemplos de sua utilização e um trecho de uma notícia sobre impactos no mercado de trabalho.</string>
+</description>
+<keyword><string language="pt-BR">inteligência artificial</string>
+<string language="pt-BR">ia</string>
+<string language="eng-US">ai</string>
+<string language="pt-BR">reconhecimento de padrões</string>
+<string language="pt-BR">recuperação de informação</string>
+<string language="pt-BR">processamento de voz</string>
+<string language="pt-BR">mudanças com a ia</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>1086962</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>difficult</value></difficulty>
+<typicalLearningTime><duration>PT4M21S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

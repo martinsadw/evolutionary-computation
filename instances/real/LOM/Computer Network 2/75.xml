@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>75</entry>
+</identifier>
+<title><string language="pt-BR">Redes de Computadores OSI e TCP_IP</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material aborda alguns conceitos da matéria de redes de computadores, são eles: modelo OSI, como a comunicação é feita e modelo TCP/IP.</string>
+</description>
+<keyword><string language="pt-BR">redes de computadores</string>
+<string language="pt-BR">redes</string>
+<string language="pt-BR">tcp/ip</string>
+<string language="pt-BR">camada</string>
+<string language="pt-BR">modelo</string>
+<string language="pt-BR">física</string>
+<string language="pt-BR">enlace</string>
+<string language="pt-BR">rede</string>
+<string language="pt-BR">transporte</string>
+<string language="pt-BR">sessão</string>
+<string language="pt-BR">apresentação</string>
+<string language="pt-BR">aplicação</string>
+<string language="pt-BR">internet</string>
+<string language="pt-BR">osi</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>362904722</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>difficult</value></difficulty>
+<typicalLearningTime><duration>PT41M5S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

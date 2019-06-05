@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>97</entry>
+</identifier>
+<title><string language="pt-BR">Resumo Simplificado de Modelo Relacional</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material aborda alguns conceitos relacionados a banco de dados, como: modelo relacional, banco de dado relacional, características do modelo relacional, chaves, restrições de integridade, definição matemática de modelo relacional e índice.</string>
+</description>
+<keyword><string language="pt-BR">banco de dados</string>
+<string language="pt-BR">modelo relacional</string>
+<string language="pt-BR">banco de dados relacional</string>
+<string language="pt-BR">relacional</string>
+<string language="pt-BR">codd</string>
+<string language="pt-BR">características do modelo relacional</string>
+<string language="pt-BR">chaves</string>
+<string language="pt-BR">chave</string>
+<string language="pt-BR">chave primária</string>
+<string language="pt-BR">chave estrangeira</string>
+<string language="pt-BR">restrições de integridade</string>
+<string language="pt-BR">integridade</string>
+<string language="pt-BR">restrições</string>
+<string language="pt-BR">definição matemática</string>
+<string language="pt-BR">teoria dos conjutos</string>
+<string language="pt-BR">conjuntos</string>
+<string language="pt-BR">relações</string>
+<string language="pt-BR">tabelas</string>
+<string language="pt-BR">índice</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>24909883</size>
+</technical>
+<educational>
+<interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<typicalLearningTime><duration>PT8M34S</duration>=
+</typicalLearningTime>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>table</value></learningResourceType>
+<language>pt-BR</language>
+</educational>
+</lom>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>185</entry>
+</identifier>
+<title><string language="pt-BR">Infográfico computação na nuvem</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material é um infográfico que tem como objetivo esclarecer o que é computação em nuvem, quais os tipos de nuvens e quais são os seus modelos de serviço.</string>
+</description>
+<keyword><string language="pt-BR">computação em nuvem</string>
+<string language="eng-US">cloud computing</string>
+<string language="pt-BR">nuvem</string>
+<string language="pt-BR">computação</string>
+<string language="pt-BR">computação na nuvem</string>
+<string language="pt-BR">iaas</string>
+<string language="pt-BR">paas</string>
+<string language="pt-BR">saas</string>
+<string language="pt-BR">tipos de nuvem</string>
+</keyword>
+</general>
+<technical><format>image/png</format>
+<size>2654794</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>easy</value></difficulty>
+<typicalLearningTime><duration>PT3M</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>134</entry>
+</identifier>
+<title><string language="pt-BR">Engenharia de Requisitos</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material aborda alguns tópicos da Engenharia de Requisitos, como: etapas do processo de análise de requisitos, técnicas de elicitação de requisitos e tipos de requisitos.</string>
+</description>
+<keyword><string language="pt-BR">engenharia de software</string>
+<string language="pt-BR">engenharia de requisitos</string>
+<string language="pt-BR">requisitos</string>
+<string language="pt-BR">requisitos não funcionais</string>
+<string language="pt-BR">requisitos funcionais</string>
+<string language="pt-BR">técnicas de análise de requisitos</string>
+<string language="pt-BR">elicitação de requisitos</string>
+<string language="pt-BR">etapas da análise de requisitos</string>
+<string language="pt-BR">requisitos de projeto</string>
+<string language="pt-BR">etapas do processo</string>
+<string language="pt-BR">requisitos de domínio</string>
+<string language="pt-BR">documento de requisito</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>166273672</size>
+</technical>
+<educational>
+<interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<typicalLearningTime><duration>PT20M21S</duration>
+</typicalLearningTime>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>problems declaration</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>simulation</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>tabela</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>graph</value></learningResourceType>
+<language>pt-BR</language>
+</educational>
+</lom>

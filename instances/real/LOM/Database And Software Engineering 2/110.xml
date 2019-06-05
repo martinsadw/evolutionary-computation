@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>110</entry>
+</identifier>
+<title><string language="pt-BR">SQL conceitos iniciais</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material é uma introdução à linguagem SQL, os assuntos abordados são: histórico, definição, aplicações, características,  linguagem de definição de dados (DDL), linguagem de manipulação de dados (DML) e comandos introdutórios.</string>
+</description>
+<keyword><string language="pt-BR">banco de dados</string>
+<string language="pt-BR">sql</string>
+<string language="pt-BR">linguagem estruturada de consulta</string>
+<string language="pt-BR">ddl</string>
+<string language="pt-BR">linguagem de definição de dados</string>
+<string language="pt-BR">dml</string>
+<string language="pt-BR">linguagem de manipulação de dados</string>
+<string language="pt-BR">dcl</string>
+<string language="pt-BR">linguagem de controle de dados</string>
+<string language="pt-BR">comandos</string>
+<string language="pt-BR">tipos de dados</string>
+<string language="pt-BR">create</string>
+<string language="pt-BR">alter</string>
+<string language="pt-BR">drop</string>
+<string language="pt-BR">select</string>
+<string language="pt-BR">consultas</string>
+<string language="pt-BR">consulta</string>
+<string language="pt-BR">query</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>1420057357</size>
+</technical>
+<educational>
+<typicalLearningTime><duration>PT1H1M48S</duration></typicalLearningTime>
+<interactivityType><source>LOMv1.0</source>
+<value>mixed</value></interactivityType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>simulation</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>questionnare</value></learningResourceType>
+<language>pt-BR</language>
+</educational>
+</lom>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>111</entry>
+</identifier>
+<title><string language="pt-BR">Apostila Engenharia de Software e Modelagem</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material é uma apostila de introdução à Engenharia de Software, alguns dos assuntos abordados são: software, engenharia de software, tipos de aplicações de software, UML, processos de software, modelos de processo de software, atividades básicas do processo de software, especificação, projeto, implementação, validação, evolução, requisitos de software, engenharia de requisitos, documento de requisitos, modelagem de sistemas, diagrama de casos de uso, diagrama de classe, projeto e testes de software.</string>
+</description>
+<keyword><string language="pt-BR">engenharia de software</string>
+<string language="pt-BR">software</string>
+<string language="pt-BR">aplicações</string>
+<string language="pt-BR">uml</string>
+<string language="pt-BR">processo de software</string>
+<string language="pt-BR">processo</string>
+<string language="pt-BR">projeto de software</string>
+<string language="pt-BR">projeto</string>
+<string language="pt-BR">especificação</string>
+<string language="pt-BR">implementação</string>
+<string language="pt-BR">validação</string>
+<string language="pt-BR">evolução</string>
+<string language="pt-BR">requisitos</string>
+<string language="pt-BR">engenharia de requisitos</string>
+<string language="pt-BR">documento</string>
+<string language="pt-BR">modelagem de sistemas</string>
+<string language="pt-BR">modelagem</string>
+<string language="pt-BR">giagrama de caso de uso</string>
+<string language="pt-BR">diagrama de classe</string>
+<string language="pt-BR">teste</string>
+<string language="pt-BR">estudo de caso</string>
+<string language="pt-BR">requisito funcional</string>
+<string language="pt-BR">requisito não funcional</string>
+<string language="pt-BR">requisito de software</string>
+<string language="pt-BR">requisito de usuário</string>
+<string language="pt-BR">estudo de viabilidade</string>
+<string language="pt-BR">modelo cascata</string>
+<string language="pt-BR">desenvolvimento incremental</string>
+<string language="pt-BR">modelo orientado a reuso</string>
+<string language="pt-BR">atividades básicas do processo de software</string>
+<string language="pt-BR">ciclo de vida</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>8352194</size>
+</technical>
+<educational>
+<interactivityType><source>LOMv1.0</source>
+<value>mixed</value></interactivityType>
+<difficulty><source>LOMv1.0</source>
+<value>difficult</value></difficulty>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<typicalLearningTime><duration>PT6H14M43S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>problems declaration</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>questionnaire</value></learningResourceType>
+</educational>
+</lom>

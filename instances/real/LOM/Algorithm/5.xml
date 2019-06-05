@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>5</entry>
+</identifier>
+<title><string language="pt-BR">Algoritmo - Introdução, definição e conceitos</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material é um vídeo que apresenta o que é algoritmo, suas características, as formas de representação deste, como: descrição narrativa. fluxograma e pseudocódigo. Além de abordar o que define um programa de computador, o que são comandos , o que é linguagem de alto e baixo nível e o que é uma variável.</string>
+</description>
+<keyword><string language="pt-BR">algoritmo</string>
+<string language="pt-BR">descrição narrativa</string>
+<string language="pt-BR">fluxograma</string>
+<string language="pt-BR">pseudocódigo</string>
+<string language="pt-BR">pseudolinguagem</string>
+<string language="pt-BR">representação</string>
+<string language="pt-BR">representação de algoritmos</string>
+<string language="pt-BR">programa</string>
+<string language="pt-BR">variável</string>
+<string language="pt-BR">linguagem de alto nível</string>
+<string language="pt-BR">linguagem de baixo nível</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>27687451</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<typicalLearningTime><duration>PT11M37S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

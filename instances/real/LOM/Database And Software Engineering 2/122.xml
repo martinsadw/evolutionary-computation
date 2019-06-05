@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>122</entry>
+</identifier>
+<title><string language="pt-BR">O processo de desenvolvimento de software</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material apresenta alguns conceitos referente à Engenharia de Software, como:  processo de software, modelos de processo, ciclo de vida, processo de desenvolvimento de software, ciclo de vida, atividades do processo, modelo cascata, modelo evolutivo, prototipação e modelo espiral.</string>
+</description>
+<keyword><string language="pt-BR">engenharia de software</string>
+<string language="pt-BR">modelos de processos</string>
+<string language="pt-BR">processo</string>
+<string language="pt-BR">ciclo de vida</string>
+<string language="pt-BR">processo de software</string>
+<string language="pt-BR">processo de desenvolvimento</string>
+<string language="pt-BR">ciclo de vida</string>
+<string language="pt-BR">atividades do processo</string>
+<string language="pt-BR">atividades</string>
+<string language="pt-BR">modelo cascata</string>
+<string language="pt-BR">modelo evolutivo</string>
+<string language="pt-BR">modelo espiral</string>
+<string language="pt-BR">prototipação</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>285600</size>
+</technical>
+<educational>
+<interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<difficulty><source>LOMv1.0</source>
+<value>difficult</value></difficulty>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<typicalLearningTime><duration>PT55M60S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+</educational>
+</lom>

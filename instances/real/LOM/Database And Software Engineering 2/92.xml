@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>92</entry>
+</identifier>
+<title><string language="pt-BR">SQL - Wikilivro</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material é uma apostila sobre SQL, alguns dos assuntos abordados são: introdução ao SQL, histórico, linguagem de definição de dados (DDL), linguagem de manipulação de dados (DML), linguagem de controle de dados (DCL), banco de dados relacional e restrições de integridade.</string>
+</description>
+<keyword><string language="pt-BR">banco de dados</string>
+<string language="pt-BR">sql</string>
+<string language="pt-BR">banco de dados relacional</string>
+<string language="pt-BR">relação</string>
+<string language="pt-BR">modelo relacional</string>
+<string language="pt-BR">chave</string>
+<string language="pt-BR">chave primária</string>
+<string language="pt-BR">chave estrangeira</string>
+<string language="pt-BR">restrições de integridade</string>
+<string language="pt-BR">restrição de domínio</string>
+<string language="pt-BR">restrição de chave</string>
+<string language="pt-BR">integridade referencial</string>
+<string language="pt-BR">ddl</string>
+<string language="pt-BR">dml</string>
+<string language="pt-BR">dcl</string>
+<string language="pt-BR">create</string>
+<string language="pt-BR">alter</string>
+<string language="pt-BR">select</string>
+<string language="pt-BR">drop</string>
+<string language="pt-BR">linguagem de manipulação de dados</string>
+<string language="pt-BR">linguagem de definição de dados</string>
+<string language="pt-BR">linguagem de controle de dados</string>
+<string language="pt-BR">relacionamentos</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>568808</size>
+</technical>
+<educational>
+<interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>table</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+	<value>narrative text</value></learningResourceType>
+	<typicalLearningTime><duration>PT1H1M56S</duration>
+</typicalLearningTime>
+<difficulty><source>LOMv1.0</source>
+<value>difficult</value></difficulty>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<language>pt-BR</language>
+</educational>
+</lom>

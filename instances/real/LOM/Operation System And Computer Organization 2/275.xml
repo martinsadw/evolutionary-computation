@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>275</entry>
+</identifier>
+<title><string language="pt-BR">Revisao Organizacao e Arquitetura de Computadores</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material aborda conceitos relacionados com a organização dos componentes do computador, como seus principais componentes: processador, memória e dispositivos periféricos.</string>
+</description>
+<keyword><string language="pt-BR">sistema operacional</string>
+<string language="pt-BR">so</string>
+<string language="pt-BR">os</string>
+<string language="pt-BR">memória</string>
+<string language="pt-BR">entrada e saída</string>
+<string language="pt-BR">sistema</string>
+<string language="pt-BR">hardware</string>
+<string language="pt-BR">cpu</string>
+<string language="pt-BR">processador</string>
+<string language="pt-BR">ula</string>
+<string language="pt-BR">uc</string>
+<string language="pt-BR">registradores</string>
+<string language="pt-BR">barramento</string>
+<string language="pt-BR">ram</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>338975</size>
+</technical>
+<educational><typicalLearningTime><duration>PT19M1S</duration>
+</typicalLearningTime>
+<interactivityType><source>LOMv1.0</source>
+<value>mixed</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>questionnaire</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<language>pt-BR</language>
+</educational>
+</lom>

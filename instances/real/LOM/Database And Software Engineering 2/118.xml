@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>118</entry>
+</identifier>
+<title><string language="pt-BR">Introdução e Processos de Sotftware - ES</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material apresenta uma introdução à Engenharia de Software, abordando os seguintes conceitos: software, engenharia de software, processos de software, atividades de um processo de software, modelos de processo e modelos de ciclos de vida.</string>
+</description>
+<keyword><string language="pt-BR">engenharia de software</string>
+<string language="pt-BR">software</string>
+<string language="pt-BR">modelos de processos</string>
+<string language="pt-BR">processo</string>
+<string language="pt-BR">ciclo de vida</string>
+<string language="pt-BR">processo de software</string>
+<string language="pt-BR">atividades de um processo de software</string>
+<string language="pt-BR">modelos de ciclo de vida</string>
+<string language="pt-BR">modelo cascata</string>
+<string language="pt-BR">modelo incremental</string>
+<string language="pt-BR">modelo orientado a reuso</string>
+<string language="pt-BR">prototipação</string>
+<string language="pt-BR">processo unificado</string>
+<string language="pt-BR">rup</string>
+<string language="pt-BR">atividades genéricas</string>
+<string language="pt-BR">especificação</string>
+<string language="pt-BR">projeto</string>
+<string language="pt-BR">implementação</string>
+<string language="pt-BR">validação</string>
+<string language="pt-BR">evolução</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>129256024</size>
+</technical>
+<educational><typicalLearningTime><duration>PT37M3S</duration>
+</typicalLearningTime>
+<interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>problems declaration</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<language>pt-BR</language>
+</educational>
+</lom>

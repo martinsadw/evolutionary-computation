@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>113</entry>
+</identifier>
+<title><string language="pt-BR">Apostila Básica -Engenharia de Software</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material apresenta uma introdução à Engenharia de Software, abordando os seguintes conceitos: software, engenharia de software, modelos de processo, processos de software, engenharia de requisitos, projeto de sistemas,  projeto de software, implementação, testes, gerência de qualidade,  mutenção, evolução e gerenciamento de software.</string>
+</description>
+<keyword><string language="pt-BR">engenharia de software</string>
+<string language="pt-BR">software</string>
+<string language="pt-BR">modelos de processos</string>
+<string language="pt-BR">processo</string>
+<string language="pt-BR">engenharia de requisito</string>
+<string language="pt-BR">requisito funcional</string>
+<string language="pt-BR">requisito não funcional</string>
+<string language="pt-BR">requisito</string>
+<string language="pt-BR">processo de software</string>
+<string language="pt-BR">progeto de sistemas</string>
+<string language="pt-BR">projeto de software</string>
+<string language="pt-BR">implementação</string>
+<string language="pt-BR">testes</string>
+<string language="pt-BR">gerência de qualidade</string>
+<string language="pt-BR">manutenção</string>
+<string language="pt-BR">evolução</string>
+<string language="pt-BR">modelo cascata</string>
+<string language="pt-BR">modelo evolucionário</string>
+<string language="pt-BR">processo unificado</string>
+<string language="pt-BR">rup</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>1734210</size>
+</technical>
+<educational>
+<interactivityType><source>LOMv1.0</source>
+<value>mixed</value></interactivityType>
+<difficulty><source>LOMv1.0</source>
+<value>very difficult</value></difficulty>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<typicalLearningTime><duration>PT2H51M36S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>table</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>questionnaire</value></learningResourceType>
+</educational>
+</lom>

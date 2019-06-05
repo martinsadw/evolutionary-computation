@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>55</entry>
+</identifier>
+<title><string language="pt-BR">Tipos de Redes de Computadores - resumo</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material aborda alguns conceitos da matéria de redes de computadores, são eles: tipos de redes, classificação quanto a abrangência.</string>
+</description>
+<keyword><string language="pt-BR">redes de computadores</string>
+<string language="pt-BR">redes</string>
+<string language="pt-BR">classificação</string>
+<string language="pt-BR">tipos</string>
+<string language="pt-BR">abrangência</string>
+<string language="pt-BR">lan</string>
+<string language="pt-BR">man</string>
+<string language="pt-BR">wan</string>
+<string language="pt-BR">pan</string>
+</keyword>
+</general>
+<technical><format>image/png</format>
+<size>671268</size>
+</technical>
+<educational><typicalLearningTime><duration>PT1M30S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+<interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>very easy</value></difficulty>
+</educational>
+</lom>

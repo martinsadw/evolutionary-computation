@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>25</entry>
+</identifier>
+<title><string language="pt-BR">Diagrama Representação de Algoritmos</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material é um diagrama que apresenta de maneira superficial as seguintes formas de representação de algoritmos: descrição narrativa, fluxograma convencional, pseudocódigo e linguagem de programação.</string>
+</description>
+<keyword><string language="pt-BR">algoritmo</string>
+<string language="pt-BR">representação</string>
+<string language="pt-BR">representação de algoritmos</string>
+<string language="pt-BR">descrição narrativa</string>
+<string language="pt-BR">fluxograma</string>
+<string language="pt-BR">pseudocódigo</string>
+</keyword>
+</general>
+<technical><format>image/png</format>
+<size>654782</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<typicalLearningTime><duration>PT4M</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

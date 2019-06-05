@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>254</entry>
+</identifier>
+<title><string language="pt-BR">Resumo de SO e Tipos</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material aborda conceitos relacionados com sistema operacional, alguns tópicos abordados são: funções do sistema operacional e tipos de sistemas.</string>
+</description>
+<keyword><string language="pt-BR">sistema operacional</string>
+<string language="pt-BR">so</string>
+<string language="pt-BR">os</string>
+<string language="pt-BR">funções do so</string>
+<string language="pt-BR">funções</string>
+<string language="pt-BR">característica do so</string>
+<string language="pt-BR">definição</string>
+<string language="pt-BR">tipos de so</string>
+<string language="pt-BR">classificação</string>
+<string language="pt-BR">gerenciador</string>
+<string language="pt-BR">gerenciador de recursos</string>
+<string language="pt-BR">processo</string>
+<string language="pt-BR">memória</string>
+<string language="pt-BR">entrada e saída</string>
+<string language="pt-BR">monotarefa</string>
+<string language="pt-BR">monousuário</string>
+<string language="pt-BR">multiprogramado</string>
+<string language="pt-BR">multiusuário</string>
+<string language="pt-BR">multitarefa</string>
+<string language="pt-BR">lote</string>
+<string language="pt-BR">bach</string>
+<string language="pt-BR">tempo compartilhado</string>
+<string language="pt-BR">tempo real</string>
+<string language="pt-BR">multiprocessado</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>169978500</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<typicalLearningTime><duration>PT33M51S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

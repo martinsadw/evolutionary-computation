@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>28</entry>
+</identifier>
+<title><string language="pt-BR">Paradigmas de Programação e características das Linguagens</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material apresenta o que é uma linguagem de programação, qual sua impotancia, quais as características que toda linguagem deve ter, o que é paradigma de programação, quais são os tipos e aborda mais diretamente o que é paradigma orientado a objetos, procedural, lógico e funcional.</string>
+</description>
+<keyword><string language="pt-BR">algoritmo</string>
+<string language="pt-BR">linguagem de programação</string>
+<string language="pt-BR">paradigma de programação</string>
+<string language="pt-BR">programação</string>
+<string language="pt-BR">paradigma</string>
+<string language="pt-BR">linguagem</string>
+<string language="pt-BR">paradigma procedural</string>
+<string language="pt-BR">paradigma orientado a objetos</string>
+<string language="pt-BR">paradigma funcional</string>
+<string language="pt-BR">paradigma lógico</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>297031</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>table</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>very difficult</value></difficulty>
+<typicalLearningTime><duration>PT58M52S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

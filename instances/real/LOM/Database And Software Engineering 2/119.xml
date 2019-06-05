@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>119</entry>
+</identifier>
+<title><string language="pt-BR">Intro - Engenharia de Software</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material apresenta uma introdução à Engenharia de Software, abordando os seguintes conceitos iniciais: software, engenharia de software,objetivos e características da engenharia de software,
+classificação de tipos de software.</string>
+</description>
+<keyword><string language="pt-BR">engenharia de software</string>
+<string language="pt-BR">software</string>
+<string language="pt-BR">objetivos da engenharia de software</string>
+<string language="pt-BR">características da engenharia de software</string>
+<string language="pt-BR">ciclo de vida</string>
+<string language="pt-BR">ferramentas</string>
+<string language="pt-BR">software proprietário</string>
+<string language="eng-US">shareware</string>
+<string language="eng-US">demo</string>
+<string language="eng-US">trial</string>
+<string language="eng-US">beta</string>
+<string language="eng-US">opensource</string>
+<string language="pt-BR">glp</string>
+<string language="pt-BR">gnu</string>
+<string language="eng-US">freeware</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>154849</size>
+</technical>
+<educational>
+<interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<typicalLearningTime><duration>PT13M59S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>graph</value></learningResourceType>
+</educational>
+</lom>

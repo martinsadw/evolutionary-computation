@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>12</entry>
+</identifier>
+<title><string language="pt-BR">O que é Algoritmo e Exemplos</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">O material define o que é um algoritmo, exemplifica, caracteriza-os e fala sobre eficiência de algoritmos</string>
+</description>
+<keyword><string language="pt-BR">algoritmo</string>
+<string language="pt-BR">problema</string>
+<string language="pt-BR">sequência de passos</string>
+<string language="pt-BR">eficiência</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>15670533</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>diagram</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>easy</value></difficulty>
+<typicalLearningTime><duration>PT6M50S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

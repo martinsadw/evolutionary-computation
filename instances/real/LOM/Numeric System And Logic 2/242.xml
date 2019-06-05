@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>242</entry>
+</identifier>
+<title><string language="pt-BR">Sistema de Numeração-Matemática Fundamental</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material introduz Sistemas Numéricos (Sistemas de Numeração) abordando os seguintes temas: hitórico do sistema indo-arábico e sua chegada à Europa, nossos algarismos atuais.</string>
+</description>
+<keyword><string language="pt-BR">sistemas numéricos</string>
+<string language="pt-BR">sistema numérico</string>
+<string language="pt-BR">história dos números</string>
+<string language="pt-BR">história dos sistemas numéricos</string>
+<string language="pt-BR">indo-arábico</string>
+<string language="pt-BR">algarismo</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>242656466</size>
+</technical>
+<educational><interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>simulation</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>figure</value></learningResourceType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<typicalLearningTime><duration>PT17M49S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+</educational>
+</lom>

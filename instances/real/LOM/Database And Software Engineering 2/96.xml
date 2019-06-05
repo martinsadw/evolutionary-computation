@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>96</entry>
+</identifier>
+<title><string language="pt-BR">Modelo Relacional (R) –  características, formalização e restrições</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material aborda alguns conceitos relacionados a banco de dados, como: modelo relacional, banco de dado relacional, características do modelo relacional, chaves, restrições de integridade, restrição de domínio e conceitos de modelo relacional.</string>
+</description>
+<keyword><string language="pt-BR">banco de dados</string>
+<string language="pt-BR">modelo relacional</string>
+<string language="pt-BR">banco de dados relacional</string>
+<string language="pt-BR">relacional</string>
+<string language="pt-BR">codd</string>
+<string language="pt-BR">características do modelo relacional</string>
+<string language="pt-BR">chaves</string>
+<string language="pt-BR">chave</string>
+<string language="pt-BR">chave primária</string>
+<string language="pt-BR">chave estrangeira</string>
+<string language="pt-BR">restrições de integridade</string>
+<string language="pt-BR">integridade</string>
+<string language="pt-BR">restrições</string>
+<string language="pt-BR">restrição de domínio</string>
+<string language="pt-BR">domínio</string>
+<string language="pt-BR">superchave</string>
+<string language="pt-BR">relações</string>
+<string language="pt-BR">tabelas</string>
+</keyword>
+</general>
+<technical><format>video/mp4</format>
+<size>260248445</size>
+</technical>
+<educational>
+<interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<interactivityLevel><source>LOMv1.0</source>
+<value>low</value></interactivityLevel>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<typicalLearningTime><duration>PT30M39S</duration>
+</typicalLearningTime>
+<learningResourceType><source>LOMv1.0</source>
+<value>slide</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>table</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+<learningResourceType><source>LOMv1.0</source>
+<value>table</value></learningResourceType>
+<language>pt-BR</language>
+</educational>
+</lom>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+<general><identifier>
+<catalog>PPAtoSCA.LAPIC.ufjf.br</catalog>
+<entry>129</entry>
+</identifier>
+<title><string language="pt-BR">Especificações de Requisitos - Fundamentos</string>
+</title>
+<language>pt-BR</language>
+<description><string language="pt-BR">Este material aborda alguns tópicos da Engenharia de Requisitos, como: técnicas de elicitação de requisitos, tipos de requisitos, modelagem de requisitos com casos de uso e a importância dos requisitos para um projeto.</string>
+</description>
+<keyword><string language="pt-BR">engenharia de software</string>
+<string language="pt-BR">engenharia de requisitos</string>
+<string language="pt-BR">requisitos</string>
+<string language="pt-BR">requisitos não funcionais</string>
+<string language="pt-BR">requisitos funcionais</string>
+<string language="pt-BR">técnicas de análise de requisitos</string>
+<string language="pt-BR">elicitação de requisitos</string>
+<string language="pt-BR">modelagem  requisitos</string>
+<string language="pt-BR">casos de uso</string>
+<string language="pt-BR">gerência de requisitos</string>
+</keyword>
+</general>
+<technical><format>application/pdf</format>
+<size>224932</size>
+</technical>
+<educational>
+<interactivityType><source>LOMv1.0</source>
+<value>expositive</value></interactivityType>
+<difficulty><source>LOMv1.0</source>
+<value>medium</value></difficulty>
+<interactivityLevel><source>LOMv1.0</source>
+<value>very low</value></interactivityLevel>
+<typicalLearningTime><duration>PT39M30S</duration>
+</typicalLearningTime>
+<language>pt-BR</language>
+<learningResourceType><source>LOMv1.0</source>
+<value>narrative text</value></learningResourceType>
+</educational>
+</lom>
