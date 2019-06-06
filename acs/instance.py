@@ -40,9 +40,13 @@ class Instance:
 
         course = Course(config_filename)
 
-        concepts_list = [concept for concept in course.concepts]
-        materials_list = [material for material in course.learning_materials]
-        learners_list = [learner for learner in course.learners]
+        instance.concepts = course.concepts
+        instance.materials = course.learning_materials
+        instance.learners = course.learners
+
+        instance.concepts_keys = [concept for concept in course.concepts]
+        instance.materials_keys = [material for material in course.learning_materials]
+        instance.learners_keys = [learner for learner in course.learners]
 
         instance.num_concepts = len(course.concepts)
         instance.num_materials = len(course.learning_materials)
@@ -55,7 +59,7 @@ class Instance:
         for learner in range(instance.num_learners):
             for concept in range(instance.num_concepts):
                 try:
-                    instance.student_abilities[learner, concept] = course.learners[learners_list[learner]].score[concepts_list[concept]]
+                    instance.student_abilities[learner, concept] = course.learners[instance.learners_keys[learner]].score[instance.concepts_keys[concept]]
                 except KeyError:
                     instance.student_abilities[learner, concept] = 0
         instance.student_abilities = instance.student_abilities[0]
@@ -65,7 +69,7 @@ class Instance:
         for learner in range(instance.num_learners):
             for concept in range(instance.num_concepts):
                 try:
-                    if concepts_list[concept] in course.learners[learners_list[learner]].learning_goals:
+                    if instance.concepts_keys[concept] in course.learners[instance.learners_keys[learner]].learning_goals:
                         instance.objectives[learner, concept] = True
                     else:
                         instance.objectives[learner, concept] = False
@@ -98,7 +102,7 @@ class Instance:
         instance.concepts_materials = np.zeros((instance.num_concepts, instance.num_materials), dtype=bool)
         for material in range(instance.num_materials):
             for concept in range(instance.num_concepts):
-                if concepts_list[concept] in course.material_coverage[materials_list[material]]:
+                if instance.concepts_keys[concept] in course.material_coverage[instance.materials_keys[material]]:
                     instance.concepts_materials[concept, material] = True
         # instance.concepts_materials = np.array([course.concepts[concept].learning_materials for concept in course.concepts])
 
