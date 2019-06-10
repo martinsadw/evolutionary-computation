@@ -118,10 +118,38 @@ if __name__ == '__main__':
             print('---------')
 
             print()
-            print('|      Nome | nº materiais |')
-            print('|----------:|--------------|')
+            print('|      Nome | nº materiais | Dificuldade  | Conceitos / material | Duração total (h) | Duração média (h) |')
+            print('|----------:|--------------|--------------|----------------------|-------------------|-------------------|')
             for num, concept in enumerate(instance.concepts_keys):
-                print('| %9s | %12d |' % (concept, instance.concepts_materials[num].sum()))
+                concept_mask = instance.concepts_materials[num]
+                num_materials = concept_mask.sum()
+
+                if num_materials == 0:
+                    print('| %9s | %12d |          nan |                  nan |               nan |               nan |' % (concept, num_materials))
+                    continue
+
+                mean_difficulty, std_difficulty = np.mean(instance.materials_difficulty[concept_mask]), np.std(instance.materials_difficulty[concept_mask])
+                mean_concepts, std_concepts = instance.concepts_materials[:, concept_mask].sum() / num_materials, np.std(instance.concepts_materials[:, concept_mask].sum(axis=0))
+                mean_time, std_time = np.mean(instance.estimated_time[concept_mask] / 3600), np.std(instance.estimated_time[concept_mask] / 3600)
+                sum_time = (instance.estimated_time[concept_mask] / 3600).sum()
+                print('| %9s | %12d | %4.2f +- %4.2f |        %5.2f +- %4.2f |            %6.2f |      %4.2f +- %4.2f |' % (concept, num_materials, mean_difficulty, std_difficulty, mean_concepts, std_concepts, sum_time, mean_time, std_time))
+
+            # print()
+            # print('|      Nome | nº materiais | ati-ref  | sen-int | vis-ver | seq-glo |')
+            # print('|----------:|--------------|----------|---------|---------|---------|')
+            # for num, concept in enumerate(instance.concepts_keys):
+            #     concept_mask = instance.concepts_materials[num]
+            #     num_materials = concept_mask.sum()
+            #
+            #     if num_materials == 0:
+            #         print('| %9s | %12d |          nan |                  nan |               nan |               nan |' % (concept, num_materials))
+            #         continue
+            #
+            #     ati_ref_hist = np.histogram(instance.materials_active_reflexive[concept_mask],   style_range)[0] / num_materials
+            #     sen_int_hist = np.histogram(instance.materials_sensory_intuitive[concept_mask],  style_range)[0] / num_materials
+            #     vis_ver_hist = np.histogram(instance.materials_visual_verbal[concept_mask],      style_range)[0] / num_materials
+            #     seq_glo_hist = np.histogram(instance.materials_sequential_global[concept_mask],  style_range)[0] / num_materials
+            #     print('| %9s | %12d | %s | %s | %s | %s |' % (concept, num_materials, ati_ref_hist, sen_int_hist, vis_ver_hist, seq_glo_hist))
 
         print()
 
