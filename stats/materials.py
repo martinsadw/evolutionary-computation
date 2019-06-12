@@ -35,7 +35,8 @@ if __name__ == '__main__':
     show_general = False
     show_difficulty = False
     show_style = False
-    show_concepts = True
+    show_concepts = False
+    show_coocurrence = True
 
     for (num, instance) in enumerate(instances):
         print(instance_list[num])
@@ -150,6 +151,11 @@ if __name__ == '__main__':
             #     vis_ver_hist = np.histogram(instance.materials_visual_verbal[concept_mask],      style_range)[0] / num_materials
             #     seq_glo_hist = np.histogram(instance.materials_sequential_global[concept_mask],  style_range)[0] / num_materials
             #     print('| %9s | %12d | %s | %s | %s | %s |' % (concept, num_materials, ati_ref_hist, sen_int_hist, vis_ver_hist, seq_glo_hist))
+
+        if show_coocurrence:
+            concepts_materials = instance.concepts_materials.astype(int)
+            coocurrence = concepts_materials.dot(concepts_materials.T)
+            print(coocurrence)
 
         print()
 
