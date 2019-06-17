@@ -1,13 +1,16 @@
 import random
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 from utils.roulette import roulette_spin
 
 
 if __name__ == '__main__':
+    ############################################################################
     num_materials = 1000
-    new_concept_rate = 0.25
+    mean_concepts = 1.33
+    smoothing = 0.01
 
     concepts_name = [
           'ICHCC01',   'ICHCC02',   'ICHCC03',   'ICHCC04',   'ICHCC05',   'ICHCC06',
@@ -74,30 +77,27 @@ if __name__ == '__main__':
         [ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  4,  4,  4, 12,  7],
         [ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  3,  3,  3,  7, 12]
     ], dtype=float)
-    coocurrence_matrix += 0.1  # Smoothing
-
+    ############################################################################
     num_concepts = len(concepts_name)
+    new_concept_rate = 1 - (1 / mean_concepts)
+    coocurrence_matrix += smoothing
+    ############################################################################
 
     materials_list = []
 
     for i in range(num_materials):
         new_material = []
 
-        remaining_concepts_name = concepts_name.copy()
-        remaining_concepts_quant = concepts_quant.copy()
+        remaining_concepts_id = list(range(num_concepts))
 
-        concept_id = roulette_spin(remaining_concepts_quant)
-        remaining_concepts_quant.pop(concept_id)
-        new_name = remaining_concepts_name.pop(concept_id)
-        # new_material.append(new_name)
-        new_material.append(concept_id)
+        concept_id = roulette_spin(concepts_quant)
+        new_material.append(remaining_concepts_id.pop(concept_id))
 
-        while random.random() < new_concept_rate:
-            concept_id = roulette_spin(remaining_concepts_quant)
-            remaining_concepts_quant.pop(concept_id)
-            new_name = remaining_concepts_name.pop(concept_id)
-            # new_material.append(new_name)
-            new_material.append(concept_id)
+        while random.random() < new_concept_rate and len(new_material) < num_concepts:
+            new_probability = np.sum(coocurrence_matrix[new_material][:, remaining_concepts_id], axis=0)
+
+            concept_id = roulette_spin(new_probability)
+            new_material.append(remaining_concepts_id.pop(concept_id))
 
         materials_list.append(new_material)
 
@@ -106,13 +106,21 @@ if __name__ == '__main__':
         for i in material:
             concepts_materials[i, j] = 1
 
-    print(materials_list)
-    print(concepts_materials.dot(concepts_materials.T))
+    new_coocurences_matrix = concepts_materials.dot(concepts_materials.T)
+    quant_concepts = np.sum(concepts_materials, axis=0)
 
-    # a = np.empty((len(materials_list),))
-    # for i, material in enumerate(materials_list):
-    #     a[i] = len(material)
-    #
-    # print(np.sum(a))
-    # print(np.mean(a))
-    # print(np.std(a))
+    print(np.sum(quant_concepts))
+    print(np.mean(quant_concepts))
+    print(np.std(quant_concepts))
+
+    fig = plt.figure()
+    fig.suptitle('Matriz de coocorrência - Sintética - Suavização %.2f' % smoothing)
+    plt.imshow(new_coocurences_matrix, interpolation='nearest', cmap='gray')
+    plt.colorbar()
+    plt.show()
+
+    fig = plt.figure()
+    fig.suptitle('Matriz de coocorrência - Real')
+    plt.imshow(coocurrence_matrix, interpolation='nearest', cmap='gray')
+    plt.colorbar()
+    plt.show()
