@@ -40,11 +40,11 @@ if __name__ == "__main__":
     config_ga = ga.config.Config.load_from_file("instances/ga_config.txt")
     config_de = de.config.Config.load_from_file("instances/de_config.txt")
 
-    # config_ppa_b.cost_budget = 2000
-    # config_ppa_c.cost_budget = 2000
-    # config_pso.cost_budget = 2000
-    # config_ga.cost_budget = 2000
-    # config_de.cost_budget = 2000
+    config_ppa_b.cost_budget = 100000
+    config_ppa_c.cost_budget = 100000
+    config_pso.cost_budget = 100000
+    config_ga.cost_budget = 100000
+    config_de.cost_budget = 100000
 
     num_repetitions = 100
 
@@ -62,10 +62,10 @@ if __name__ == "__main__":
             'ga': results_ga,
             'de': results_de,
         }
-        with open('results/results_300.pickle', 'wb') as file:
+        with open('results/results_300_100000.pickle', 'wb') as file:
             pickle.dump(results, file)
     else:
-        with open('results/results_300.pickle', 'rb') as file:
+        with open('results/results_300_100000.pickle', 'rb') as file:
             results = pickle.load(file)
 
         results_ppa_b = results['ppa_b']
@@ -87,44 +87,52 @@ if __name__ == "__main__":
     deviation_ga = np.std(results_ga[1], axis=0)
     deviation_de = np.std(results_de[1], axis=0)
 
-    mean_partial_ppa_b = np.min(results_ppa_b[2], axis=0)
-    mean_partial_ppa_c = np.min(results_ppa_c[2], axis=0)
-    mean_partial_pso = np.min(results_pso[2], axis=0)
-    mean_partial_ga = np.min(results_ga[2], axis=0)
-    mean_partial_de = np.min(results_de[2], axis=0)
+    mean_partial_ppa_b = np.mean(results_ppa_b[2], axis=0)
+    mean_partial_ppa_c = np.mean(results_ppa_c[2], axis=0)
+    mean_partial_pso = np.mean(results_pso[2], axis=0)
+    mean_partial_ga = np.mean(results_ga[2], axis=0)
+    mean_partial_de = np.mean(results_de[2], axis=0)
 
-    fig = plt.figure()
+    # Colorblind colors: https://gist.github.com/thriveth/8560036
+    fig = plt.figure(figsize=(7, 4))
     # fig.suptitle('PPAC: best fitness')
-    plt.xlabel('# executions of fitness function')
-    plt.ylabel('fitness value')
-    plt.plot(results_ppa_b[0], mean_ppa_b, label="PPAD")
-    plt.plot(results_ppa_c[0], mean_ppa_c, label="PPAC")
-    plt.plot(results_pso[0], mean_pso, label="PSO")
-    plt.plot(results_ga[0], mean_ga, label="GA")
-    plt.plot(results_de[0], mean_de, label="DE")
+    plt.xlabel('# execuções da função de avaliação')
+    plt.ylabel('valor da avaliação')
+    plt.plot(results_ppa_b[0], mean_ppa_b, color='#4daf4a', label="APPD")
+    plt.plot(results_ppa_c[0], mean_ppa_c, color='#f781bf', label="APPC")
+    plt.plot(results_pso[0], mean_pso, color='#a65628', label="OEP")
+    plt.plot(results_ga[0], mean_ga, color='#377eb8', label="AG")
+    plt.plot(results_de[0], mean_de, color='#ff7f00', label="ED")
     plt.legend(loc=1)
     plt.show()
 
-    fig = plt.figure()
-    plt.xlabel('# executions of fitness function')
-    plt.ylabel('fitness value')
-    plt.plot(results_pso[0], mean_pso, color='g', label="PSO")
-    plt.plot(results_pso[0], mean_pso - deviation_pso, linestyle='--', color='g', linewidth=0.5)
-    plt.plot(results_pso[0], mean_pso + deviation_pso, linestyle='--', color='g', linewidth=0.5)
-    plt.plot(results_ga[0], mean_ga, color='r', label="GA")
-    plt.plot(results_ga[0], mean_ga + deviation_ga, linestyle='--', color='r', linewidth=0.5)
-    plt.plot(results_ga[0], mean_ga - deviation_ga, linestyle='--', color='r', linewidth=0.5)
+    print(mean_partial_ga[0, 0])
+    print(mean_partial_ga[0, 1])
+    print(mean_partial_ga[0, 2])
+    print(mean_partial_ga[0, 3])
+    print(mean_partial_ga[0, 4])
+
+    fig = plt.figure(figsize=(4, 4))
+    plt.xlabel('# execuções da função de avaliação')
+    plt.ylabel('valor da avaliação')
+    plt.plot(results_ga[0], mean_ga, color='#377eb8', label="AG")
+    plt.plot(results_ga[0], mean_ga + deviation_ga, linestyle='--', color='#377eb8', linewidth=0.5)
+    plt.plot(results_ga[0], mean_ga - deviation_ga, linestyle='--', color='#377eb8', linewidth=0.5)
+    plt.fill_between(results_ga[0], mean_ga + deviation_ga, mean_ga - deviation_ga, facecolor='#377eb8', alpha=0.2)
+    plt.plot(results_de[0], mean_de, color='#ff7f00', label="ED")
+    plt.plot(results_de[0], mean_de - deviation_de, linestyle='--', color='#ff7f00', linewidth=0.5)
+    plt.plot(results_de[0], mean_de + deviation_de, linestyle='--', color='#ff7f00', linewidth=0.5)
+    plt.fill_between(results_de[0], mean_de + deviation_de, mean_de - deviation_de, facecolor='#ff7f00', alpha=0.2)
     plt.legend(loc=1)
     plt.show()
 
-    fig = plt.figure()
-    plt.xlabel('# executions of fitness function')
-    plt.ylabel('fitness value')
-    plt.plot(results_ga[0], mean_ga, label="Total")
-    plt.plot(results_ga[0], mean_partial_ga[:, 0], label="Coverage")
-    plt.plot(results_ga[0], mean_partial_ga[:, 1], label="Difficulty")
-    plt.plot(results_ga[0], mean_partial_ga[:, 2], label="Time")
-    plt.plot(results_ga[0], mean_partial_ga[:, 3], label="Balance")
-    plt.plot(results_ga[0], mean_partial_ga[:, 4], label="Style")
+    fig = plt.figure(figsize=(4, 4))
+    plt.xlabel('# execuções da função de avaliação')
+    plt.ylabel('valor da avaliação')
+    plt.plot(results_de[0], mean_partial_de[:, 0], color='#377eb8', label="Cobertura")
+    plt.plot(results_de[0], mean_partial_de[:, 1], color='#ff7f00', label="Dificuldade")
+    plt.plot(results_de[0], mean_partial_de[:, 2], color='#4daf4a', label="Tempo")
+    plt.plot(results_de[0], mean_partial_de[:, 3], color='#f781bf', label="Balanceamento")
+    plt.plot(results_de[0], mean_partial_de[:, 4], color='#a65628', label="Estilo")
     plt.legend(loc=1)
     plt.show()

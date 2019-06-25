@@ -43,10 +43,12 @@ def differential_evolution(instance, config, fitness_function, out_info=None):
     # TODO(andre: 2019-04-25): Testar utilizar um valor limite para os valores
     # dos individuos, similar ao PSO e ao PPA_C
     population = np.random.rand(population_size, instance.num_materials) * 2 - 1
-    population_best_evaluation = evaluate_function(population[0])
-    population_best_fitness = counter_fitness(population_best_evaluation, instance, timer)
     population_evaluation = evaluate_function(population)
     survival_values = np.apply_along_axis(counter_fitness, 1, population_evaluation, instance, timer)
+
+    population_best_index = np.argmin(survival_values, axis=0)
+    population_best_evaluation = np.copy(population_evaluation[population_best_index])
+    population_best_fitness = survival_values[population_best_index]
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()

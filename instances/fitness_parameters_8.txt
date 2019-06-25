@@ -26,9 +26,9 @@ ppatosca.fitness.learningStyleWeight = 0.5
 
 # 300 Materiais
 [section]
-ppatosca.fitness.missingConceptsCoeficient = 143.1
-ppatosca.fitness.conceptsCoveredWeight = 0.0027953
-ppatosca.fitness.difficultyWeight = 0.76923
-ppatosca.fitness.totalTimeWeight = 0.0000032299
-ppatosca.fitness.materialsBalancingWeight = 0.0193798
-ppatosca.fitness.learningStyleWeight = 0.5
+ppatosca.fitness.missingConceptsCoeficient = 137.904  ; (344.76 * 2 / 5)
+ppatosca.fitness.conceptsCoveredWeight = 0.00290057   ; (1 / 344.76)
+ppatosca.fitness.difficultyWeight = 0.673067          ; (1 / 1.485736)
+ppatosca.fitness.totalTimeWeight = 0.00000304553      ; (1 / (600 * 547.250416))
+ppatosca.fitness.materialsBalancingWeight = 0.0345734 ; (1 / 28.923939)
+ppatosca.fitness.learningStyleWeight = 0.505656       ; (1 / 1.977629)
