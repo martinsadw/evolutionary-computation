@@ -1,5 +1,6 @@
 import random
 import pickle
+import math
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -90,14 +91,29 @@ if __name__ == '__main__':
     #     print(coocurrence)
     #     print("---------------------------------------------")
 
-    fig = plt.figure()
-    fig.suptitle('Matriz de coocorrência - Sintética - Suavização %.2f' % smoothing)
-    plt.imshow(new_coocurences_matrix, interpolation='nearest', cmap='gray')
-    plt.colorbar()
-    plt.show()
+    # fig = plt.figure()
+    # fig.suptitle('Matriz de coocorrência - Sintética - Suavização %.2f' % smoothing)
+    # plt.imshow(new_coocurences_matrix, interpolation='nearest', cmap='gray')
+    # plt.colorbar()
+    # plt.show()
+    #
+    # fig = plt.figure()
+    # fig.suptitle('Matriz de coocorrência - Real')
+    # plt.imshow(coocurrence_matrix, interpolation='nearest', cmap='gray')
+    # plt.colorbar()
+    # plt.show()
 
-    fig = plt.figure()
-    fig.suptitle('Matriz de coocorrência - Real')
-    plt.imshow(coocurrence_matrix, interpolation='nearest', cmap='gray')
-    plt.colorbar()
-    plt.show()
+    def virtualRoulette(size, quant):
+        combinations_size = (math.factorial(size) / math.factorial(size - quant))
+        values_list = [*range(size)]
+
+        combination_value = math.floor(random.random() * combinations_size)
+
+        result = []
+        for i in range(quant):
+            result.append(values_list.pop(combination_value % (size - i)))
+            combination_value //= (size - i)
+
+        return result
+
+    print(virtualRoulette(30, 5))
