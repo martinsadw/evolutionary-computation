@@ -41,6 +41,7 @@ if __name__ == '__main__':
 
     with open('results/instance_stats.pickle', 'wb') as file:
         pickle.dump({
+            'concepts_materials': instance.concepts_materials,
             'concepts_name': concepts_name,
             'concepts_quant': concepts_quant,
             'concepts_difficulty': concepts_difficulty,

@@ -1,6 +1,7 @@
 import random
 import pickle
 import math
+from collections import defaultdict
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,6 +18,7 @@ if __name__ == '__main__':
     with open('results/instance_stats.pickle', 'rb') as file:
         stats = pickle.load(file)
 
+    base_concepts_materials = stats['concepts_materials']
     concepts_name = stats['concepts_name']
     concepts_quant = stats['concepts_quant']
     concepts_difficulty = stats['concepts_difficulty']
@@ -116,4 +118,43 @@ if __name__ == '__main__':
 
         return result
 
-    print(virtualRoulette(30, 5))
+    # print(virtualRoulette(30, 5))
+
+    coocurrence_set = []
+    coocurrence_dict = []
+
+    coocurrence_set.append(defaultdict(set))
+    coocurrence_dict.append({})
+    for i in range(num_concepts):
+        for j in range(i+1, num_concepts):
+            concept_and = base_concepts_materials[i] & base_concepts_materials[j]
+            if concept_and.sum() > 0:
+                coocurrence_set[0][i].add(j)
+                coocurrence_set[0][j].add(i)
+                coocurrence_dict[0][frozenset([i, j])] = concept_and
+
+    while (len(coocurrence_dict[-1]) > 0):
+        current_set = defaultdict(set)
+        current_dict = {}
+        for (key, value) in coocurrence_dict[-1].items():
+            # Talvez seja mais rapido calcular quais são as chaves que podem ter coocorrencia
+            # possible_keys = set.intersection(*[coocurrence_set[0][x] for x in key])
+
+            for i in range(num_concepts):
+                if i not in key:
+                    if key.union([i]) in current_dict:
+                        current_set[key].add(i)
+                    else:
+                        concept_and = value & base_concepts_materials[i]
+                        if concept_and.sum() > 0:
+                            current_set[key].add(i)
+                            current_dict[key.union([i])] = concept_and
+
+        coocurrence_set.append(current_set)
+        coocurrence_dict.append(current_dict)
+
+    print("========================")
+    for n, i in enumerate(coocurrence_dict):
+        print(n+2)
+        for key, value in i.items():
+            print(key, value.sum())
