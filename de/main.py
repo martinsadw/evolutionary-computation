@@ -23,13 +23,15 @@ def differential_evolution(instance, config, fitness_function, out_info=None):
         evaluate_function = evaluate_population_random
 
     cost_counter = 0
-    def counter_fitness(individual, instance, timer, print_results=False, data=None):
+    def counter_fitness(individual, instance, student, timer, print_results=False, data=None):
         nonlocal cost_counter
         cost_counter += 1
-        return fitness_function(individual, instance, timer, print_results, data=data)
+        return fitness_function(individual, instance, student, timer, print_results, data=data)
 
     iteration_counter = 0
     stagnation_counter = 0
+
+    student = 0
 
     if out_info is not None:
         out_info["best_fitness"] = []
@@ -44,7 +46,7 @@ def differential_evolution(instance, config, fitness_function, out_info=None):
     # dos individuos, similar ao PSO e ao PPA_C
     population = np.random.rand(population_size, instance.num_materials) * 2 - 1
     population_evaluation = evaluate_function(population)
-    survival_values = np.apply_along_axis(counter_fitness, 1, population_evaluation, instance, timer)
+    survival_values = np.apply_along_axis(counter_fitness, 1, population_evaluation, instance, student, timer)
 
     population_best_index = np.argmin(survival_values, axis=0)
     population_best_evaluation = np.copy(population_evaluation[population_best_index])
@@ -64,7 +66,7 @@ def differential_evolution(instance, config, fitness_function, out_info=None):
 
         if out_info is not None:
             out_info["best_fitness"].append(population_best_fitness)
-            fitness_function(population_best_evaluation, instance, timer, data=out_info["partial_fitness"])
+            fitness_function(population_best_evaluation, instance, student, timer, data=out_info["partial_fitness"])
             out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
             out_info["process_time"].append(time.process_time() - start_process_time)
             out_info["cost_value"].append(cost_counter)
@@ -84,7 +86,7 @@ def differential_evolution(instance, config, fitness_function, out_info=None):
 
             applicant = np.where(cross_points, mutant, population[p])
             applicant_evaluation = evaluate_function(applicant)
-            applicant_fit = counter_fitness(applicant_evaluation, instance, timer)
+            applicant_fit = counter_fitness(applicant_evaluation, instance, student, timer)
 
             if applicant_fit < survival_values[p]:
                 new_population[p] = applicant
@@ -105,7 +107,7 @@ def differential_evolution(instance, config, fitness_function, out_info=None):
 
     if out_info is not None:
         out_info["best_fitness"].append(population_best_fitness)
-        fitness_function(population_best_evaluation, instance, timer, data=out_info["partial_fitness"])
+        fitness_function(population_best_evaluation, instance, student, timer, data=out_info["partial_fitness"])
         out_info["perf_counter"].append(time.perf_counter() - start_perf_counter)
         out_info["process_time"].append(time.process_time() - start_process_time)
         out_info["cost_value"].append(cost_counter)

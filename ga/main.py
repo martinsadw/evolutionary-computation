@@ -23,13 +23,16 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
     population_size = config.population_size
 
     cost_counter = 0
-    def counter_fitness(individual, instance, timer, print_results=False, data=None):
+    def counter_fitness(individual, instance, student, timer, print_results=False, data=None):
         nonlocal cost_counter
         cost_counter += 1
-        return fitness_function(individual, instance, timer, print_results, data=data)
+        return fitness_function(individual, instance, student, timer, print_results, data=data)
 
     iteration_counter = 0
     stagnation_counter = 0
+
+    # student = instance.learners_keys[0]
+    student = 1
 
     if out_info is not None:
         out_info['best_fitness'] = []
@@ -42,7 +45,7 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
 
     population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
     population_best_individual = population[0]
-    population_best_fitness = counter_fitness(population[0], instance, timer)
+    population_best_fitness = counter_fitness(population[0], instance, student, timer)
 
     start_perf_counter = time.perf_counter()
     start_process_time = time.process_time()
@@ -51,7 +54,7 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
            (not config.max_stagnation or stagnation_counter < config.max_stagnation)):
         timer.add_time()
         # print('==========================' + str(iteration))
-        survival_values = np.apply_along_axis(counter_fitness, 1, population, instance, timer)
+        survival_values = np.apply_along_axis(counter_fitness, 1, population, instance, student, timer)
         sorted_indices = np.argsort(survival_values)
         population = population[sorted_indices]
         survival_values = survival_values[sorted_indices]
@@ -69,7 +72,7 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
         if out_info is not None:
             # out_info['best_fitness'].append(survival_values[0])
             out_info['best_fitness'].append(population_best_fitness)
-            fitness_function(population_best_individual, instance, timer, data=out_info['partial_fitness'])
+            fitness_function(population_best_individual, instance, student, timer, data=out_info['partial_fitness'])
             out_info['perf_counter'].append(time.perf_counter() - start_perf_counter)
             out_info['process_time'].append(time.process_time() - start_process_time)
             out_info['cost_value'].append(cost_counter)
@@ -98,7 +101,7 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
     if out_info is not None:
         # out_info['best_fitness'].append(survival_values[0])
         out_info['best_fitness'].append(population_best_fitness)
-        fitness_function(population_best_individual, instance, timer, data=out_info['partial_fitness'])
+        fitness_function(population_best_individual, instance, student, timer, data=out_info['partial_fitness'])
         out_info['perf_counter'].append(time.perf_counter() - start_perf_counter)
         out_info['process_time'].append(time.process_time() - start_process_time)
         out_info['cost_value'].append(cost_counter)

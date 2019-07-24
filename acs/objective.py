@@ -5,8 +5,8 @@ import numpy as np
 
 INVALID_VALUE = 1000
 
-def concepts_covered_function(individual, instance, timer):
-    objectives = instance.objectives
+def concepts_covered_function(individual, instance, student, timer):
+    objectives = instance.objectives[student]
     concepts_materials = instance.concepts_materials
     missing_concepts_coeficient = instance.missing_concepts_coeficient
     timer.add_time("fitness_concept_start")
@@ -32,11 +32,11 @@ def concepts_covered_function(individual, instance, timer):
     return result
 
 
-def difficulty_function(individual, instance, timer):
+def difficulty_function(individual, instance, student, timer):
     timer.add_time()
-    objectives = instance.objectives
+    objectives = instance.objectives[student]
+    student_abilities = instance.student_abilities[student]
     concepts_materials = instance.concepts_materials
-    student_abilities = instance.student_abilities
     materials_difficulty = instance.materials_difficulty
 
     if (objectives.sum() == 0):
@@ -85,10 +85,10 @@ def difficulty_function(individual, instance, timer):
     return mean_student_materials_difficulty
 
 
-def total_time_function(individual, instance):
+def total_time_function(individual, instance, student):
+    duration_min = instance.duration_min[student]
+    duration_max = instance.duration_max[student]
     estimated_time = instance.estimated_time
-    duration_min = instance.duration_min
-    duration_max = instance.duration_max
 
     masked_estimated_time = np.ma.array(estimated_time, mask=~individual)
 
@@ -101,8 +101,8 @@ def total_time_function(individual, instance):
     return max(duration_min - total_time, 0) + max(0, total_time - duration_max)
 
 
-def materials_balancing_function(individual, instance):
-    objectives = instance.objectives
+def materials_balancing_function(individual, instance, student):
+    objectives = instance.objectives[student]
     concepts_materials = instance.concepts_materials
 
     selected_concepts_materials = concepts_materials[objectives, :][:, individual]
@@ -123,16 +123,16 @@ def materials_balancing_function(individual, instance):
     return distance_from_mean.sum()
 
 
-def learning_style_function(individual, instance):
+def learning_style_function(individual, instance, student):
+    student_active_reflexive = instance.student_active_reflexive[student]
+    student_sensory_intuitive = instance.student_sensory_intuitive[student]
+    student_visual_verbal = instance.student_visual_verbal[student]
+    student_sequential_global = instance.student_sequential_global[student]
+
     materials_active_reflexive = instance.materials_active_reflexive
     materials_sensory_intuitive = instance.materials_sensory_intuitive
     materials_visual_verbal = instance.materials_visual_verbal
     materials_sequential_global = instance.materials_sequential_global
-
-    student_active_reflexive = instance.student_active_reflexive
-    student_sensory_intuitive = instance.student_sensory_intuitive
-    student_visual_verbal = instance.student_visual_verbal
-    student_sequential_global = instance.student_sequential_global
 
     selected_active_reflexive = materials_active_reflexive[individual]
     selected_sensory_intuitive = materials_sensory_intuitive[individual]
@@ -170,17 +170,17 @@ def learning_style_function(individual, instance):
     return (objective_active_reflexive + objective_sensory_intuitive + objective_visual_verbal + objective_sequential_global) / 4
 
 
-def fitness(individual, instance, timer, print_results=False, data=None):
+def fitness(individual, instance, student, timer, print_results=False, data=None):
     timer.add_time()
-    concepts_covered_objective = concepts_covered_function(individual, instance, timer)
+    concepts_covered_objective = concepts_covered_function(individual, instance, student, timer)
     timer.add_time()
-    difficulty_objective = difficulty_function(individual, instance, timer)
+    difficulty_objective = difficulty_function(individual, instance, student, timer)
     timer.add_time()
-    total_time_objective = total_time_function(individual, instance)
+    total_time_objective = total_time_function(individual, instance, student)
     timer.add_time("fitness_total_time")
-    materials_balancing_objective = materials_balancing_function(individual, instance)
+    materials_balancing_objective = materials_balancing_function(individual, instance, student)
     timer.add_time("fitness_materials")
-    learning_style_objective = learning_style_function(individual, instance)
+    learning_style_objective = learning_style_function(individual, instance, student)
     timer.add_time("fitness_learning_style")
 
     sum_objective = (instance.concepts_covered_weight * concepts_covered_objective
@@ -214,12 +214,12 @@ def fitness(individual, instance, timer, print_results=False, data=None):
     return sum_objective
 
 
-def fitness_population(population, instance, timer, print_results=False, data=None):
+def fitness_population(population, instance, student, timer, print_results=False, data=None):
     population_size = population.shape[0]
     survival_values = np.empty(population_size)
 
     for i in range(population_size):
         # Calcula o valor de sobrevivencia do individuo i
-        survival_values[i] = fitness(population[i], instance, timer, print_results, data)
+        survival_values[i] = fitness(population[i], instance, student, timer, print_results, data)
 
     return survival_values

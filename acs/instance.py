@@ -52,9 +52,6 @@ class Instance:
         instance.num_materials = len(course.learning_materials)
         instance.num_learners = len(course.learners)
 
-        # TODO(andre:2018-05-21): Garantir que a ordem das disciplinas está correta
-        # TODO(andre:2018-05-21): Modificar o restante do codigo para aceitar
-        # multiplos alunos e então modificar essas atribuições
         instance.student_abilities = np.empty((instance.num_learners, instance.num_concepts))
         for learner in range(instance.num_learners):
             for concept in range(instance.num_concepts):
@@ -62,8 +59,6 @@ class Instance:
                     instance.student_abilities[learner, concept] = course.learners[instance.learners_keys[learner]].score[instance.concepts_keys[concept]]
                 except KeyError:
                     instance.student_abilities[learner, concept] = 0
-        instance.student_abilities = instance.student_abilities[0]
-        # instance.student_abilities = np.array([[course.learners[learner].score[score] for score in course.learners[learner].score] for learner in course.learners])
 
         instance.objectives = np.empty((instance.num_learners, instance.num_concepts), dtype=bool)
         for learner in range(instance.num_learners):
@@ -75,27 +70,18 @@ class Instance:
                         instance.objectives[learner, concept] = False
                 except (KeyError, TypeError):
                     instance.objectives[learner, concept] = False
-        instance.objectives = instance.objectives[0]
-        # instance.objectives = np.array([course.learners[learner].learning_goals for learner in course.learners])
-        # instance.objectives = instance.objectives[0]
 
         instance.duration_min = np.array([course.learners[learner].lower_time for learner in course.learners])
-        instance.duration_min = instance.duration_min[0]
 
         instance.duration_max = np.array([course.learners[learner].upper_time for learner in course.learners])
-        instance.duration_max = instance.duration_max[0]
 
         instance.student_active_reflexive = np.array([course.learners[learner].active_reflexive for learner in course.learners])
-        instance.student_active_reflexive = instance.student_active_reflexive[0]
 
         instance.student_sensory_intuitive = np.array([course.learners[learner].sensory_intuitive for learner in course.learners])
-        instance.student_sensory_intuitive = instance.student_sensory_intuitive[0]
 
         instance.student_visual_verbal = np.array([course.learners[learner].visual_verbal for learner in course.learners])
-        instance.student_visual_verbal = instance.student_visual_verbal[0]
 
         instance.student_sequential_global = np.array([course.learners[learner].sequential_global for learner in course.learners])
-        instance.student_sequential_global = instance.student_sequential_global[0]
 
         instance.materials_difficulty = np.array([course.learning_materials[material].difficulty for material in course.learning_materials])
 
