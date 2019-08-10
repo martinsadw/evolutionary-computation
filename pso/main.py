@@ -33,6 +33,8 @@ def particle_swarm_optmization(instance, config, fitness_function, out_info=None
         out_info['process_time'] = []
         out_info['cost_value'] = []
 
+    results = []
+
     for student in range(instance.num_learners):
         cost_counter = 0
         iteration_counter = 0
@@ -122,7 +124,9 @@ def particle_swarm_optmization(instance, config, fitness_function, out_info=None
             out_info["process_time"][-1].append(time.process_time() - start_process_time)
             out_info["cost_value"][-1].append(cost_counter)
 
-    return (global_best_position, global_best_fitness)
+        results.append((global_best_position, global_best_fitness))
+
+    return results
 
 
 def read_files(instance_config_filename, config_filename):

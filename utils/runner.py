@@ -12,12 +12,12 @@ def run_method(method_function, fitness_function, instance, config, num_repetiti
 
     out_info = {}
 
-    popularity = np.zeros((instance.num_materials,))
+    # TODO(andre:2019-08-10): Calcular a quantidade de vezes que cada material foi selecionado para cada aluno
 
     for i in range(num_repetitions):
         np.random.seed(seed + i)
         random.seed(seed + i)
-        (individual, survival_value) = method_function(instance, config, fitness_function, out_info=out_info, **kwargs)
+        results = method_function(instance, config, fitness_function, out_info=out_info, **kwargs)
 
         best_fitness.append(out_info["best_fitness"])
         partial_fitness.append(out_info["partial_fitness"])
@@ -30,8 +30,6 @@ def run_method(method_function, fitness_function, instance, config, num_repetiti
             if len(student_cost_value) > len(cost_value):
                 new_cost_values = student_cost_value[len(cost_value):]
                 cost_value.extend(new_cost_values)
-
-        popularity += individual
 
     num_iterations = len(cost_value)
 

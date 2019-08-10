@@ -37,6 +37,8 @@ def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=
         out_info["process_time"] = []
         out_info["cost_value"] = []
 
+    results = []
+
     for student in range(instance.num_learners):
         cost_counter = 0
         iteration_counter = 0
@@ -162,7 +164,9 @@ def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=
             out_info["process_time"][-1].append(time.process_time() - start_process_time)
             out_info["cost_value"][-1].append(cost_counter)
 
-    return (population_best_individual, population_best_fitness)
+        results.append((population_best_individual, population_best_fitness))
+
+    return results
 
 
 def read_files(instance_config_filename, config_filename):

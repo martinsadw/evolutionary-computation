@@ -34,6 +34,8 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
         out_info['process_time'] = []
         out_info['cost_value'] = []
 
+    results = []
+
     for student in range(instance.num_learners):
         cost_counter = 0
         iteration_counter = 0
@@ -58,12 +60,10 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
                (not config.num_iterations or iteration_counter < config.num_iterations) and
                (not config.max_stagnation or stagnation_counter < config.max_stagnation)):
             timer.add_time()
-            # print('==========================' + str(iteration))
             survival_values = np.apply_along_axis(counter_fitness, 1, population, instance, student, timer)
             sorted_indices = np.argsort(survival_values)
             population = population[sorted_indices]
             survival_values = survival_values[sorted_indices]
-            # print(survival_values)
 
             iteration_counter += 1
             if survival_values[0] < population_best_fitness:
@@ -75,7 +75,6 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
                 stagnation_counter += 1
 
             if out_info is not None:
-                # out_info['best_fitness'][-1].append(survival_values[0])
                 out_info['best_fitness'][-1].append(population_best_fitness)
                 fitness_function(population_best_individual, instance, student, timer, data=out_info['partial_fitness'][-1])
                 out_info['perf_counter'][-1].append(time.perf_counter() - start_perf_counter)
@@ -104,14 +103,15 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
             population = new_population
 
         if out_info is not None:
-            # out_info['best_fitness'][-1].append(survival_values[0])
             out_info['best_fitness'][-1].append(population_best_fitness)
             fitness_function(population_best_individual, instance, student, timer, data=out_info['partial_fitness'][-1])
             out_info['perf_counter'][-1].append(time.perf_counter() - start_perf_counter)
             out_info['process_time'][-1].append(time.process_time() - start_process_time)
             out_info['cost_value'][-1].append(cost_counter)
 
-    return (population_best_individual, population_best_fitness)
+        results.append((population_best_individual, population_best_fitness))
+
+    return results
 
 
 def read_files(instance_config_filename, config_filename):
