@@ -23,7 +23,6 @@ import ga.config
 import de.config
 
 
-# TODO(andre: 2019-05-20): Testar se esse código ainda está funcionando
 if __name__ == "__main__":
     instance_config_filename = None
     if (len(sys.argv) >= 2):
@@ -46,9 +45,12 @@ if __name__ == "__main__":
     config_ga.cost_budget = 100000
     config_de.cost_budget = 100000
 
-    num_repetitions = 100
+    num_repetitions = 10
 
-    if False:
+    use_cache = False
+    filename = 'results/real_test_10_10000.pickle'
+
+    if not use_cache:
         results_ppa_b = run_method(prey_predator_algorithm_binary, fitness, instance, config_ppa_b, num_repetitions)
         results_ppa_c = run_method(prey_predator_algorithm_continuous, fitness, instance, config_ppa_c, num_repetitions)
         results_pso = run_method(particle_swarm_optmization, fitness, instance, config_pso, num_repetitions)
@@ -62,10 +64,10 @@ if __name__ == "__main__":
             'ga': results_ga,
             'de': results_de,
         }
-        with open('results/results_300_100000.pickle', 'wb') as file:
+        with open(filename, 'wb') as file:
             pickle.dump(results, file)
     else:
-        with open('results/results_300_100000.pickle', 'rb') as file:
+        with open(filename, 'rb') as file:
             results = pickle.load(file)
 
         results_ppa_b = results['ppa_b']
@@ -75,26 +77,25 @@ if __name__ == "__main__":
         results_de = results['de']
 
 
-    mean_ppa_b = np.mean(results_ppa_b[1], axis=0)
-    mean_ppa_c = np.mean(results_ppa_c[1], axis=0)
-    mean_pso = np.mean(results_pso[1], axis=0)
-    mean_ga = np.mean(results_ga[1], axis=0)
-    mean_de = np.mean(results_de[1], axis=0)
+    mean_ppa_b = np.mean(results_ppa_b[1], axis=(0, 1))
+    mean_ppa_c = np.mean(results_ppa_c[1], axis=(0, 1))
+    mean_pso = np.mean(results_pso[1], axis=(0, 1))
+    mean_ga = np.mean(results_ga[1], axis=(0, 1))
+    mean_de = np.mean(results_de[1], axis=(0, 1))
 
-    deviation_ppa_b = np.std(results_ppa_b[1], axis=0)
-    deviation_ppa_c = np.std(results_ppa_c[1], axis=0)
-    deviation_pso = np.std(results_pso[1], axis=0)
-    deviation_ga = np.std(results_ga[1], axis=0)
-    deviation_de = np.std(results_de[1], axis=0)
+    deviation_ppa_b = np.std(results_ppa_b[1], axis=(0, 1))
+    deviation_ppa_c = np.std(results_ppa_c[1], axis=(0, 1))
+    deviation_pso = np.std(results_pso[1], axis=(0, 1))
+    deviation_ga = np.std(results_ga[1], axis=(0, 1))
+    deviation_de = np.std(results_de[1], axis=(0, 1))
 
-    mean_partial_ppa_b = np.mean(results_ppa_b[2], axis=0)
-    mean_partial_ppa_c = np.mean(results_ppa_c[2], axis=0)
-    mean_partial_pso = np.mean(results_pso[2], axis=0)
-    mean_partial_ga = np.mean(results_ga[2], axis=0)
-    mean_partial_de = np.mean(results_de[2], axis=0)
+    mean_partial_ppa_b = np.mean(results_ppa_b[2], axis=(0, 1))
+    mean_partial_ppa_c = np.mean(results_ppa_c[2], axis=(0, 1))
+    mean_partial_pso = np.mean(results_pso[2], axis=(0, 1))
+    mean_partial_ga = np.mean(results_ga[2], axis=(0, 1))
+    mean_partial_de = np.mean(results_de[2], axis=(0, 1))
 
     # Colorblind colors: https://gist.github.com/thriveth/8560036
-    fig = plt.figure(figsize=(7, 4))
     # fig.suptitle('PPAC: best fitness')
     plt.xlabel('# execuções da função de avaliação')
     plt.ylabel('valor da avaliação')
@@ -112,7 +113,6 @@ if __name__ == "__main__":
     print(mean_partial_ga[0, 3])
     print(mean_partial_ga[0, 4])
 
-    fig = plt.figure(figsize=(4, 4))
     plt.xlabel('# execuções da função de avaliação')
     plt.ylabel('valor da avaliação')
     plt.plot(results_ga[0], mean_ga, color='#377eb8', label="AG")
@@ -126,7 +126,6 @@ if __name__ == "__main__":
     plt.legend(loc=1)
     plt.show()
 
-    fig = plt.figure(figsize=(4, 4))
     plt.xlabel('# execuções da função de avaliação')
     plt.ylabel('valor da avaliação')
     plt.plot(results_de[0], mean_partial_de[:, 0], color='#377eb8', label="Cobertura")
