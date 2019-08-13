@@ -57,12 +57,12 @@ class LearningMaterial:
         # time_regex = re.search(r"PT(?:(?P<hours>[0-9]+)H)?(?:(?P<minutes>[0-5]?[0-9]|60)M)?(?:(?P<seconds>[0-5]?[0-9]|60)S)?", typical_learning_time)
         time_regex = re.search(r"PT(?:(?P<hours>[0-9]+)H)?(?:(?P<minutes>[0-9]+)M)?(?:(?P<seconds>[0-5]?[0-9]|60)S)?", typical_learning_time)
         self.typical_learning_time = 0
-        if time_regex['hours'] is not None:
-            self.typical_learning_time += int(time_regex['hours']) * 3600
-        if time_regex['minutes'] is not None:
-            self.typical_learning_time += int(time_regex['minutes']) * 60
-        if time_regex['seconds'] is not None:
-            self.typical_learning_time += int(time_regex['seconds'])
+        if time_regex.group('hours') is not None:
+            self.typical_learning_time += int(time_regex.group('hours')) * 3600
+        if time_regex.group('minutes') is not None:
+            self.typical_learning_time += int(time_regex.group('minutes')) * 60
+        if time_regex.group('seconds') is not None:
+            self.typical_learning_time += int(time_regex.group('seconds'))
 
         self.learning_style_active_value = 0
         self.learning_style_reflexive_value = 0
