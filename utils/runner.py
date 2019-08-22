@@ -52,11 +52,5 @@ def run_method(method_function, fitness_function, instance, config, num_repetiti
             perf_counter_array[i, j, repetition_len:] = perf_counter_array[i, j, repetition_len - 1]
             process_time_array[i, j, repetition_len:] = process_time_array[i, j, repetition_len - 1]
 
-    # mean_best_fitness = np.mean(best_fitness_array, axis=0)
-    # deviation_best_fitness = np.std(best_fitness_array, axis=0)
-    # mean_perf_counter = np.mean(perf_counter_array, axis=0)
-    # mean_process_time = np.mean(process_time_array, axis=0)
-
-    # return (cost_value, mean_best_fitness, deviation_best_fitness, mean_perf_counter, mean_process_time)
-
-    return (cost_value, best_fitness_array, partial_fitness_array, perf_counter_array, process_time_array)
+    # return (cost_value, best_fitness_array, partial_fitness_array, perf_counter_array, process_time_array)
+    return (cost_value, partial_fitness_array)
