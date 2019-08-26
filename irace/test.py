@@ -111,22 +111,22 @@ if __name__ == '__main__':
 
     if args.algorithm == 'ppa_b':
         label = 'PPAB'
-        results = run_method(prey_predator_algorithm_binary, fitness, instance, config, args.repetitions, seed=args.seed)
+        results = run_method(prey_predator_algorithm_binary, fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')
     elif args.algorithm == 'ppa_c':
         label = 'PPAC'
-        results = run_method(prey_predator_algorithm_continuous, fitness, instance, config, args.repetitions, seed=args.seed)
+        results = run_method(prey_predator_algorithm_continuous, fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')
     elif args.algorithm == 'pso':
         label = 'PSO'
-        results = run_method(particle_swarm_optmization, fitness, instance, config, args.repetitions, seed=args.seed)
+        results = run_method(particle_swarm_optmization, fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')
     elif args.algorithm == 'ga':
         label = 'GA'
-        results = run_method(genetic_algorithm, fitness, instance, config, args.repetitions, seed=args.seed)
+        results = run_method(genetic_algorithm, fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')
     elif args.algorithm == 'de':
         label = 'DE'
-        results = run_method(differential_evolution, fitness, instance, config, args.repetitions, seed=args.seed)
+        results = run_method(differential_evolution, fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')
 
-    mean_best_fitness = np.mean(results[1], axis=0)
-    mean_partial_fitness = np.mean(results[2], axis=0)
+    mean_best_fitness = np.mean(results[2], axis=0)
+    mean_partial_fitness = np.mean(results[3], axis=0)
 
     # mean_best_fitness = np.mean(results[1], axis=(0, 1))
     # mean_partial_fitness = np.mean(results[2], axis=(0, 1))
@@ -141,8 +141,8 @@ if __name__ == '__main__':
         fig = plt.figure()
         fig.suptitle('%s: best fitness' % label)
         # plt.plot(results[0], mean_best_fitness, label=label)
-        plt.plot(results[0], mean_best_fitness[0], label=label)
-        plt.plot(results[0], mean_best_fitness[1], label=label)
+        plt.plot(results[1], mean_best_fitness[0], label=label)
+        plt.plot(results[1], mean_best_fitness[1], label=label)
         plt.legend(loc=1)
         plt.show()
 
