@@ -2,4 +2,4 @@ maxExperiments = 1000
 trainInstancesDir = "../../"
 trainInstancesFile = "instances.txt"
 parameterFile = "parameters.txt"
-targetRunner = "runner.bat"
+targetRunner = "runner.sh"

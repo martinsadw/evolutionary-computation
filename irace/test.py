@@ -132,10 +132,10 @@ if __name__ == '__main__':
     # mean_best_fitness = np.mean(results[1], axis=(0, 1))
     # mean_partial_fitness = np.mean(results[2], axis=(0, 1))
 
-    print(mean_best_fitness.shape)
+    # print(mean_best_fitness.shape)
     print(mean_best_fitness[0, -1])
     # print(mean_best_fitness[1, -1])
-    print(mean_partial_fitness[0, -1])
+    # print(mean_partial_fitness[0, -1])
     # print(mean_partial_fitness[1, -1])
 
     if args.show:
