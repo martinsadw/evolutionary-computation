@@ -52,7 +52,7 @@ def differential_evolution(instance, config, fitness_function, out_info=None):
 
         # TODO(andre: 2019-04-25): Testar utilizar um valor limite para os valores
         # dos individuos, similar ao PSO e ao PPA_C
-        population = np.random.rand(population_size, instance.num_materials) * 2 - 1
+        population = np.random.rand(population_size, instance.num_materials) * (2 * config.max_velocity) - config.max_velocity
         population_evaluation = evaluate_function(population)
         survival_values = np.apply_along_axis(counter_fitness, 1, population_evaluation, instance, student, timer)
 
@@ -86,13 +86,16 @@ def differential_evolution(instance, config, fitness_function, out_info=None):
                 idxs = [idx for idx in range(population_size) if idx != p]
                 a, b, c = population[np.random.choice(idxs, 3, replace = False)]
 
-                mutant = np.clip(a + config.mutation_chance * (b - c), 0, 1)
+                # mutant = np.clip(a + config.mutation_chance * (b - c), 0, 1)
+                # mutant = np.copy(a + config.mutation_chance * (b - c))
+                mutant = np.clip(a + config.mutation_chance * (b - c), -config.max_velocity, config.max_velocity)
 
                 cross_points = np.random.rand(instance.num_materials) < config.crossover_rate
                 if not np.any(cross_points):
                     cross_points[np.random.randint(0, instance.num_materials)] = True
 
                 applicant = np.where(cross_points, mutant, population[p])
+
                 applicant_evaluation = evaluate_function(applicant)
                 applicant_fit = counter_fitness(applicant_evaluation, instance, student, timer)
 

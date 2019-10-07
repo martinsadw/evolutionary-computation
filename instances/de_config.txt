@@ -1,6 +1,7 @@
 [section]
 
 
+acs.de.maxVelocity = 16
 acs.de.costBudget = 12000
 ;acs.de.numIterations = 600
 ;acs.de.maxStagnation = 100

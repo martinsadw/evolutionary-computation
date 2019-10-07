@@ -9,6 +9,8 @@ class Evaluator(Enum):
 
 class Config:
     def __init__(self):
+        self.max_velocity = 1
+
         self.cost_budget = None
         self.num_iterations = None
         self.max_stagnation = None
@@ -27,6 +29,8 @@ class Config:
             config_string = config_file.read()
         config_values = configparser.ConfigParser(inline_comment_prefixes=(";",))
         config_values.read_string(config_string)
+
+        config.max_velocity = float(config_values['section']['acs.de.maxVelocity'])
 
         if config_values.has_option('section', 'acs.de.costBudget'):
             config.cost_budget = int(config_values['section']['acs.de.costBudget'])
@@ -49,6 +53,8 @@ class Config:
     def load_test(cls):
         config = cls()
 
+        config.max_velocity = 2
+
         config.cost_budget = 12000
         config.num_iterations = 600
         config.max_stagnation = 100
@@ -63,6 +69,8 @@ class Config:
     @classmethod
     def load_args(cls, args):
         config = cls()
+
+        config.max_velocity = args.max_velocity
 
         config.cost_budget = args.cost_budget
         config.num_iterations = args.num_iterations

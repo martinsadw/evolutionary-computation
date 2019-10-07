@@ -92,6 +92,7 @@ if __name__ == '__main__':
 
     parser_de = subparsers.add_parser('de')
     create_base_parser(parser_de)
+    parser_de.add_argument('-v', '--max-velocity', type=float, default=6)
     parser_de.add_argument('-m', '--mutation-chance', type=float, default=0.1)
     parser_de.add_argument('-c', '--crossover-rate', type=float, default=0.5)
     parser_de.add_argument('-e', '--evaluator', choices=['RANDOM', 'FIXED'], default='RANDOM')
@@ -133,16 +134,16 @@ if __name__ == '__main__':
 
     print(mean_best_fitness.shape)
     print(mean_best_fitness[0, -1])
-    print(mean_best_fitness[1, -1])
+    # print(mean_best_fitness[1, -1])
     print(mean_partial_fitness[0, -1])
-    print(mean_partial_fitness[1, -1])
+    # print(mean_partial_fitness[1, -1])
 
     if args.show:
         fig = plt.figure()
         fig.suptitle('%s: best fitness' % label)
         # plt.plot(results[0], mean_best_fitness, label=label)
         plt.plot(results[1], mean_best_fitness[0], label=label)
-        plt.plot(results[1], mean_best_fitness[1], label=label)
+        # plt.plot(results[1], mean_best_fitness[1], label=label)
         plt.legend(loc=1)
         plt.show()
 
