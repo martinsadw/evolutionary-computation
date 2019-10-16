@@ -47,21 +47,21 @@ if __name__ == "__main__":
 
     num_repetitions = 20
 
-    use_cache = False
-    filename = 'results/real_test_20_100000_de.pickle'
+    use_cache = True
+    filename = 'results/real_test_20_100000.pickle'
 
     if not use_cache:
-        # results_ppa_b = run_method(prey_predator_algorithm_binary, fitness, instance, config_ppa_b, num_repetitions)
-        # results_ppa_c = run_method(prey_predator_algorithm_continuous, fitness, instance, config_ppa_c, num_repetitions)
-        # results_pso = run_method(particle_swarm_optmization, fitness, instance, config_pso, num_repetitions)
-        # results_ga = run_method(genetic_algorithm, fitness, instance, config_ga, num_repetitions)
+        results_ppa_b = run_method(prey_predator_algorithm_binary, fitness, instance, config_ppa_b, num_repetitions)
+        results_ppa_c = run_method(prey_predator_algorithm_continuous, fitness, instance, config_ppa_c, num_repetitions)
+        results_pso = run_method(particle_swarm_optmization, fitness, instance, config_pso, num_repetitions)
+        results_ga = run_method(genetic_algorithm, fitness, instance, config_ga, num_repetitions)
         results_de = run_method(differential_evolution, fitness, instance, config_de, num_repetitions)
 
         results = {
-            # 'ppa_b': results_ppa_b,
-            # 'ppa_c': results_ppa_c,
-            # 'pso': results_pso,
-            # 'ga': results_ga,
+            'ppa_b': results_ppa_b,
+            'ppa_c': results_ppa_c,
+            'pso': results_pso,
+            'ga': results_ga,
             'de': results_de,
         }
         with open(filename, 'wb') as file:
@@ -106,6 +106,15 @@ if __name__ == "__main__":
     mean_partial_ga = np.mean(results_ga[2], axis=(0, 1))
     mean_partial_de = np.mean(results_de[2], axis=(0, 1))
 
+    factor = np.empty((mean_ga.shape[0], 1))
+    for i in range(mean_ga.shape[0]):
+        factor[i] = min(np.min(mean_ppa_b[i]),
+                        np.min(mean_ppa_c[i]),
+                        np.min(mean_pso[i]),
+                        np.min(mean_ga[i]),
+                        np.min(mean_de[i])
+                        )
+
     # Colorblind colors: https://gist.github.com/thriveth/8560036
     # fig.suptitle('PPAC: best fitness')
     # plt.xlabel('# execuções da função de avaliação')
@@ -118,38 +127,36 @@ if __name__ == "__main__":
     # plt.legend(loc=1)
     # plt.show()
 
-    print(mean_ppa_b.shape)
-    factor = np.empty((mean_ga.shape[0], 1))
-    for i in range(mean_ga.shape[0]):
-        factor[i] = min(np.min(mean_ppa_b[i]),
-                        np.min(mean_ppa_c[i]),
-                        np.min(mean_pso[i]),
-                        np.min(mean_ga[i]),
-                        np.min(mean_de[i]))
+    ############################################################################
+    # Gerar resultados normalizados para cada aluno
+    ############################################################################
+    # for i in range(mean_ga.shape[0]):
+    #     fig = plt.figure()
+    #     fig.suptitle('Fitness aluno #%d' % (i))
+    #     plt.xlabel('# execuções da função de avaliação')
+    #     plt.ylabel('valor da avaliação')
+    #     plt.ylim((0.8, 5))
+    #     plt.plot(results_ppa_b[1], mean_ppa_b[i] / factor[i], color='#4daf4a', label="APPD")
+    #     plt.plot(results_ppa_c[1], mean_ppa_c[i] / factor[i], color='#f781bf', label="APPC")
+    #     plt.plot(results_pso[1], mean_pso[i] / factor[i], color='#a65628', label="OEP")
+    #     plt.plot(results_ga[1], mean_ga[i] / factor[i], color='#377eb8', label="AG")
+    #     plt.plot(results_de[1], mean_de[i] / factor[i], color='#ff7f00', label="ED")
+    #     plt.legend(loc=1)
+    #     plt.savefig('results/all/real_test_%d.png' % (i))
+    #     plt.close()
+    #     # plt.show()
+    ############################################################################
 
-        # Média normalizada por aluno
-        # fig = plt.figure()
-        # fig.suptitle('Fitness aluno #%d' % (i))
-        # plt.xlabel('# execuções da função de avaliação')
-        # plt.ylabel('valor da avaliação')
-        # plt.ylim((0.8, 2))
-        # plt.plot(results_ppa_b[1], mean_ppa_b[i] / factor[i], color='#4daf4a', label="APPD")
-        # plt.plot(results_ppa_c[1], mean_ppa_c[i] / factor[i], color='#f781bf', label="APPC")
-        # plt.plot(results_pso[1], mean_pso[i] / factor[i], color='#a65628', label="OEP")
-        # plt.plot(results_ga[1], mean_ga[i] / factor[i], color='#377eb8', label="AG")
-        # plt.plot(results_de[1], mean_de[i] / factor[i], color='#ff7f00', label="ED")
-        # plt.legend(loc=1)
-        # plt.savefig('results/real_test_%d.png' % (i))
-        # plt.close()
-        # # plt.show()
-
-    global_mean_ppa_b = np.mean(mean_ppa_b / factor, axis=0)
-    global_mean_ppa_c = np.mean(mean_ppa_c / factor, axis=0)
-    global_mean_pso = np.mean(mean_pso / factor, axis=0)
-    global_mean_ga = np.mean(mean_ga / factor, axis=0)
-    global_mean_de = np.mean(mean_de / factor, axis=0)
-
-    # Média normalizada
+    ############################################################################
+    # Gerar resultados normalizados de todos os alunos
+    ############################################################################
+    # global_mean_ppa_b = np.mean(mean_ppa_b / factor, axis=0)
+    # global_mean_ppa_c = np.mean(mean_ppa_c / factor, axis=0)
+    # global_mean_pso = np.mean(mean_pso / factor, axis=0)
+    # global_mean_ga = np.mean(mean_ga / factor, axis=0)
+    # global_mean_de = np.mean(mean_de / factor, axis=0)
+    #
+    # # Média normalizada
     # plt.xlabel('# execuções da função de avaliação')
     # plt.ylabel('valor da avaliação')
     # plt.plot(results_ppa_b[1], global_mean_ppa_b, color='#4daf4a', label="APPD")
@@ -158,55 +165,95 @@ if __name__ == "__main__":
     # plt.plot(results_ga[1], global_mean_ga, color='#377eb8', label="AG")
     # plt.plot(results_de[1], global_mean_de, color='#ff7f00', label="ED")
     # plt.legend(loc=1)
+    # plt.savefig('results/real_test_all.png')
+    # plt.close()
+    # # plt.show()
+    ############################################################################
+
+    ############################################################################
+    # Gerar resultados separando os alunos por caracteristica
+    ############################################################################
+    # title = 'duração'
+    # axis = '10h | 100h'
+    # mask_0 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    # mask_1 = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    #
+    # # title = 'estilo de aprendizado'
+    # # axis = '11 | -11'
+    # # mask_0 = [0, 1, 2, 3, 4, 5, 12, 13, 14, 15, 16, 17]
+    # # mask_1 = [6, 7, 8, 9, 10, 11, 18, 19, 20, 21, 22, 23]
+    #
+    # # title = 'conceitos'
+    # # axis = 'Todos | Muitos | Poucos'
+    # # mask_0 = [0, 1, 6, 7, 12, 13, 18, 19]
+    # # mask_1 = [2, 3, 8, 9, 14, 15, 20, 21]
+    # # mask_2 = [4, 5, 10, 11, 16, 17, 21, 23]
+    #
+    # # title = 'habilidade'
+    # # axis = 'Baixa | Alta'
+    # # mask_0 = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22]
+    # # mask_1 = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23]
+    #
+    # mean_ppa_b_0 = np.mean((mean_ppa_b / factor)[mask_0], axis=0)
+    # mean_ppa_c_0 = np.mean((mean_ppa_c / factor)[mask_0], axis=0)
+    # mean_pso_0 = np.mean((mean_pso / factor)[mask_0], axis=0)
+    # mean_ga_0 = np.mean((mean_ga / factor)[mask_0], axis=0)
+    # mean_de_0 = np.mean((mean_de / factor)[mask_0], axis=0)
+    #
+    # mean_ppa_b_1 = np.mean((mean_ppa_b / factor)[mask_1], axis=0)
+    # mean_ppa_c_1 = np.mean((mean_ppa_c / factor)[mask_1], axis=0)
+    # mean_pso_1 = np.mean((mean_pso / factor)[mask_1], axis=0)
+    # mean_ga_1 = np.mean((mean_ga / factor)[mask_1], axis=0)
+    # mean_de_1 = np.mean((mean_de / factor)[mask_1], axis=0)
+    #
+    # diff_ppa_b = mean_ppa_b_1 - mean_ppa_b_0
+    # diff_ppa_c = mean_ppa_c_1 - mean_ppa_c_0
+    # diff_pso = mean_pso_1 - mean_pso_0
+    # diff_ga = mean_ga_1 - mean_ga_0
+    # diff_de = mean_de_1 - mean_de_0
+    #
+    # margin = 0.2
+    # cut_fac = 0.05
+    # ##############
+    # ppa_b_lim = max(np.max(diff_ppa_b[int(diff_ppa_b.shape[0] * cut_fac):]), -np.min(diff_ppa_b[int(diff_ppa_b.shape[0] * cut_fac):]))
+    # ppa_c_lim = max(np.max(diff_ppa_c[int(diff_ppa_c.shape[0] * cut_fac):]), -np.min(diff_ppa_c[int(diff_ppa_c.shape[0] * cut_fac):]))
+    # pso_lim   = max(np.max(  diff_pso[int(  diff_pso.shape[0] * cut_fac):]), -np.min(  diff_pso[int(  diff_pso.shape[0] * cut_fac):]))
+    # ga_lim    = max(np.max(   diff_ga[int(   diff_ga.shape[0] * cut_fac):]), -np.min(   diff_ga[int(   diff_ga.shape[0] * cut_fac):]))
+    # de_lim    = max(np.max(   diff_de[int(   diff_de.shape[0] * cut_fac):]), -np.min(   diff_de[int(   diff_de.shape[0] * cut_fac):]))
+    #
+    # lim = np.mean([ppa_b_lim, ppa_c_lim, pso_lim, ga_lim, de_lim]) * (1 + margin)
+    # ylim = (-lim, lim)
+    #
+    # fig = plt.figure()
+    # fig.suptitle('Comparação de %s' % title)
+    # plt.xlabel('# execuções da função de avaliação')
+    # plt.ylabel(axis)
+    # plt.ylim(ylim)
+    # plt.plot(results_ppa_b[1], mean_ppa_b_1 - mean_ppa_b_0, color='#4daf4a', label="PPAB")
+    # plt.plot(results_ppa_c[1], mean_ppa_c_1 - mean_ppa_c_0, color='#f781bf', label="PPAC")
+    # plt.plot(results_pso[1], mean_pso_1 - mean_pso_0, color='#a65628', label="PSO")
+    # plt.plot(results_ga[1], mean_ga_1 - mean_ga_0, color='#377eb8', label="GA")
+    # plt.plot(results_de[1], mean_de_1 - mean_de_0, color='#ff7f00', label="DE")
+    # plt.legend(loc=1)
     # plt.show()
+    ############################################################################
 
-    # mask_0 = [0, 1, 2, 3, 4, 5, 12, 13, 14, 15, 16, 17]
-    # mask_1 = [6, 7, 8, 9, 10, 11, 18, 19, 20, 21, 22, 23]
-
-    mask_0 = [0, 1, 2, 6, 7, 8, 12, 13, 14, 18, 19, 20]
-    mask_1 = [3, 4, 5, 9, 10, 11, 15, 16, 17, 21, 22, 23]
-
-    mean_ppa_b_0 = np.mean((mean_ppa_b / factor)[mask_0], axis=0)
-    mean_ppa_b_1 = np.mean((mean_ppa_b / factor)[mask_1], axis=0)
-    mean_ppa_c_0 = np.mean((mean_ppa_c / factor)[mask_0], axis=0)
-    mean_ppa_c_1 = np.mean((mean_ppa_c / factor)[mask_1], axis=0)
-    mean_pso_0 = np.mean((mean_pso / factor)[mask_0], axis=0)
-    mean_pso_1 = np.mean((mean_pso / factor)[mask_1], axis=0)
-    mean_ga_0 = np.mean((mean_ga / factor)[mask_0], axis=0)
-    mean_ga_1 = np.mean((mean_ga / factor)[mask_1], axis=0)
-    mean_de_0 = np.mean((mean_de / factor)[mask_0], axis=0)
-    mean_de_1 = np.mean((mean_de / factor)[mask_1], axis=0)
-
-    fig = plt.figure()
-    fig.suptitle('Comparação de estilo')
-    plt.xlabel('# execuções da função de avaliação')
-    plt.ylabel('valor da avaliação')
-    plt.plot(results_ppa_b[1], mean_ppa_b_0, color='#4daf4a', label="PPAB 11")
-    plt.plot(results_ppa_b[1], mean_ppa_b_1, color='#8daf4a', label="PPAB -11")
-    plt.plot(results_ppa_c[1], mean_ppa_c_0, color='#f781bf', label="PPAC 11")
-    plt.plot(results_ppa_c[1], mean_ppa_c_1, color='#b781bf', label="PPAC -11")
-    plt.plot(results_pso[1], mean_pso_0, color='#a65628', label="PSO 11")
-    plt.plot(results_pso[1], mean_pso_1, color='#665628', label="PSO -11")
-    plt.plot(results_ga[1], mean_ga_0, color='#377eb8', label="GA 11")
-    plt.plot(results_ga[1], mean_ga_1, color='#777eb8', label="GA -11")
-    plt.plot(results_de[1], mean_de_0, color='#ff7f00', label="DE 11")
-    plt.plot(results_de[1], mean_de_1, color='#bf7f00', label="DE -11")
-    plt.legend(loc=1)
-    plt.show()
-
+    ############################################################################
     # Todos os resultados por algoritmo por aluno
+    ############################################################################
     # for i in range(fitness_ppa_b.shape[1]):
     #     fig = plt.figure()
     #     fig.suptitle('Fitness aluno #%d' % (i))
     #     plt.xlabel('# execuções da função de avaliação')
     #     plt.ylabel('valor da avaliação')
-    #     plt.ylim((0.8, 2))
+    #     plt.ylim((0.8, 5))
     #     for j in range(fitness_ppa_b.shape[0]):
     #         plt.plot(results_ppa_b[1], fitness_ppa_b[j, i] / factor[i])
     #
     #     plt.savefig('results/ppa_b/real_test_%d_ppa_b.png' % (i))
     #     plt.close()
     #     # plt.show()
+    ############################################################################
 
     print(mean_partial_ga[0, 0])
     print(mean_partial_ga[0, 1])
