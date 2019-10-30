@@ -6,5 +6,5 @@ ppatosca.file.concepts = conceitos.csv
 ppatosca.file.materialsCoverage = 200/materiais_conceitos.csv
 ppatosca.file.learners = learner.csv
 ppatosca.file.learnersScore = learners_score.csv
-ppatosca.file.fitnessParameters = ../fitness_parameters_9.txt
+ppatosca.file.fitnessParameters = 200/fitness_parameters_9.txt
 # ppatosca.file.prerequisites =

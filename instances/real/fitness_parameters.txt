@@ -1,0 +1,7 @@
+[section]
+ppatosca.fitness.missingConceptsCoeficient = 4        ; (2 * 2)
+ppatosca.fitness.conceptsCoveredWeight = 0.5          ; (1 / 2)
+ppatosca.fitness.difficultyWeight = 0.650590          ; (1 / 1.537064)
+ppatosca.fitness.totalTimeWeight = 0.0000128721       ; (1 / (600 * 129.4784))
+ppatosca.fitness.materialsBalancingWeight = 0.0181725 ; (1 / 55.028)
+ppatosca.fitness.learningStyleWeight = 0.515664       ; (1 / 1.939247)

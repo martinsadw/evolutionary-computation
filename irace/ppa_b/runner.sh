@@ -1,1 +1,1 @@
-python3 -m irace.test ppa_b $@ -b 12000
+python3 -m irace.test ppa_b $@ -b 100000

@@ -104,6 +104,8 @@ if __name__ == '__main__':
 
     instance = Instance.load_from_file(args.instance_file)
 
+    # TODO(andre:2019-10-29): Fazer com que os parametros da linha de comando
+    # sobrescrevam os parametros do arquivo de configuração ao invés de serem ignorados
     config_class = config_class_dict[args.algorithm]
     if args.config:
         config = config_class.load_from_file(args.config)
@@ -126,24 +128,15 @@ if __name__ == '__main__':
         label = 'DE'
         results = run_method(differential_evolution, fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')
 
-    mean_best_fitness = np.mean(results[2], axis=0)
-    mean_partial_fitness = np.mean(results[3], axis=0)
+    mean_best_fitness = np.mean(results[2], axis=(0, 1))
+    mean_partial_fitness = np.mean(results[3], axis=(0, 1))
 
-    # mean_best_fitness = np.mean(results[1], axis=(0, 1))
-    # mean_partial_fitness = np.mean(results[2], axis=(0, 1))
-
-    # print(mean_best_fitness.shape)
-    print(mean_best_fitness[0, -1])
-    # print(mean_best_fitness[1, -1])
-    # print(mean_partial_fitness[0, -1])
-    # print(mean_partial_fitness[1, -1])
+    print(mean_best_fitness[-1])
 
     if args.show:
         fig = plt.figure()
         fig.suptitle('%s: best fitness' % label)
-        # plt.plot(results[0], mean_best_fitness, label=label)
-        plt.plot(results[1], mean_best_fitness[0], label=label)
-        # plt.plot(results[1], mean_best_fitness[1], label=label)
+        plt.plot(results[1], mean_best_fitness, label=label)
         plt.legend(loc=1)
         plt.show()
 
@@ -158,3 +151,19 @@ if __name__ == '__main__':
     #     plt.plot(results[0], mean_partial_fitness[:, 4], label="Style")
     #     plt.legend(loc=1)
     #     plt.show()
+
+    # temp = results[3].mean(axis=0)
+    # for i in range(24):
+    #     plt.xlabel('# execuções da função de avaliação')
+    #     plt.ylabel('valor da avaliação')
+    #     plt.ylim((-1, 7))
+    #     plt.plot(results[1], temp[i, :, 0], color='#377eb8', label="Cobertura")
+    #     plt.plot(results[1], temp[i, :, 1], color='#ff7f00', label="Dificuldade")
+    #     plt.plot(results[1], temp[i, :, 2], color='#4daf4a', label="Tempo")
+    #     plt.plot(results[1], temp[i, :, 3], color='#f781bf', label="Balanceamento")
+    #     plt.plot(results[1], temp[i, :, 4], color='#a65628', label="Estilo")
+    #     plt.legend(loc=1)
+    #     # plt.show()
+    #     # plt.savefig('results/de_partial_all.png')
+    #     plt.savefig('results/de_partial_%d.png' % i)
+    #     plt.close()
