@@ -82,17 +82,17 @@ if __name__ == "__main__":
     fitness_ga = np.sum(results_ga[2], axis=3)
     fitness_de = np.sum(results_de[2], axis=3)
 
-    # mean_ppa_b = np.mean(fitness_ppa_b, axis=(0, 1))
-    # mean_ppa_c = np.mean(fitness_ppa_c, axis=(0, 1))
-    # mean_pso = np.mean(fitness_pso, axis=(0, 1))
-    # mean_ga = np.mean(fitness_ga, axis=(0, 1))
-    # mean_de = np.mean(fitness_de, axis=(0, 1))
+    mean_ppa_b = np.mean(fitness_ppa_b, axis=(0, 1))
+    mean_ppa_c = np.mean(fitness_ppa_c, axis=(0, 1))
+    mean_pso = np.mean(fitness_pso, axis=(0, 1))
+    mean_ga = np.mean(fitness_ga, axis=(0, 1))
+    mean_de = np.mean(fitness_de, axis=(0, 1))
 
-    mean_ppa_b = np.mean(fitness_ppa_b, axis=0)
-    mean_ppa_c = np.mean(fitness_ppa_c, axis=0)
-    mean_pso = np.mean(fitness_pso, axis=0)
-    mean_ga = np.mean(fitness_ga, axis=0)
-    mean_de = np.mean(fitness_de, axis=0)
+    student_mean_ppa_b = np.mean(fitness_ppa_b, axis=0)
+    student_mean_ppa_c = np.mean(fitness_ppa_c, axis=0)
+    student_mean_pso = np.mean(fitness_pso, axis=0)
+    student_mean_ga = np.mean(fitness_ga, axis=0)
+    student_mean_de = np.mean(fitness_de, axis=0)
 
     deviation_ppa_b = np.std(fitness_ppa_b, axis=(0, 1))
     deviation_ppa_c = np.std(fitness_ppa_c, axis=(0, 1))
@@ -106,17 +106,22 @@ if __name__ == "__main__":
     mean_partial_ga = np.mean(results_ga[2], axis=(0, 1))
     mean_partial_de = np.mean(results_de[2], axis=(0, 1))
 
-    factor = np.empty((mean_ga.shape[0], 1))
-    for i in range(mean_ga.shape[0]):
-        factor[i] = min(np.min(mean_ppa_b[i]),
-                        np.min(mean_ppa_c[i]),
-                        np.min(mean_pso[i]),
-                        np.min(mean_ga[i]),
-                        np.min(mean_de[i])
+    student_mean_partial_ppa_b = np.mean(results_ppa_b[2], axis=0)
+    student_mean_partial_ppa_c = np.mean(results_ppa_c[2], axis=0)
+    student_mean_partial_pso = np.mean(results_pso[2], axis=0)
+    student_mean_partial_ga = np.mean(results_ga[2], axis=0)
+    student_mean_partial_de = np.mean(results_de[2], axis=0)
+
+    factor = np.empty((student_mean_ga.shape[0], 1))
+    for i in range(student_mean_ga.shape[0]):
+        factor[i] = min(np.min(student_mean_ppa_b[i]),
+                        np.min(student_mean_ppa_c[i]),
+                        np.min(student_mean_pso[i]),
+                        np.min(student_mean_ga[i]),
+                        np.min(student_mean_de[i])
                         )
 
     # Colorblind colors: https://gist.github.com/thriveth/8560036
-    # fig.suptitle('PPAC: best fitness')
     # plt.xlabel('# execuções da função de avaliação')
     # plt.ylabel('valor da avaliação')
     # plt.plot(results_ppa_b[1], mean_ppa_b, color='#4daf4a', label="APPD")
@@ -130,17 +135,17 @@ if __name__ == "__main__":
     ############################################################################
     # Gerar resultados normalizados para cada aluno
     ############################################################################
-    # for i in range(mean_ga.shape[0]):
+    # for i in range(student_mean_ga.shape[0]):
     #     fig = plt.figure()
     #     fig.suptitle('Fitness aluno #%d' % (i))
     #     plt.xlabel('# execuções da função de avaliação')
     #     plt.ylabel('valor da avaliação')
     #     plt.ylim((0.8, 5))
-    #     plt.plot(results_ppa_b[1], mean_ppa_b[i] / factor[i], color='#4daf4a', label="APPD")
-    #     plt.plot(results_ppa_c[1], mean_ppa_c[i] / factor[i], color='#f781bf', label="APPC")
-    #     plt.plot(results_pso[1], mean_pso[i] / factor[i], color='#a65628', label="OEP")
-    #     plt.plot(results_ga[1], mean_ga[i] / factor[i], color='#377eb8', label="AG")
-    #     plt.plot(results_de[1], mean_de[i] / factor[i], color='#ff7f00', label="ED")
+    #     plt.plot(results_ppa_b[1], student_mean_ppa_b[i] / factor[i], color='#4daf4a', label="APPD")
+    #     plt.plot(results_ppa_c[1], student_mean_ppa_c[i] / factor[i], color='#f781bf', label="APPC")
+    #     plt.plot(results_pso[1], student_mean_pso[i] / factor[i], color='#a65628', label="OEP")
+    #     plt.plot(results_ga[1], student_mean_ga[i] / factor[i], color='#377eb8', label="AG")
+    #     plt.plot(results_de[1], student_mean_de[i] / factor[i], color='#ff7f00', label="ED")
     #     plt.legend(loc=1)
     #     plt.savefig('results/all/real_test_%d.png' % (i))
     #     plt.close()
@@ -150,11 +155,11 @@ if __name__ == "__main__":
     ############################################################################
     # Gerar resultados normalizados de todos os alunos
     ############################################################################
-    # global_mean_ppa_b = np.mean(mean_ppa_b / factor, axis=0)
-    # global_mean_ppa_c = np.mean(mean_ppa_c / factor, axis=0)
-    # global_mean_pso = np.mean(mean_pso / factor, axis=0)
-    # global_mean_ga = np.mean(mean_ga / factor, axis=0)
-    # global_mean_de = np.mean(mean_de / factor, axis=0)
+    # global_mean_ppa_b = np.mean(student_mean_ppa_b / factor, axis=0)
+    # global_mean_ppa_c = np.mean(student_mean_ppa_c / factor, axis=0)
+    # global_mean_pso = np.mean(student_mean_pso / factor, axis=0)
+    # global_mean_ga = np.mean(student_mean_ga / factor, axis=0)
+    # global_mean_de = np.mean(student_mean_de / factor, axis=0)
     #
     # # Média normalizada
     # plt.xlabel('# execuções da função de avaliação')
@@ -241,16 +246,16 @@ if __name__ == "__main__":
     ############################################################################
     # Todos os resultados por algoritmo por aluno
     ############################################################################
-    # for i in range(fitness_ppa_b.shape[1]):
+    # for i in range(fitness_de.shape[1]):
     #     fig = plt.figure()
     #     fig.suptitle('Fitness aluno #%d' % (i))
     #     plt.xlabel('# execuções da função de avaliação')
     #     plt.ylabel('valor da avaliação')
     #     plt.ylim((0.8, 5))
-    #     for j in range(fitness_ppa_b.shape[0]):
-    #         plt.plot(results_ppa_b[1], fitness_ppa_b[j, i] / factor[i])
+    #     for j in range(fitness_de.shape[0]):
+    #         plt.plot(results_de[1], fitness_de[j, i] / factor[i])
     #
-    #     plt.savefig('results/ppa_b/real_test_%d_ppa_b.png' % (i))
+    #     plt.savefig('results/de/real_test_%d_de.png' % (i))
     #     plt.close()
     #     # plt.show()
     ############################################################################
@@ -283,6 +288,20 @@ if __name__ == "__main__":
     # plt.plot(results_de[1], mean_partial_de[:, 4], color='#a65628', label="Estilo")
     # plt.legend(loc=1)
     # plt.show()
+
+    # for i in range(fitness_de.shape[1]):
+    #     plt.xlabel('# execuções da função de avaliação')
+    #     plt.ylabel('valor da avaliação')
+    #     plt.ylim((-0.5, 10))
+    #     plt.plot(results_de[1], student_mean_partial_de[i, :, 0], color='#377eb8', label="Cobertura")
+    #     plt.plot(results_de[1], student_mean_partial_de[i, :, 1], color='#ff7f00', label="Dificuldade")
+    #     plt.plot(results_de[1], student_mean_partial_de[i, :, 2], color='#4daf4a', label="Tempo")
+    #     plt.plot(results_de[1], student_mean_partial_de[i, :, 3], color='#f781bf', label="Balanceamento")
+    #     plt.plot(results_de[1], student_mean_partial_de[i, :, 4], color='#a65628', label="Estilo")
+    #     plt.legend(loc=1)
+    #     plt.savefig('results/de/real_test_%d_de.png' % (i))
+    #     plt.close()
+    #     # plt.show()
 
     # fig = plt.figure()
     # fig.suptitle('Materiais selecionados')

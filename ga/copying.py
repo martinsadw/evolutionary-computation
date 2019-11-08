@@ -1,4 +1,5 @@
 from enum import Enum
+import math
 
 import numpy as np
 
@@ -25,14 +26,14 @@ def copying_gene(population, method, config):
 
 
 def _elitism_copying_gene(population, config):
-    top_selection_size = (int)(len(population) * config.top_selection_ratio)
+    top_selection_size = math.ceil(len(population) * config.top_selection_ratio)
 
     return np.copy(population[:top_selection_size])
 
 
 def _permissive_copying_gene(population, config):
-    top_selection_size = (int)(len(population) * config.top_selection_ratio)
-    bottom_selection_size = (int)(len(population) * config.bottom_selection_ratio)
+    top_selection_size = math.ceil(len(population) * config.top_selection_ratio)
+    bottom_selection_size = math.ceil(len(population) * config.bottom_selection_ratio)
 
     return np.concatenate((population[:top_selection_size], population[population.shape[0] - bottom_selection_size:]))
 
