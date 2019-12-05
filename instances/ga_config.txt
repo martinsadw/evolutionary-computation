@@ -1,18 +1,18 @@
 [section]
 
-acs.ga.copyingMethod = ELITISM_COPYING
+acs.ga.copyingMethod = PERMISSIVE_COPYING
 acs.ga.localSearchMethod = PER_VARIABLE_LOCAL_SEARCH
 
 acs.ga.selectionMethod = ROULETTE_SELECTION
-acs.ga.crossoverMethod = UNIFORM_CROSSOVER
+acs.ga.crossoverMethod = TWO_POINT_CROSSOVER
 acs.ga.mutationMethod = SINGLE_BIT_INVERSION_MUTATION
 
 acs.ga.costBudget = 12000
 ;acs.ga.numIterations = 600
 ;acs.ga.maxStagnation = 100
-acs.ga.populationSize = 30
+acs.ga.populationSize = 10
 
-acs.ga.topSelectionRatio = 0.2
+acs.ga.topSelectionRatio = 0.01
 acs.ga.bottomSelectionRatio = 0.1
 acs.ga.mutationChance = 0.01
 

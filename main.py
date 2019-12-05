@@ -45,10 +45,10 @@ if __name__ == "__main__":
     config_ga.cost_budget = 100000
     config_de.cost_budget = 100000
 
-    num_repetitions = 20
+    num_repetitions = 5
 
-    use_cache = True
-    filename = 'results/real_test_20_100000.pickle'
+    use_cache = False
+    filename = 'results/2019-12-03_old_5_100000.pickle'
 
     if not use_cache:
         results_ppa_b = run_method(prey_predator_algorithm_binary, fitness, instance, config_ppa_b, num_repetitions)

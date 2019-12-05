@@ -1,6 +1,6 @@
 population      "--population "       c  (10, 20, 30)
 mutationchance  "--mutation-chance "  c  (0.01, 0.03, 0.05)                                |  mutation != 'SINGLE_BIT_INVERSION'
-copying         "--copying "          c  (ELITISM)
+copying         "--copying "          c  (ELITISM, PERMISSIVE)
 top             "--top "              c  (0.01)
 selection       "--selection "        c  (RANDOM, ROULETTE)
 crossover       "--crossover "        c  (SINGLE_POINT, TWO_POINT, THREE_PARENT, UNIFORM)
