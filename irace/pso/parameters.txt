@@ -1,5 +1,5 @@
 population  "--population "        c  (10, 20, 30)
-inertia     "--inertia "           r  (0.4, 0.9)
-local       "--local-influence "   c  (2)
-global      "--global-influence "  c  (2)
+inertia     "--inertia "           r  (0, 5)
+local       "--local-influence "   r  (0, 5)
+global      "--global-influence "  r  (0, 5)
 evaluator   "--evaluator "         c  (RANDOM --max-velocity 6, FIXED --max-velocity 1)
