@@ -1,3 +1,4 @@
+import csv
 import math
 import random
 
@@ -106,6 +107,7 @@ def histogram_concepts_selector(stats, num_materials, smoothing):
 
     return materials_list
 
+
 def roulette_concepts_selector(stats, num_materials):
     count_histogram = stats['count_histogram']
 
@@ -119,3 +121,11 @@ def roulette_concepts_selector(stats, num_materials):
         materials_list.append(select_concepts(stats, quant_concepts))
 
     return materials_list
+
+
+def write_material_coverage_file(path, materials):
+    with open(path, 'w') as coverage_file:
+        coverage_writer = csv.writer(coverage_file, delimiter=';')
+
+        for i, material in enumerate(materials):
+            coverage_writer.writerow([i] + material)
