@@ -46,31 +46,39 @@ if __name__ == '__main__':
     materials_list = [[concepts_name[concept] for concept in material] for material in sorted(materials_list)]
     write_material_coverage_file('results/material_coverage.csv', materials_list)
 
-    for material in materials_list:
-        difficulty = random.randint(1, 5)
-
-        if difficulty == 1:
+    materials_difficulty = np.random.randint(1, 6, size=(num_materials,))
+    materials_duration = np.empty((num_materials,), dtype=int)
+    for i in range(num_materials):
+        if materials_difficulty[i] == 1:
             max_indice = 16
             power_a = 36.74891727
             power_b = 1.23339668
-        if difficulty == 2:
+        if materials_difficulty[i] == 2:
             max_indice = 72
             power_a = 31.44068961
             power_b = 0.954634698
-        if difficulty == 3:
+        if materials_difficulty[i] == 3:
             max_indice = 130
             power_a = 22.37523474
             power_b = 1.021917379
-        if difficulty == 4:
+        if materials_difficulty[i] == 4:
             max_indice = 48
             power_a = 80.7756257
             power_b = 0.904543376
-        if difficulty == 5:
+        if materials_difficulty[i] == 5:
             max_indice = 18
             power_a = 103.7746477
             power_b = 1.531354033
 
         power_x = (random.random() * max_indice) + 1
-        material_duration = int(power_a * power_x ** power_b)
+        materials_duration[i] = int(power_a * power_x ** power_b)
 
-        print(difficulty, material_duration)
+    materials_active_reflexive  = np.round(np.random.normal(-2.32, 1.54, size=(num_materials,)))
+    materials_sensory_intuitive = np.round(np.random.normal(-0.36, 1.12, size=(num_materials,)))
+    materials_visual_verbal     = np.round(np.random.normal( 0.34, 0.90, size=(num_materials,)))
+    materials_sequential_global = np.round(np.random.normal(-0.52, 0.76, size=(num_materials,)))
+
+    # Estilo act-ref: -2.32 +- 1.54
+    # Estilo sen-int: -0.36 +- 1.12
+    # Estilo vis-ver:  0.34 +- 0.90
+    # Estilo seq-glo: -0.52 +- 0.76
