@@ -5,7 +5,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-from utils.roulette import Roulette, roulette_spin
+from utils.roulette import Roulette
 from generator.concepts_selector import random_concepts_selector, histogram_concepts_selector, roulette_concepts_selector, write_material_coverage_file
 
 
@@ -46,9 +46,12 @@ if __name__ == '__main__':
     materials_list = [[concepts_name[concept] for concept in material] for material in sorted(materials_list)]
     write_material_coverage_file('results/material_coverage.csv', materials_list)
 
-    materials_difficulty = np.random.randint(1, 6, size=(num_materials,))
+    difficulty_roulette = Roulette([16, 72, 130, 48, 18])
+    materials_difficulty = np.empty((num_materials,), dtype=int)
     materials_duration = np.empty((num_materials,), dtype=int)
     for i in range(num_materials):
+        materials_difficulty[i] = difficulty_roulette.spin() + 1
+
         if materials_difficulty[i] == 1:
             max_indice = 16
             power_a = 36.74891727
