@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 from utils.roulette import Roulette
 from generator.concepts_selector import random_concepts_selector, histogram_concepts_selector, roulette_concepts_selector, write_material_coverage_file
+from generator.lom import write_lom_file
 
 
 if __name__ == '__main__':
@@ -80,6 +81,8 @@ if __name__ == '__main__':
     materials_sensory_intuitive = np.round(np.random.normal(-0.36, 1.12, size=(num_materials,)))
     materials_visual_verbal     = np.round(np.random.normal( 0.34, 0.90, size=(num_materials,)))
     materials_sequential_global = np.round(np.random.normal(-0.52, 0.76, size=(num_materials,)))
+
+    write_lom_file()
 
     # Estilo act-ref: -2.32 +- 1.54
     # Estilo sen-int: -0.36 +- 1.12
