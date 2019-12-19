@@ -55,32 +55,32 @@ if __name__ == '__main__':
 
         if materials_difficulty[i] == 1:
             max_indice = 16
-            power_a = 36.74891727
-            power_b = 1.23339668
+            power_a = 68.12307258
+            power_b = 0.2095535293
         if materials_difficulty[i] == 2:
             max_indice = 72
-            power_a = 31.44068961
-            power_b = 0.954634698
+            power_a = 134.6334519
+            power_b = 0.04677506963
         if materials_difficulty[i] == 3:
             max_indice = 130
-            power_a = 22.37523474
-            power_b = 1.021917379
+            power_a = 175.1923166
+            power_b = 0.0293693865
         if materials_difficulty[i] == 4:
             max_indice = 48
-            power_a = 80.7756257
-            power_b = 0.904543376
+            power_a = 106.7568341
+            power_b = 0.09490106732
         if materials_difficulty[i] == 5:
             max_indice = 18
-            power_a = 103.7746477
-            power_b = 1.531354033
+            power_a = 84.89245786
+            power_b = 0.3313514637
 
         power_x = (random.random() * max_indice) + 1
-        materials_duration[i] = int(power_a * power_x ** power_b)
+        materials_duration[i] = int(power_a * math.e ** (power_b * power_x))
 
-    materials_active_reflexive  = np.round(np.random.normal(-2.32, 1.54, size=(num_materials,)))
-    materials_sensory_intuitive = np.round(np.random.normal(-0.36, 1.12, size=(num_materials,)))
-    materials_visual_verbal     = np.round(np.random.normal( 0.34, 0.90, size=(num_materials,)))
-    materials_sequential_global = np.round(np.random.normal(-0.52, 0.76, size=(num_materials,)))
+    # materials_active_reflexive  = np.round(np.random.normal(-2.32, 1.54, size=(num_materials,)))
+    # materials_sensory_intuitive = np.round(np.random.normal(-0.36, 1.12, size=(num_materials,)))
+    # materials_visual_verbal     = np.round(np.random.normal( 0.34, 0.90, size=(num_materials,)))
+    # materials_sequential_global = np.round(np.random.normal(-0.52, 0.76, size=(num_materials,)))
 
     write_lom_file()
 
