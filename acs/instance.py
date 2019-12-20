@@ -100,6 +100,8 @@ class Instance:
         instance.materials_visual_verbal = np.array([course.learning_materials[material].visual_verbal for material in course.learning_materials])
         instance.materials_sequential_global = np.array([course.learning_materials[material].sequential_global for material in course.learning_materials])
         instance.materials_learning_resource_types = [course.learning_materials[material].learning_resource_types for material in course.learning_materials]
+        instance.materials_interactivity_level = [course.learning_materials[material].interactivity_level for material in course.learning_materials]
+        instance.materials_interactivity_type = [course.learning_materials[material].interactivity_type for material in course.learning_materials]
 
         instance.missing_concepts_coeficient = course.missing_concepts_coeficient
         instance.concepts_covered_weight = course.concepts_covered_weight

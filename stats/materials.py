@@ -10,6 +10,7 @@ if __name__ == '__main__':
     'instances/marcelo/instance_100.txt',
     'instances/marcelo/instance_200.txt',
     'instances/marcelo/instance_300.txt',
+    'instances/andre/500/instance.txt',
     'instances/real/instance.txt',
     # 'instances/test/instance_config.txt',
     ]
@@ -21,7 +22,7 @@ if __name__ == '__main__':
 
     np.set_printoptions(precision=2)
 
-    if False:
+    if True:
         instances = []
         for instance_file in instance_list:
             instances.append(Instance.load_from_file(instance_file))
@@ -32,10 +33,10 @@ if __name__ == '__main__':
         with open('results/instances.pickle', 'rb') as file:
             instances = pickle.load(file)
 
-    show_general = False
-    show_difficulty = False
-    show_style = False
-    show_concepts = False
+    show_general = True
+    show_difficulty = True
+    show_style = True
+    show_concepts = True
     show_coocurrence = True
 
     for (num, instance) in enumerate(instances):

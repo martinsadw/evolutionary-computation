@@ -12,6 +12,9 @@ from generator.lom import write_lom_file
 from acs.instance import Instance
 
 
+_difficulty_strings = ['none', 'very easy', 'easy', 'medium', 'difficult', 'very difficult']
+
+
 def time_to_string(time):
     result = 'PT'
     if (time > 60 * 60):
@@ -28,7 +31,7 @@ def time_to_string(time):
 
 if __name__ == '__main__':
     ############################################################################
-    num_materials = 284
+    num_materials = 500
     mean_concepts = 1.33
     smoothing = 0.01
     ############################################################################
@@ -46,6 +49,8 @@ if __name__ == '__main__':
     quant_resource_types = stats['quant_resource_types']
     quant_resource_types_histogram = stats['quant_resource_types_histogram']
     resource_types_frequency = stats['resource_types_frequency']
+    interactivity_level_frequency = stats['interactivity_level_frequency']
+    interactivity_type_frequency = stats['interactivity_type_frequency']
 
     num_concepts = len(concepts_name)
     new_concept_rate = 1 - (1 / mean_concepts)
@@ -72,9 +77,19 @@ if __name__ == '__main__':
     resource_types_name = list(resource_types_frequency.keys())
     resource_types_frequency_values = list(resource_types_frequency.values())
 
+    interactivity_type_name = list(interactivity_type_frequency.keys())
+    interactivity_type_frequency_values = list(interactivity_type_frequency.values())
+    interactivity_type_frequency_roulette = Roulette(interactivity_type_frequency_values)
+
+    interactivity_level_name = list(interactivity_level_frequency.keys())
+    interactivity_level_frequency_values = list(interactivity_level_frequency.values())
+    interactivity_level_frequency_roulette = Roulette(interactivity_level_frequency_values)
+
     materials_difficulty = np.empty((num_materials,), dtype=int)
     materials_duration = np.empty((num_materials,), dtype=int)
     materials_resource_types = [None] * num_materials
+    materials_interactivity_type = [None] * num_materials
+    materials_interactivity_level = [None] * num_materials
     for i in range(num_materials):
         materials_difficulty[i] = difficulty_roulette.spin() + 1
 
@@ -113,14 +128,14 @@ if __name__ == '__main__':
             del remaining_resource_types[new_resource_type_index]
             del remaining_resource_types_frequency[new_resource_type_index]
 
-    difficulty_strings = ['none', 'very easy', 'easy', 'medium', 'difficult', 'very difficult']
+        materials_interactivity_type[i] = interactivity_type_name[interactivity_type_frequency_roulette.spin()]
+        materials_interactivity_level[i] = interactivity_level_name[interactivity_level_frequency_roulette.spin()]
 
-    interactivity_type = ['mixed'] * num_materials
-    interactivity_level = ['low'] * num_materials
+    interactivity_type = materials_interactivity_type
+    interactivity_level = materials_interactivity_level
     learning_resource_types = materials_resource_types
-    difficulty = [difficulty_strings[difficulty_values] for difficulty_values in materials_difficulty]
+    difficulty = [_difficulty_strings[difficulty_values] for difficulty_values in materials_difficulty]
     typical_learning_time = [time_to_string(duration_values) for duration_values in materials_duration]
-
     write_lom_file(interactivity_type, interactivity_level, learning_resource_types, difficulty, typical_learning_time)
 
     # Estilo act-ref: -2.32 +- 1.54

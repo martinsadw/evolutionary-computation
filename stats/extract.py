@@ -93,8 +93,13 @@ if __name__ == '__main__':
     merged_resource_types = [resource for material in instance.materials_learning_resource_types for resource in material]
     resource_types_frequency = Counter(merged_resource_types)
 
-    print(count_histogram)
-    print(type(count_histogram))
+    ############################################################################
+
+    interactivity_level_frequency = Counter(instance.materials_interactivity_level)
+
+    ############################################################################
+
+    interactivity_type_frequency = Counter(instance.materials_interactivity_type)
 
     ############################################################################
 
@@ -112,4 +117,6 @@ if __name__ == '__main__':
             'quant_resource_types': quant_resource_types,
             'quant_resource_types_histogram': quant_resource_types_histogram,
             'resource_types_frequency': resource_types_frequency,
+            'interactivity_level_frequency': interactivity_level_frequency,
+            'interactivity_type_frequency': interactivity_type_frequency,
         }, file)

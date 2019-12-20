@@ -73,8 +73,7 @@ class LearningMaterial:
         self.learning_style_sequential_value = 0
         self.learning_style_global_value = 0
 
-        self.learning_resource_types = learning_resource_types
-        for learningResourceType in self.learning_resource_types:
+        for learningResourceType in learning_resource_types:
             if learningResourceType in _active_resource_types:
                 self.learning_style_active_value += 1
 
