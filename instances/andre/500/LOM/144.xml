@@ -1,0 +1,46 @@
+<?xml version="1.0" ?>
+<lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM http://ltsc.ieee.org/xsd/lomv1.0/lom.xsd">
+    <general>
+        <identifier>
+            <catalog>acs.getcomp.ufjf.br</catalog>
+            <entry>144</entry>
+        </identifier>
+    </general>
+    <technical>
+        <format>video/mp4</format>
+    </technical>
+    <educational>
+        <interactivityType>
+            <source>LOMv1.0</source>
+            <value>expositive</value>
+        </interactivityType>
+        <learningResourceType>
+            <source>LOMv1.0</source>
+            <value>narrative text</value>
+        </learningResourceType>
+        <learningResourceType>
+            <source>LOMv1.0</source>
+            <value>figure</value>
+        </learningResourceType>
+        <learningResourceType>
+            <source>LOMv1.0</source>
+            <value>simulation</value>
+        </learningResourceType>
+        <learningResourceType>
+            <source>LOMv1.0</source>
+            <value>problems declaration</value>
+        </learningResourceType>
+        <interactivityLevel>
+            <source>LOMv1.0</source>
+            <value>medium</value>
+        </interactivityLevel>
+        <difficulty>
+            <source>LOMv1.0</source>
+            <value>medium</value>
+        </difficulty>
+        <typicalLearningTime>
+            <duration>PT1H27M15S</duration>
+        </typicalLearningTime>
+        <language>pt-BR</language>
+    </educational>
+</lom>
