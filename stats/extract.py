@@ -1,4 +1,4 @@
-from collections import defaultdict
+from collections import defaultdict, Counter
 import pickle
 
 import numpy as np
@@ -85,6 +85,19 @@ if __name__ == '__main__':
 
     ############################################################################
 
+    quant_resource_types = np.array([len(material) for material in instance.materials_learning_resource_types])
+    quant_resource_types_histogram = np.bincount(quant_resource_types)[1:]
+
+    ############################################################################
+
+    merged_resource_types = [resource for material in instance.materials_learning_resource_types for resource in material]
+    resource_types_frequency = Counter(merged_resource_types)
+
+    print(count_histogram)
+    print(type(count_histogram))
+
+    ############################################################################
+
     with open('results/instance_stats.pickle', 'wb') as file:
         pickle.dump({
             'instance': instance,
@@ -96,4 +109,7 @@ if __name__ == '__main__':
             'n_coocurrence_matrix': n_coocurrence_matrix,
             'coocurrence_set': coocurrence_set,
             'coocurrence_dict': coocurrence_dict,
+            'quant_resource_types': quant_resource_types,
+            'quant_resource_types_histogram': quant_resource_types_histogram,
+            'resource_types_frequency': resource_types_frequency,
         }, file)

@@ -1,31 +1,15 @@
 import xml.etree.cElementTree as xml
 
-# active 'exercise', 'questionnaire', 'experiment'
-# reflexive 'diagram', 'figure', 'graphic', 'slide', 'table', 'narrative text', 'problems declaration'
-# neutro 'simulation', 'test'
-#
-# sensory 'exercise', 'graphic', 'table', 'experiment', 'problems declaration'
-# intuitive 'questionnaire', 'diagram', 'figure'
-# neutro 'simulation', 'test', 'slide', 'narrative text'
-#
-# visual 'simulation', 'diagram', 'figure', 'graphic', 'table'
-# verbal 'narrative text', 'reading'
-# neutro 'slide'
-#
-# sequential 'exercise', 'simulation', 'experiment'
-# global 'figure', 'graphic', 'table'
-# neutro 'diagram', 'slide', 'narrative text'
 
-def write_lom_file():
-    # num_materials = len(materials)
-    num_materials = 284
+def write_lom_file(interactivity_type, interactivity_level, learning_resource_types, difficulty, typical_learning_time):
+    num_materials = len(interactivity_type)
 
     for i in range(num_materials):
-        str_interactivity_type = 'mixed'
-        str_interactivity_level = 'low'
-        str_learning_resource_types = ['narrative text', 'figure', 'simulation', 'diagram', 'exercise']
-        str_difficulty = 'medium'
-        str_typical_learning_time = 'PT28M18S'
+        str_interactivity_type = interactivity_type[i]
+        str_interactivity_level = interactivity_level[i]
+        str_learning_resource_types = learning_resource_types[i]
+        str_difficulty = difficulty[i]
+        str_typical_learning_time = typical_learning_time[i]
 
         lom = xml.Element('lom', attrib={
         'xmlns': 'http://ltsc.ieee.org/xsd/LOM',
@@ -68,25 +52,25 @@ def write_lom_file():
 
         educational = xml.SubElement(lom, 'educational')
 
-        interactivity_type = xml.SubElement(educational, 'interactivityType')
-        xml.SubElement(interactivity_type, 'source').text = 'LOMv1.0'
-        xml.SubElement(interactivity_type, 'value').text = str_interactivity_type
+        node_interactivity_type = xml.SubElement(educational, 'interactivityType')
+        xml.SubElement(node_interactivity_type, 'source').text = 'LOMv1.0'
+        xml.SubElement(node_interactivity_type, 'value').text = str_interactivity_type
 
         for str_learning_resource_type in str_learning_resource_types:
-            learning_resource_type = xml.SubElement(educational, 'learningResourceType')
-            xml.SubElement(learning_resource_type, 'source').text = 'LOMv1.0'
-            xml.SubElement(learning_resource_type, 'value').text = str_learning_resource_type
+            node_learning_resource_type = xml.SubElement(educational, 'learningResourceType')
+            xml.SubElement(node_learning_resource_type, 'source').text = 'LOMv1.0'
+            xml.SubElement(node_learning_resource_type, 'value').text = str_learning_resource_type
 
-        interactivity_level = xml.SubElement(educational, 'interactivityLevel')
-        xml.SubElement(interactivity_level, 'source').text = 'LOMv1.0'
-        xml.SubElement(interactivity_level, 'value').text = str_interactivity_level
+        node_interactivity_level = xml.SubElement(educational, 'interactivityLevel')
+        xml.SubElement(node_interactivity_level, 'source').text = 'LOMv1.0'
+        xml.SubElement(node_interactivity_level, 'value').text = str_interactivity_level
 
-        difficulty = xml.SubElement(educational, 'difficulty')
-        xml.SubElement(difficulty, 'source').text = 'LOMv1.0'
-        xml.SubElement(difficulty, 'value').text = str_difficulty
+        node_difficulty = xml.SubElement(educational, 'difficulty')
+        xml.SubElement(node_difficulty, 'source').text = 'LOMv1.0'
+        xml.SubElement(node_difficulty, 'value').text = str_difficulty
 
-        typical_learning_time = xml.SubElement(educational, 'typicalLearningTime')
-        xml.SubElement(typical_learning_time, 'duration').text = str_typical_learning_time
+        node_typical_learning_time = xml.SubElement(educational, 'typicalLearningTime')
+        xml.SubElement(node_typical_learning_time, 'duration').text = str_typical_learning_time
 
         xml.SubElement(educational, 'language').text = 'pt-BR'
 

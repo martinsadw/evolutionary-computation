@@ -25,6 +25,7 @@ class Instance:
         self.materials_sensory_intuitive = None
         self.materials_visual_verbal = None
         self.materials_sequential_global = None
+        self.materials_learning_resource_types = None
 
         self.missing_concepts_coeficient = 1
 
@@ -98,6 +99,7 @@ class Instance:
         instance.materials_sensory_intuitive = np.array([course.learning_materials[material].sensory_intuitive for material in course.learning_materials])
         instance.materials_visual_verbal = np.array([course.learning_materials[material].visual_verbal for material in course.learning_materials])
         instance.materials_sequential_global = np.array([course.learning_materials[material].sequential_global for material in course.learning_materials])
+        instance.materials_learning_resource_types = [course.learning_materials[material].learning_resource_types for material in course.learning_materials]
 
         instance.missing_concepts_coeficient = course.missing_concepts_coeficient
         instance.concepts_covered_weight = course.concepts_covered_weight
