@@ -48,7 +48,7 @@ if __name__ == "__main__":
     num_repetitions = 5
 
     use_cache = False
-    filename = 'results/2019-12-03_old_5_100000.pickle'
+    filename = 'results/2020-01-14_andre_500_5_100000.pickle'
 
     if not use_cache:
         results_ppa_b = run_method(prey_predator_algorithm_binary, fitness, instance, config_ppa_b, num_repetitions)

@@ -31,7 +31,7 @@ def time_to_string(time):
 
 if __name__ == '__main__':
     ############################################################################
-    num_materials = 500
+    num_materials = 1000
     mean_concepts = 1.33
     smoothing = 0.01
     ############################################################################
@@ -68,7 +68,8 @@ if __name__ == '__main__':
         materials_list = roulette_concepts_selector(stats, num_materials)
 
     materials_list = [sorted(material) for material in materials_list]
-    materials_list = [[concepts_name[concept] for concept in material] for material in sorted(materials_list)]
+    # materials_list = [[concepts_name[concept] for concept in material] for material in sorted(materials_list)]
+    materials_list = [[concepts_name[concept] for concept in material] for material in materials_list]
     write_material_coverage_file('results/material_coverage.csv', materials_list)
 
     difficulty_roulette = Roulette([16, 72, 130, 48, 18])

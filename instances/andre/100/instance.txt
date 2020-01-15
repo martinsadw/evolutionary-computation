@@ -1,0 +1,9 @@
+[section]
+ppatosca.path = .
+ppatosca.path.learningMaterialsLOM = LOM
+
+ppatosca.file.concepts = ../concepts.csv
+ppatosca.file.materialsCoverage = material_coverage.csv
+ppatosca.file.learners = ../learners.csv
+ppatosca.file.learnersScore = ../learners_score.csv
+ppatosca.file.fitnessParameters = fitness_parameters.txt

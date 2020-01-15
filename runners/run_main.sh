@@ -1,1 +1,1 @@
-python3 -m main instances/real/test_instance.txt > results/output.txt
+python3 -m main instances/andre/500/instance.txt > results/output.txt
