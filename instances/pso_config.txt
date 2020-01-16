@@ -1,11 +1,11 @@
 [section]
 
-acs.pso.maxVelocity = 1
+acs.pso.maxVelocity = 6
 acs.pso.costBudget = 12000
 ;acs.pso.numIterations = 600
 ;acs.pso.maxStagnation = 100
-acs.pso.numParticles = 30
-acs.pso.inertiaParameter = 0.5
-acs.pso.localInfluenceParameter = 2
-acs.pso.globalInfluenceParameter = 2
-acs.pso.evaluator = FIXED_EVALUATOR
+acs.pso.numParticles = 20
+acs.pso.inertiaParameter = 1.3
+acs.pso.localInfluenceParameter = 4.1
+acs.pso.globalInfluenceParameter = 2.5
+acs.pso.evaluator = RANDOM_EVALUATOR
