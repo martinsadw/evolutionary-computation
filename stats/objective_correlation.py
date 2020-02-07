@@ -1,33 +1,38 @@
 import pickle
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
+    base_folder = 'results/2020-02-07 - Correlação dos objetivos/'
     folder = 'results/2020-01-16 - Resultados base sintética/'
     filenames = [
-        '2020-01-16_andre_50_5_100000.pickle',
-        '2020-01-16_andre_100_5_100000.pickle',
-        '2020-01-16_andre_150_5_100000.pickle',
-        '2020-01-16_andre_200_5_100000.pickle',
-        '2020-01-16_andre_250_5_100000.pickle',
-        '2020-01-16_andre_300_5_100000.pickle',
-        '2020-01-16_andre_350_5_100000.pickle',
-        '2020-01-16_andre_400_5_100000.pickle',
-        '2020-01-16_andre_450_5_100000.pickle',
-        '2020-01-16_andre_500_5_100000.pickle',
-        # '2020-01-16_andre_550_5_100000.pickle',
-        # '2020-01-16_andre_600_5_100000.pickle',
-        # '2020-01-16_andre_650_5_100000.pickle',
-        # '2020-01-16_andre_700_5_100000.pickle',
-        # '2020-01-16_andre_750_5_100000.pickle',
-        # '2020-01-16_andre_800_5_100000.pickle',
-        # '2020-01-16_andre_850_5_100000.pickle',
-        # '2020-01-16_andre_900_5_100000.pickle',
-        # '2020-01-16_andre_950_5_100000.pickle',
-        # '2020-01-16_andre_1000_5_100000.pickle',
+        ('andre_50', '2020-01-16_andre_50_5_100000.pickle'),
+        ('andre_100', '2020-01-16_andre_100_5_100000.pickle'),
+        ('andre_150', '2020-01-16_andre_150_5_100000.pickle'),
+        ('andre_200', '2020-01-16_andre_200_5_100000.pickle'),
+        ('andre_250', '2020-01-16_andre_250_5_100000.pickle'),
+        ('andre_300', '2020-01-16_andre_300_5_100000.pickle'),
+        ('andre_350', '2020-01-16_andre_350_5_100000.pickle'),
+        ('andre_400', '2020-01-16_andre_400_5_100000.pickle'),
+        ('andre_450', '2020-01-16_andre_450_5_100000.pickle'),
+        ('andre_500', '2020-01-16_andre_500_5_100000.pickle'),
+        ('andre_550', '2020-01-16_andre_550_5_100000.pickle'),
+        ('andre_600', '2020-01-16_andre_600_5_100000.pickle'),
+        ('andre_650', '2020-01-16_andre_650_5_100000.pickle'),
+        ('andre_700', '2020-01-16_andre_700_5_100000.pickle'),
+        ('andre_750', '2020-01-16_andre_750_5_100000.pickle'),
+        ('andre_800', '2020-01-16_andre_800_5_100000.pickle'),
+        ('andre_850', '2020-01-16_andre_850_5_100000.pickle'),
+        ('andre_900', '2020-01-16_andre_900_5_100000.pickle'),
+        ('andre_950', '2020-01-16_andre_950_5_100000.pickle'),
+        ('andre_1000', '2020-01-16_andre_1000_5_100000.pickle'),
+        ('real', '2020-01-16_real_5_100000.pickle'),
     ]
 
-    for (i, filename) in enumerate(filenames):
+    total_all_fitness = np.empty((5, 0))
+
+    for (i, (base, filename)) in enumerate(filenames):
         with open(folder + filename, 'rb') as file:
             results = pickle.load(file)
 
@@ -55,6 +60,33 @@ if __name__ == "__main__":
         all_fitness_de = fitness_de.reshape(fitness_de.shape[0] * fitness_de.shape[1], fitness_de.shape[2])
 
         # (function, execution * student * 5)
-        all_fitness = np.hstack((all_fitness_ppa_b, all_fitness_ppa_c, all_fitness_pso, all_fitness_ga, all_fitness_de)).T
+        all_fitness = np.vstack((all_fitness_ppa_b, all_fitness_ppa_c, all_fitness_pso, all_fitness_ga, all_fitness_de)).T
+        total_all_fitness = np.hstack((total_all_fitness, all_fitness))
 
-        print(np.corrcoef(all_fitness_de.T))
+        correlation = np.corrcoef(all_fitness)
+        # print(correlation)
+
+        fig, ax = plt.subplots()
+        im = ax.imshow(correlation)
+        fig.colorbar(im, orientation="horizontal", aspect=40)
+        ax.set_xticks(range(5))
+        ax.set_xticklabels(["O1", "O2", "O3", "O4", "O5"])
+        ax.set_yticks(range(5))
+        ax.set_yticklabels(["O1", "O2", "O3", "O4", "O5"])
+        plt.savefig(base_folder + '/correlation_%s.%s' % (base, "png"))
+        plt.close()
+        # plt.show()
+
+    total_correlation = np.corrcoef(total_all_fitness)
+    # print(total_correlation)
+
+    fig, ax = plt.subplots()
+    im = ax.imshow(total_correlation)
+    fig.colorbar(im, orientation="horizontal", aspect=40)
+    ax.set_xticks(range(5))
+    ax.set_xticklabels(["O1", "O2", "O3", "O4", "O5"])
+    ax.set_yticks(range(5))
+    ax.set_yticklabels(["O1", "O2", "O3", "O4", "O5"])
+    plt.savefig(base_folder + '/correlation_%s.%s' % ("total", "png"))
+    plt.close()
+    # plt.show()
