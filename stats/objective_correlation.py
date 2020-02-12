@@ -2,9 +2,37 @@ import pickle
 
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+from scipy.stats import spearmanr
+
+
+# https://stackoverflow.com/questions/48139899/correlation-matrix-plot-with-coefficients-on-one-side-scatterplots-on-another
+def matrix_plot(data, path):
+    def corrdot(*args, **kwargs):
+        corr_r = args[0].corr(args[1], 'spearman')
+        corr_text = f"{corr_r:2.2f}".replace("0.", ".")
+        ax = plt.gca()
+        ax.set_axis_off()
+        marker_size = abs(corr_r) * 10000
+        ax.scatter([.5], [.5], marker_size, [corr_r], alpha=0.6, cmap="coolwarm",
+                   vmin=-1, vmax=1, transform=ax.transAxes)
+        font_size = abs(corr_r) * 40 + 5
+        ax.annotate(corr_text, [.5, .5,],  xycoords="axes fraction",
+                    ha='center', va='center', fontsize=font_size)
+
+    sns.set(style='white', font_scale=1.6)
+    df = pd.DataFrame(data)
+    g = sns.PairGrid(df, aspect=1.4, diag_sharey=False)
+    g.map_lower(sns.regplot, lowess=True, ci=False, line_kws={'color': 'black'})
+    g.map_diag(sns.distplot, kde_kws={'color': 'black'})
+    g.map_upper(corrdot)
+    plt.savefig(path)
+    plt.close()
+    # plt.show()
 
 if __name__ == "__main__":
-    base_folder = 'results/2020-02-07 - Correlação dos objetivos/'
+    base_folder = 'results/2020-02-12 - Matriz de correlação spearman/'
     folder = 'results/2020-01-16 - Resultados base sintética/'
     filenames = [
         ('andre_50', '2020-01-16_andre_50_5_100000.pickle'),
@@ -63,30 +91,34 @@ if __name__ == "__main__":
         all_fitness = np.vstack((all_fitness_ppa_b, all_fitness_ppa_c, all_fitness_pso, all_fitness_ga, all_fitness_de)).T
         total_all_fitness = np.hstack((total_all_fitness, all_fitness))
 
-        correlation = np.corrcoef(all_fitness)
-        # print(correlation)
+        # correlation = np.corrcoef(all_fitness)
+        (correlation, p) = spearmanr(all_fitness, axis=1)
+        print(correlation)
 
-        fig, ax = plt.subplots()
-        im = ax.imshow(correlation)
-        fig.colorbar(im, orientation="horizontal", aspect=40)
-        ax.set_xticks(range(5))
-        ax.set_xticklabels(["O1", "O2", "O3", "O4", "O5"])
-        ax.set_yticks(range(5))
-        ax.set_yticklabels(["O1", "O2", "O3", "O4", "O5"])
-        plt.savefig(base_folder + '/correlation_%s.%s' % (base, "png"))
-        plt.close()
-        # plt.show()
+        matrix_plot(all_fitness.T, base_folder + '/correlation_%s.%s' % (base, "png"))
+        # fig, ax = plt.subplots()
+        # im = ax.imshow(correlation)
+        # fig.colorbar(im, orientation="horizontal", aspect=40)
+        # ax.set_xticks(range(5))
+        # ax.set_xticklabels(["O1", "O2", "O3", "O4", "O5"])
+        # ax.set_yticks(range(5))
+        # ax.set_yticklabels(["O1", "O2", "O3", "O4", "O5"])
+        # plt.savefig(base_folder + '/correlation_%s.%s' % (base, "png"))
+        # plt.close()
+        # # plt.show()
 
-    total_correlation = np.corrcoef(total_all_fitness)
-    # print(total_correlation)
+    # total_correlation = np.corrcoef(total_all_fitness)
+    (total_correlation, total_p) = spearmanr(total_all_fitness, axis=1)
+    print(total_correlation)
 
-    fig, ax = plt.subplots()
-    im = ax.imshow(total_correlation)
-    fig.colorbar(im, orientation="horizontal", aspect=40)
-    ax.set_xticks(range(5))
-    ax.set_xticklabels(["O1", "O2", "O3", "O4", "O5"])
-    ax.set_yticks(range(5))
-    ax.set_yticklabels(["O1", "O2", "O3", "O4", "O5"])
-    plt.savefig(base_folder + '/correlation_%s.%s' % ("total", "png"))
-    plt.close()
-    # plt.show()
+    # matrix_plot(total_all_fitness.T, base_folder + '/correlation_%s.%s' % ("total", "png"))
+    # fig, ax = plt.subplots()
+    # im = ax.imshow(total_correlation)
+    # fig.colorbar(im, orientation="horizontal", aspect=40)
+    # ax.set_xticks(range(5))
+    # ax.set_xticklabels(["O1", "O2", "O3", "O4", "O5"])
+    # ax.set_yticks(range(5))
+    # ax.set_yticklabels(["O1", "O2", "O3", "O4", "O5"])
+    # plt.savefig(base_folder + '/correlation_%s.%s' % ("total", "png"))
+    # plt.close()
+    # # plt.show()
