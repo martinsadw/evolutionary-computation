@@ -66,7 +66,7 @@ if __name__ == "__main__":
     normalization_factors = np.empty((24, quant_instances))
 
     # for i in range(student_mean_ga.shape[0]):
-    #     factor[i] = min(np.min(student_mean_ppa_b[i]),
+    #     factor[i] = min(np.min(student_mean_ppa_d[i]),
     #                     np.min(student_mean_ppa_c[i]),
     #                     np.min(student_mean_pso[i]),
     #                     np.min(student_mean_ga[i]),
@@ -128,13 +128,13 @@ if __name__ == "__main__":
 
         if iteration_fitness[0] is None:
             # (iteration, instance)
-            iteration_fitness[0] = np.zeros((results['ppa_b'][2].shape[2],))
+            iteration_fitness[0] = np.zeros((results['ppa_d'][2].shape[2],))
             iteration_fitness[1] = np.zeros((results['ppa_c'][2].shape[2],))
             iteration_fitness[2] = np.zeros((results['pso'][2].shape[2],))
             iteration_fitness[3] = np.zeros((results['ga'][2].shape[2],))
             iteration_fitness[4] = np.zeros((results['de'][2].shape[2],))
 
-            cost_values[0] = results['ppa_b'][1]
+            cost_values[0] = results['ppa_d'][1]
             cost_values[1] = results['ppa_c'][1]
             cost_values[2] = results['pso'][1]
             cost_values[3] = results['ga'][1]
@@ -143,7 +143,7 @@ if __name__ == "__main__":
         print('Reading %s' % filename)
 
         # (execution, student, iteration, function)
-        results_ppa_b = results['ppa_b'][2]
+        results_ppa_d = results['ppa_d'][2]
         results_ppa_c = results['ppa_c'][2]
         results_pso = results['pso'][2]
         results_ga = results['ga'][2]
@@ -152,7 +152,7 @@ if __name__ == "__main__":
         # (execution, student, iteration)
         # Fitness total
         # # O somatório é realizado pois o problema é definido como a soma das funções objetivos
-        iteration_fitness_ppa_b = np.sum(results_ppa_b, axis=3)
+        iteration_fitness_ppa_d = np.sum(results_ppa_d, axis=3)
         iteration_fitness_ppa_c = np.sum(results_ppa_c, axis=3)
         iteration_fitness_pso = np.sum(results_pso, axis=3)
         iteration_fitness_ga = np.sum(results_ga, axis=3)
@@ -161,7 +161,7 @@ if __name__ == "__main__":
         # (execution, student)
         # Melhor fitness total
         # # Apenas o resultado final é utilizado no calculo do fator de normalização
-        fitness_ppa_b = iteration_fitness_ppa_b[:, :, -1]
+        fitness_ppa_d = iteration_fitness_ppa_d[:, :, -1]
         fitness_ppa_c = iteration_fitness_ppa_c[:, :, -1]
         fitness_pso = iteration_fitness_pso[:, :, -1]
         fitness_ga = iteration_fitness_ga[:, :, -1]
@@ -171,7 +171,7 @@ if __name__ == "__main__":
         # # Um problema é definido por um par (student, instance).
         # # O fator de normalização é o menor resultado encontrado para um problema
         for j in range(fitness_de.shape[1]):
-            normalization_factors[j, i] = min(np.min(fitness_ppa_b[:, j]),
+            normalization_factors[j, i] = min(np.min(fitness_ppa_d[:, j]),
                                               np.min(fitness_ppa_c[:, j]),
                                               np.min(fitness_pso[:, j]),
                                               np.min(fitness_ga[:, j]),
@@ -180,7 +180,7 @@ if __name__ == "__main__":
         # (student, iteration)
         # Fitness total da média de um estudante de uma instância
         # # As multiplas execuções de um problema evitam a aleatoriedade dos algoritmos.
-        iteration_mean_ppa_b = np.mean(iteration_fitness_ppa_b, axis=0)
+        iteration_mean_ppa_d = np.mean(iteration_fitness_ppa_d, axis=0)
         iteration_mean_ppa_c = np.mean(iteration_fitness_ppa_c, axis=0)
         iteration_mean_pso = np.mean(iteration_fitness_pso, axis=0)
         iteration_mean_ga = np.mean(iteration_fitness_ga, axis=0)
@@ -189,32 +189,32 @@ if __name__ == "__main__":
         # (iteration)
         # Fitness total da média de todos os resutados de uma instância
         # # O fitness normalizado serve para remover as variações de intervalo de valor entre problemas diferentes
-        normalized_mean_ppa_b = np.mean(iteration_mean_ppa_b / normalization_factors[:, i][:, np.newaxis], axis=0)
+        normalized_mean_ppa_d = np.mean(iteration_mean_ppa_d / normalization_factors[:, i][:, np.newaxis], axis=0)
         normalized_mean_ppa_c = np.mean(iteration_mean_ppa_c / normalization_factors[:, i][:, np.newaxis], axis=0)
         normalized_mean_pso = np.mean(iteration_mean_pso / normalization_factors[:, i][:, np.newaxis], axis=0)
         normalized_mean_ga = np.mean(iteration_mean_ga / normalization_factors[:, i][:, np.newaxis], axis=0)
         normalized_mean_de = np.mean(iteration_mean_de / normalization_factors[:, i][:, np.newaxis], axis=0)
 
-        best_fitness[0, i] = normalized_mean_ppa_b[-1]
+        best_fitness[0, i] = normalized_mean_ppa_d[-1]
         best_fitness[1, i] = normalized_mean_ppa_c[-1]
         best_fitness[2, i] = normalized_mean_pso[-1]
         best_fitness[3, i] = normalized_mean_ga[-1]
         best_fitness[4, i] = normalized_mean_de[-1]
 
-        iteration_fitness[0] += normalized_mean_ppa_b
+        iteration_fitness[0] += normalized_mean_ppa_d
         iteration_fitness[1] += normalized_mean_ppa_c
         iteration_fitness[2] += normalized_mean_pso
         iteration_fitness[3] += normalized_mean_ga
         iteration_fitness[4] += normalized_mean_de
 
         # (execution * student)
-        normalized_fitness_ppa_b = (fitness_ppa_b / normalization_factors[:, i]).ravel()
+        normalized_fitness_ppa_d = (fitness_ppa_d / normalization_factors[:, i]).ravel()
         normalized_fitness_ppa_c = (fitness_ppa_c / normalization_factors[:, i]).ravel()
         normalized_fitness_pso = (fitness_pso / normalization_factors[:, i]).ravel()
         normalized_fitness_ga = (fitness_ga / normalization_factors[:, i]).ravel()
         normalized_fitness_de = (fitness_de / normalization_factors[:, i]).ravel()
 
-        all_best_fitness[0, :, i] = normalized_fitness_ppa_b
+        all_best_fitness[0, :, i] = normalized_fitness_ppa_d
         all_best_fitness[1, :, i] = normalized_fitness_ppa_c
         all_best_fitness[2, :, i] = normalized_fitness_pso
         all_best_fitness[3, :, i] = normalized_fitness_ga

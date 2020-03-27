@@ -1,11 +1,11 @@
 import configparser
 from enum import Enum
 
-from ga.copying import Copying
-from ga.local_search import LocalSearch
-from ga.selection import Selection
-from ga.crossover import Crossover
-from ga.mutation import Mutation
+from algorithms.ga.copying import Copying
+from algorithms.ga.local_search import LocalSearch
+from algorithms.ga.selection import Selection
+from algorithms.ga.crossover import Crossover
+from algorithms.ga.mutation import Mutation
 
 
 class Config:

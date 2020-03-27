@@ -12,11 +12,11 @@ from utils.timer import Timer
 from utils.roulette import Roulette
 from utils.misc import hamming_distance
 
-from ppa_b.config import Config
-from ppa_b.population_movement import move_population_roulette, move_population_direction, move_population_random, move_population_random_complement, move_population_local_search
+from algorithms.ppa_d.config import Config
+from algorithms.ppa_d.population_movement import move_population_roulette, move_population_direction, move_population_random, move_population_random_complement, move_population_local_search
 
 
-def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=None):
+def prey_predator_algorithm_discrete(instance, config, fitness_function, out_info=None):
     population_size = config.population_size
 
     if config.max_steps > instance.num_materials:
@@ -167,131 +167,3 @@ def prey_predator_algorithm_binary(instance, config, fitness_function, out_info=
         results.append((population_best_individual, population_best_fitness))
 
     return results
-
-
-def read_files(instance_config_filename, config_filename):
-    if instance_config_filename is None:
-        instance = Instance.load_test()
-    else:
-        instance = Instance.load_from_file(instance_config_filename)
-
-    # print_instance(instance)
-    # print("")
-
-    if config_filename is None:
-        config = Config.load_test()
-    else:
-        config = Config.load_from_file(config_filename)
-
-    return (instance, config)
-
-
-if __name__ == "__main__":
-    # assert(len(sys.argv) >= 2)
-    instance_config_filename = None
-    if (len(sys.argv) >= 2):
-        instance_config_filename = sys.argv[1]
-
-    config_filename = None
-    if (len(sys.argv) >= 3):
-        config_filename = sys.argv[2]
-
-    num_repetitions = 1
-
-    (instance, config) = read_files(instance_config_filename, config_filename)
-    best_fitness = []
-    perf_counter = []
-    process_time = []
-    cost_value = []
-
-    out_info = {}
-
-    popularity = np.zeros((instance.num_materials,))
-
-    for i in range(num_repetitions):
-        np.random.seed(i)
-        (individual, survival_value) = prey_predator_algorithm_binary(instance, config, fitness, out_info=out_info)
-
-        best_fitness.append(out_info["best_fitness"])
-        perf_counter.append(out_info["perf_counter"])
-        process_time.append(out_info["process_time"])
-
-        if len(out_info["cost_value"]) > len(cost_value):
-            new_cost_values = out_info["cost_value"][len(cost_value):]
-            cost_value.extend(new_cost_values)
-
-        timer = Timer()
-        fitness(individual, instance, timer, True)
-
-        popularity += individual
-
-        print('#{}\n'.format(i))
-        print('Survival values:\n{}\n'.format(survival_value))
-        print('Best Individual:\n{}\n'.format(individual))
-
-    num_iterations = len(cost_value)
-
-    best_fitness_array = np.zeros((num_repetitions, num_iterations))
-    perf_counter_array = np.zeros((num_repetitions, num_iterations))
-    process_time_array = np.zeros((num_repetitions, num_iterations))
-
-    for i in range(num_repetitions):
-        repetition_len = len(best_fitness[i])
-
-        best_fitness_array[i, :repetition_len] = best_fitness[i]
-        perf_counter_array[i, :repetition_len] = perf_counter[i]
-        process_time_array[i, :repetition_len] = process_time[i]
-
-        best_fitness_array[i, repetition_len:] = best_fitness_array[i, repetition_len - 1]
-        perf_counter_array[i, repetition_len:] = perf_counter_array[i, repetition_len - 1]
-        process_time_array[i, repetition_len:] = process_time_array[i, repetition_len - 1]
-
-    mean_best_fitness = np.mean(best_fitness_array, axis=0)
-    deviation_best_fitness = np.std(best_fitness_array, axis=0)
-    mean_perf_counter = np.mean(perf_counter_array, axis=0)
-    mean_process_time = np.mean(process_time_array, axis=0)
-
-    print('Statistics:')
-    print('Fitness:\n{}\n'.format(mean_best_fitness))
-    print('perf_counter:\n{}\n'.format(mean_perf_counter))
-    print('process_time:\n{}\n'.format(mean_process_time))
-
-    # fig = plt.figure()
-    # fig.suptitle('PPAB: perf_counter vs. process_time')
-    # plt.plot(mean_perf_counter, 'r.')
-    # plt.plot(mean_process_time, 'b.')
-    # plt.show()
-
-    fig = plt.figure()
-    fig.suptitle('PPAB: best fitness')
-    plt.plot(cost_value, mean_best_fitness, color='r')
-    plt.plot(cost_value, mean_best_fitness+deviation_best_fitness, color='b', linewidth=0.5)
-    plt.plot(cost_value, mean_best_fitness-deviation_best_fitness, color='b', linewidth=0.5)
-    # plt.errorbar(cost_value, mean_best_fitness, yerr=deviation_best_fitness, color='r', ecolor='b')
-    plt.show()
-
-    fig = plt.figure()
-    fig.suptitle('PPAB: materials selected')
-    plt.hist(popularity, bins=10, range=(0, num_repetitions))
-    plt.show()
-
-    # timeit_globals = {
-    #     'prey_predator_algorithm_binary': prey_predator_algorithm_binary,
-    #     'instance': instance,
-    #     'config': config,
-    #     'fitness_population': fitness_population
-    # }
-    # a = timeit.Timer('prey_predator_algorithm_binary(instance, config, fitness_population)', globals=timeit_globals).repeat(10, 1)
-    # b = np.array(a)
-    # print('Media: ' + str(np.mean(b)))
-    # print('Min: ' + str(np.min(b)))
-    # print('Max: ' + str(np.max(b)))
-
-    # np.savetxt("results/fitness_100_30.csv", best_fitness, fmt="%7.3f", delimiter=",")
-    # np.savetxt("results/time_100_30.csv", process_time, fmt="%8.3f", delimiter=",")
-
-    # instance_test = Instance.load_from_file(config_filename)
-    # print('a: {}\n'.format(fitness(np.array([True, False, False, False, False, False]), instance_test, True)))
-    # print('b: {}\n'.format(fitness(np.array([False, False, False, False, True, False]), instance_test, True)))
-    # print('c: {}\n'.format(fitness(np.array([True, True, True, True, True, True]), instance_test, True)))
-    # print('d: {}\n'.format(fitness(np.array([False, False, False, False, False, False]), instance_test, True)))

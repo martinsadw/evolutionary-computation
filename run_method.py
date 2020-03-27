@@ -10,17 +10,17 @@ from acs.instance import Instance
 from utils.misc import evaluate_population_fixed, evaluate_population_random
 from utils.runner import run_method
 
-from ppa_d.main import prey_predator_algorithm_discrete
-from ppa_c.main import prey_predator_algorithm_continuous
-from pso.main import particle_swarm_optmization
-from ga.main import genetic_algorithm
-from de.main import differential_evolution
+from algorithms.ppa_d.main import prey_predator_algorithm_discrete
+from algorithms.ppa_c.main import prey_predator_algorithm_continuous
+from algorithms.pso.main import particle_swarm_optmization
+from algorithms.ga.main import genetic_algorithm
+from algorithms.de.main import differential_evolution
 
-import ppa_d.config
-import ppa_c.config
-import pso.config
-import ga.config
-import de.config
+import algorithms.ppa_d.config as ppa_d_config
+import algorithms.ppa_c.config as ppa_c_config
+import algorithms.pso.config as pso_config
+import algorithms.ga.config as ga_config
+import algorithms.de.config as de_config
 
 
 def create_base_parser(parser):
@@ -43,11 +43,11 @@ if __name__ == '__main__':
     subparsers.required = True
 
     config_class_dict = {
-        'ga': ga.config.Config,
-        'pso': pso.config.Config,
-        'ppa_d': ppa_d.config.Config,
-        'ppa_c': ppa_c.config.Config,
-        'de': de.config.Config,
+        'ga': ga_config.Config,
+        'pso': pso_config.Config,
+        'ppa_d': ppa_d_config.Config,
+        'ppa_c': ppa_c_config.Config,
+        'de': de_config.Config,
     }
 
     parser_ga = subparsers.add_parser('ga')
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if not args.config and not args.cost_budget and not args.max_stagnation and not args.num_iterations:
-        raise Exception("No end conditions")
+        raise Exception("No end condition specified. Use '-b', '-s' or '-i'.")
 
     instance = Instance.load_from_file(args.instance_file)
 
