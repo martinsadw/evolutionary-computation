@@ -1,64 +1,88 @@
-Adaptive Curricular Sequence with Evolutionary Computation
-==========================================================
+Dataset generation for Adaptive Curricular Sequence
+===================================================
 
-Requisitos
-----------
+This repository contains the codes required to generate learning object datasets for the adaptive curriculum sequencing problem. Some datasets and some evolutionary computation algorithms have been included to perform comparative tests.
+
+This project was organized with the following structure:
+
+```
+├─ acs         # Implementation of the dataset reader
+├─ algorithms  # Implementation of evolutionary computation algorithms
+│  ├─ de          # Differential Evolution
+│  ├─ ga          # Genetic Algorithm
+│  ├─ ppa_c       # Prey Predator Algorithm Continuous
+│  ├─ ppa_d       # Prey Predator Algorithm Discrete
+│  └─ pso         # Particle Swarm Optmization
+├─ generator   # Implementation of dataset generation algorithms
+├─ graphics    # Generation of comparison graphs
+├─ instance    # Comparison datasets
+├─ irace       # Irace tests for choosing algorithm parameters
+├─ runners     # Example scripts
+├─ stats       # Comparison of dataset characteristics
+└─ utils       # Extra codes
+```
+
+Requirements
+------------
 
 - Python 3
     - Numpy
     - Matplotlib
 
-Você pode instalar as dependências com os seguintes comandos:
+You can install the dependencies with the following commands:
 
 ```
 apt install python3-pip python3-tk
 pip3 install -r requirements.txt
 ```
 
-Executando
-----------
+Running the codes
+-----------------
 
-### Geração da base de materiais
+### Generation of the learning object dataset
 
-### Escolha dos parâmetros
+### Choice of parameters
 
-A escolha dos parâmetros para cada algoritmo é feita utilizando o pacote irace.
+The choice of parameters for each algorithm is made using the irace package.
 
-### Geração do arquivo de resultados
+### Generation of the algorithm comparison file
 
-Para gerar os dados de comparação entre os métodos basta executar o arquivo `generate_data.py`. Por exemplo, para gerar os dados para a base `real` com 100000 avaliações da função objetivo, 5 repetições e excluindo os testes com o PSO execute o seguinte comando:
+To generate the algotithm comparison file, just run `generate_data.py`. For example, to generate the data for the `real` dataset with 100000 evaluations of the objective function, 5 repetitions and excluding PSO, run the following command:
 
 ```
 python3 -m generate_data instances/real/instance.txt -n results/real.pickle -b 100000 -r 5 --no-pso
 ```
 
-#### Parâmetros
+#### Available parameters
 
-O comportamento da geração de dados pode ser controlado pelos seguintes parâmetros:
+The behavior of data generation can be controlled by the following parameters:
 
-- `-r, --repetitions`: Número de vezes que os algoritmos serão executados. Múltiplas repetições são utilizadas para reduzir os efeitos da aleatoriedade das meta-heurísticas;
-- `-b, --cost-budget`: Quantidade de avaliações da função objetivo permitidas para cada algoritmo. É utilizado como um critério de parada para os algoritmos;
-- `-s, --max-stagnation`: Quantidade máxima de iterações sem melhorias no valor da função objetivo. É utilizado como um critério de parada para os algoritmos;
-- `-i, --num-iterations`: Quantidade de iterações permitidas para cada algoritmo. É utilizado como um critério de parada para os algoritmos;
-- `-f, --results-format`: Formato dos dados que serão gerados. Pode ser `simple` ou `full`;
-- `-n, --results-name`: Nome do arquivo que será gerado;
-- `--no-ppad`: Não executa os testes para o PPAD
-- `--no-pso`: Não executa os testes para o PSO
-- `--no-ga`: Não executa os testes para o GA
-- `--no-de`: Não executa os testes para o DE
 
-É necessário especificar pelo menos um dos critérios de parada (`-b`, `-s` ou `-i`). Caso multiplos critérios de parada sejam definidos os algoritmos serão interrompidos quando o primeiro critério de parada ocorrer.
+Number of times the objective function is allowed to run for each algorithm. It is used as a stopping criterion;
 
-#### Resultados
+- `-r, --repetitions`: Number of times the algorithms will be executed. Multiple repetitions are used to reduce the effects of randomness of the metaheuristics;
+- `-b, --cost-budget`: Number of times the objective function is allowed to run for each algorithm. It is used as a stopping criterion;
+- `-s, --max-stagnation`: Maximum number of iterations without improving the value of the objective function. It is used as a stopping criterion;
+- `-i, --num-iterations`: Number of iterations allowed for each algorithm. It is used as a stopping criterion;
+- `-f, --results-format`: Format of the generated data. Can be `simple` or `full`;
+- `-n, --results-name`: Name of the generated file;
+- `--no-ppad`: Do not run tests for PPAD
+- `--no-pso`: Do not run tests for PSO
+- `--no-ga`: Do not run tests for GA
+- `--no-de`: Do not run tests for DE
+
+You must specify at least one of the stop criteria (`-b`,` -s` or `-i`). If multiple stopping criteria are defined, the algorithms will be interrupted when the first stopping criterion occurs.
+
+#### Results
 
 Existem dois formatos de dados disponíveis para a geração dos dados:
 
-- `simple`: Retorna uma tupla `(selected_materials, cost_value, partial_fitness_array)`. Gera arquivos menores, mas inclui apenas os materiais selecionados e os dados parciais de custo e valor de cada função objetivo ao longo das iterações.
-- `full`: Retorna uma tupla `(selected_materials, cost_value, best_fitness_array, partial_fitness_array, perf_counter_array, process_time_array)`. Gera arquivos maiores mas, além dos dados gerados pelo formato `simple`, inclui dados de tempo de execução dos algoritmos. Além disso retorna o valor da função objetivo final (esse valor pode ser calculado a partir de `partial_fitness_array`).
+- `simple`: Returns a tuple `(selected_materials, cost_value, partial_fitness_array)`. Generates smaller files, but includes only the selected learning objects and the partial data of cost values and objective function throughout iterations;
+- `full`: Returns a tuple `(selected_materials, cost_value, best_fitness_array, partial_fitness_array, perf_counter_array, process_time_array)`. Generates larger files but, in addition to the data generated by the `simple` format, includes execution time data and value of final objective function (this can be calculated from `partial_fitness_array`).
 
-Exemplo das informações contidas no arquivo gerado:
+Example of the information contained in the generated file:
 
-```json
+```python
 {
     "info": {
         "algorithms": ["ppa_d", "ga", "de"],
@@ -78,25 +102,24 @@ Exemplo das informações contidas no arquivo gerado:
 }
 ```
 
-- `algorithms`: Lista de algoritmos incluidos no arquivo de resultados;
-- `command`: Comando utilizado para gerar os dados;
-- `datetime`: Data da geração dos dados;
-- `instance`: Dados da instância utilizada no arquivo de resultados;
-- `cost_budget`: Valor do parametro `-b`;
-- `max_stagnation`: Valor do parametro `-s`;
-- `num_iterations`: Valor do parametro `-i`;
-- `repetitions`: Valor do parametro `-r`;
-- `results_format`: Valor do parametro `-f`;
-- `results_name`: Valor do parametro `-n`;
-- `ppa_d`, `pso`, `ga` e `de`: Dados gerados por cada um dos algotimos.
+- `algorithms`: List of algorithms included in the results file;
+- `command`: Command used to generate the data;
+- `datetime`: Data generation date;
+- `instance`: Instance data used in the results file;
+- `cost_budget`: Value of parameter `-b`;
+- `max_stagnation`: Value of parameter `-s`;
+- `num_iterations`: Value of parameter `-i`;
+- `repetitions`: Value of parameter `-r`;
+- `results_format`: Value of parameter `-f`;
+- `results_name`: Value of parameter `-n`;
+- `ppa_d`, `pso`, `ga` e `de`: Data generated by each of the algorithms.
 
 
-### Geração dos gráficos
+### Graph generation
 
-Os códigos utilizados para a geração dos gráficos estão na pasta `graphics`. Todos eles dependem de gerar o arquivo de resultados previamente.
-
+The codes used to generate the graphs are in the `graphics` folder. They all depend on generating the algorithm comparison file beforehand.
 
 Datasets
 --------
 
-Todos os datasets se encontram na pasta `instances`
+All datasets are located in the `instances` folder.
