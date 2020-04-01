@@ -6,9 +6,7 @@ import numpy as np
 from acs.instance import Instance
 
 
-if __name__ == '__main__':
-    instance = Instance.load_from_file('instances/real/instance.txt')
-
+def extract_data(instance):
     concepts_name = instance.concepts_keys
 
     num_concepts = len(concepts_name)
@@ -67,7 +65,7 @@ if __name__ == '__main__':
         current_set = defaultdict(set)
         current_dict = {}
         for (key, value) in coocurrence_dict[-1].items():
-            # Talvez seja mais rapido calcular quais são as chaves que podem ter coocorrencia
+            # It may be faster to calculate which keys may have co-occurrence and only iterate on them
             # possible_keys = set.intersection(*[coocurrence_set[0][x] for x in key])
 
             for i in range(num_concepts):
@@ -103,20 +101,28 @@ if __name__ == '__main__':
 
     ############################################################################
 
+    return {
+        'instance': instance,
+        'concepts_materials': instance.concepts_materials,
+        'concepts_name': concepts_name,
+        'concepts_quant': concepts_quant,
+        'concepts_difficulty': concepts_difficulty,
+        'count_histogram': count_histogram,
+        'n_coocurrence_matrix': n_coocurrence_matrix,
+        'coocurrence_set': coocurrence_set,
+        'coocurrence_dict': coocurrence_dict,
+        'quant_resource_types': quant_resource_types,
+        'quant_resource_types_histogram': quant_resource_types_histogram,
+        'resource_types_frequency': resource_types_frequency,
+        'interactivity_level_frequency': interactivity_level_frequency,
+        'interactivity_type_frequency': interactivity_type_frequency,
+    }
+
+
+if __name__ == '__main__':
+    instance = Instance.load_from_file('instances/real/instance.txt')
+
+    instance_data = extract_data(instance)
+
     with open('results/instance_stats.pickle', 'wb') as file:
-        pickle.dump({
-            'instance': instance,
-            'concepts_materials': instance.concepts_materials,
-            'concepts_name': concepts_name,
-            'concepts_quant': concepts_quant,
-            'concepts_difficulty': concepts_difficulty,
-            'count_histogram': count_histogram,
-            'n_coocurrence_matrix': n_coocurrence_matrix,
-            'coocurrence_set': coocurrence_set,
-            'coocurrence_dict': coocurrence_dict,
-            'quant_resource_types': quant_resource_types,
-            'quant_resource_types_histogram': quant_resource_types_histogram,
-            'resource_types_frequency': resource_types_frequency,
-            'interactivity_level_frequency': interactivity_level_frequency,
-            'interactivity_type_frequency': interactivity_type_frequency,
-        }, file)
+        pickle.dump(instance_data, file)
