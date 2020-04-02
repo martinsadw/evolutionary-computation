@@ -1,7 +1,16 @@
+import os
 import xml.etree.cElementTree as xml
 
+from utils.xml_prettifier import prettify_xml
 
-def write_lom_file(interactivity_type, interactivity_level, learning_resource_types, difficulty, typical_learning_time):
+
+def write_lom_file(results_folder, lom_data, prettify=False):
+    interactivity_type = lom_data['interactivity_type']
+    interactivity_level = lom_data['interactivity_level']
+    learning_resource_types = lom_data['learning_resource_types']
+    difficulty = lom_data['difficulty']
+    typical_learning_time = lom_data['typical_learning_time']
+
     num_materials = len(interactivity_type)
 
     for i in range(num_materials):
@@ -23,7 +32,7 @@ def write_lom_file(interactivity_type, interactivity_level, learning_resource_ty
         general = xml.SubElement(lom, 'general')
 
         identifier = xml.SubElement(general, 'identifier')
-        xml.SubElement(identifier, 'catalog').text = 'acs.getcomp.ufjf.br'
+        xml.SubElement(identifier, 'catalog').text = 'acs.ufjf.br'
         xml.SubElement(identifier, 'entry').text = str(i)
 
         # NOTE(andre:2019-12-18): Essas tags não são relevantes para a nossa modelagem
@@ -75,4 +84,9 @@ def write_lom_file(interactivity_type, interactivity_level, learning_resource_ty
         xml.SubElement(educational, 'language').text = 'pt-BR'
 
         tree = xml.ElementTree(lom)
-        tree.write('results/LOMs/%d.xml'  % i)
+
+        lom_path = os.path.join(results_folder, '%d.xml' % i)
+        tree.write(lom_path)
+
+        if prettify:
+            prettify_xml(lom_path)

@@ -1,6 +1,7 @@
 import math
 import pickle
 import random
+from collections import namedtuple
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -29,48 +30,25 @@ def time_to_string(time):
     return result
 
 
-if __name__ == '__main__':
-    ############################################################################
-    num_materials = 1000
-    mean_concepts = 1.33
-    smoothing = 0.01
-    ############################################################################
-    with open('results/instance_stats.pickle', 'rb') as file:
-        stats = pickle.load(file)
-
-    concepts_materials = stats['concepts_materials']
+def generate_materials(stats, num_materials, gen_type, args):
     concepts_name = stats['concepts_name']
-    concepts_quant = stats['concepts_quant']
-    concepts_difficulty = stats['concepts_difficulty']
-    coocurrence_matrix = np.sum(stats['n_coocurrence_matrix'], axis=0)
-    count_histogram = stats['count_histogram']
-    coocurrence_set = stats['coocurrence_set']
-    coocurrence_dict = stats['coocurrence_dict']
-    quant_resource_types = stats['quant_resource_types']
     quant_resource_types_histogram = stats['quant_resource_types_histogram']
     resource_types_frequency = stats['resource_types_frequency']
     interactivity_level_frequency = stats['interactivity_level_frequency']
     interactivity_type_frequency = stats['interactivity_type_frequency']
 
-    num_concepts = len(concepts_name)
-    new_concept_rate = 1 - (1 / mean_concepts)
-    coocurrence_matrix += smoothing
-    ############################################################################
+    if gen_type == 'random':
+        materials_list = random_concepts_selector(stats, num_materials, args.mean_concepts, args.smoothing)
 
-    gen_type = 2
-    if gen_type == 0:
-        materials_list = random_concepts_selector(stats, num_materials, mean_concepts, smoothing)
+    elif gen_type == 'histogram':
+        materials_list = histogram_concepts_selector(stats, num_materials, args.smoothing)
 
-    elif gen_type == 1:
-        materials_list = histogram_concepts_selector(stats, num_materials, smoothing)
-
-    elif gen_type == 2:
+    elif gen_type == 'roulette':
         materials_list = roulette_concepts_selector(stats, num_materials)
 
     materials_list = [sorted(material) for material in materials_list]
     # materials_list = [[concepts_name[concept] for concept in material] for material in sorted(materials_list)]
     materials_list = [[concepts_name[concept] for concept in material] for material in materials_list]
-    write_material_coverage_file('results/material_coverage.csv', materials_list)
 
     difficulty_roulette = Roulette([16, 72, 130, 48, 18])
     quant_resource_types_roulette = Roulette(quant_resource_types_histogram.tolist())
@@ -137,9 +115,29 @@ if __name__ == '__main__':
     learning_resource_types = materials_resource_types
     difficulty = [_difficulty_strings[difficulty_values] for difficulty_values in materials_difficulty]
     typical_learning_time = [time_to_string(duration_values) for duration_values in materials_duration]
-    write_lom_file(interactivity_type, interactivity_level, learning_resource_types, difficulty, typical_learning_time)
 
-    # Estilo act-ref: -2.32 +- 1.54
-    # Estilo sen-int: -0.36 +- 1.12
-    # Estilo vis-ver:  0.34 +- 0.90
-    # Estilo seq-glo: -0.52 +- 0.76
+    lom_data = {
+        'interactivity_type': interactivity_type,
+        'interactivity_level': interactivity_level,
+        'learning_resource_types': learning_resource_types,
+        'difficulty': difficulty,
+        'typical_learning_time': typical_learning_time,
+    }
+
+    return (materials_list, lom_data)
+
+if __name__ == '__main__':
+    num_materials = 1000
+    gen_type = 'roulette'
+    mean_concepts = 1.33
+    smoothing = 0.01
+
+    with open('results/instance_stats.pickle', 'rb') as file:
+        stats = pickle.load(file)
+
+    Args = namedtuple('Args', ['mean_concepts', 'smoothing'])
+    args = Args(mean_concepts=mean_concepts, smoothing=smoothing)
+    (materials_list, lom_data) = generate_materials(stats, num_materials, gen_type, args)
+
+    write_material_coverage_file('results/material_coverage.csv', materials_list)
+    write_lom_file('results/LOMs', lom_data)
