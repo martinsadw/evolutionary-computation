@@ -80,7 +80,7 @@ Before generating the learning object dataset, you must extract the characterist
 For example, to extract the characteristics of the `real` dataset, run the following command:
 
 ```shell
-python3 -m characteristics_extraction.py instances/real/instance.txt -n results/instance.pickle
+python3 -m characteristics_extraction instances/real/instance.txt -n results/instance.pickle
 ```
 
 ### Generation of the learning object dataset
