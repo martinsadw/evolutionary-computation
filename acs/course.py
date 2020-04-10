@@ -10,26 +10,26 @@ from acs.learner import Learner
 
 class Course:
     def __init__(self, config_filename):
-        # config_string = '[section]\n'  # python precisa de um "section" para ler o arquivo de configurações
+        # config_string = '[section]\n'  # python needs a "[section]" to read the config file
         with open(config_filename, 'r') as config_file:
             config_string = config_file.read()
         config = configparser.ConfigParser()
         config.read_string(config_string)
 
         dirname = os.path.dirname(config_filename)
-        path = config['section']['ppatosca.path']
-        learning_materials_lom      = os.path.normpath(os.path.join(dirname, path, config['section']['ppatosca.path.learningMaterialsLOM']))
-        concepts_filename           = os.path.normpath(os.path.join(dirname, path, config['section']['ppatosca.file.concepts']))
-        material_coverage_filename  = os.path.normpath(os.path.join(dirname, path, config['section']['ppatosca.file.materialsCoverage']))
-        learners_filename           = os.path.normpath(os.path.join(dirname, path, config['section']['ppatosca.file.learners']))
-        learners_score_filename     = os.path.normpath(os.path.join(dirname, path, config['section']['ppatosca.file.learnersScore']))
-        fitness_parameters_filename = os.path.normpath(os.path.join(dirname, path, config['section']['ppatosca.file.fitnessParameters']))
-        # prerequisites_filename      = os.path.normpath(os.path.join(dirname, path, config['section']['ppatosca.file.prerequisites']))
+        path = config['section']['acs.path']
+        learning_materials_lom      = os.path.normpath(os.path.join(dirname, path, config['section']['acs.path.learningMaterialsLOM']))
+        concepts_filename           = os.path.normpath(os.path.join(dirname, path, config['section']['acs.file.concepts']))
+        material_coverage_filename  = os.path.normpath(os.path.join(dirname, path, config['section']['acs.file.materialsCoverage']))
+        learners_filename           = os.path.normpath(os.path.join(dirname, path, config['section']['acs.file.learners']))
+        learners_score_filename     = os.path.normpath(os.path.join(dirname, path, config['section']['acs.file.learnersScore']))
+        fitness_parameters_filename = os.path.normpath(os.path.join(dirname, path, config['section']['acs.file.fitnessParameters']))
+        # prerequisites_filename      = os.path.normpath(os.path.join(dirname, path, config['section']['acs.file.prerequisites']))
 
         self.concepts = {}
         with open(concepts_filename, 'r') as concepts_file:
             for line in concepts_file:
-                # A leitura de arquivos do python converte os caracteres de fim de linha em \n
+                # Python file reading converts end-of-line characters to \n
                 concept = Concept.load_from_string(line.rstrip('\n'))
                 self.concepts[concept.abbreviation] = concept
 
@@ -40,8 +40,8 @@ class Course:
                     learning_material = LearningMaterial.load_from_file(os.path.join(root, lom_file))
                     self.learning_materials[learning_material.id] = learning_material
 
-        # TODO(andre:2018-06-15): Oferecer opção 'strict' para retornar erro
-        # caso o curso ou o material nesse arquivo não existam
+        # TODO(andre:2018-06-15): Offer a 'strict' option to return error if
+        # the course or the material in this file does not exist.
         self.material_coverage = defaultdict(set)
         with open(material_coverage_filename, 'r') as material_coverage_file:
             for line in material_coverage_file:
@@ -53,12 +53,12 @@ class Course:
         self.learners = {}
         with open(learners_filename, 'r') as learners_file:
             for line in learners_file:
-                # A leitura de arquivos do python converte os caracteres de fim de linha em \n
+                # Python file reading converts end-of-line characters to \n
                 learner = Learner.load_from_string(line.rstrip('\n'))
                 self.learners[learner.id] = learner
 
-        # TODO(andre:2018-06-15): Oferecer opção 'strict' para retornar erro
-        # caso o aluno nesse arquivo não exista
+        # TODO(andre:2018-06-15): Offer a 'strict' option to return error if
+        # the student in this file does not exist.
         with open(learners_score_filename, 'r') as learners_score_file:
             for line in learners_score_file:
                 score_fields = line.rstrip('\n').split(';')
@@ -75,12 +75,12 @@ class Course:
             config = configparser.ConfigParser(inline_comment_prefixes=(';',))
             config.read_string(fitness_string)
 
-            self.missing_concepts_coeficient = float(config['section']['ppatosca.fitness.missingConceptsCoeficient'])
-            self.concepts_covered_weight = float(config['section']['ppatosca.fitness.conceptsCoveredWeight'])
-            self.difficulty_weight = float(config['section']['ppatosca.fitness.difficultyWeight'])
-            self.total_time_weight = float(config['section']['ppatosca.fitness.totalTimeWeight'])
-            self.materials_balancing_weight = float(config['section']['ppatosca.fitness.materialsBalancingWeight'])
-            self.learning_style_weight = float(config['section']['ppatosca.fitness.learningStyleWeight'])
+            self.missing_concepts_coeficient = float(config['section']['acs.fitness.missingConceptsCoeficient'])
+            self.concepts_covered_weight = float(config['section']['acs.fitness.conceptsCoveredWeight'])
+            self.difficulty_weight = float(config['section']['acs.fitness.difficultyWeight'])
+            self.total_time_weight = float(config['section']['acs.fitness.totalTimeWeight'])
+            self.materials_balancing_weight = float(config['section']['acs.fitness.materialsBalancingWeight'])
+            self.learning_style_weight = float(config['section']['acs.fitness.learningStyleWeight'])
 
 
 if __name__ == "__main__":

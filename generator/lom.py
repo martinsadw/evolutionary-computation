@@ -35,7 +35,7 @@ def write_lom_file(results_folder, lom_data, prettify=False):
         xml.SubElement(identifier, 'catalog').text = 'acs.ufjf.br'
         xml.SubElement(identifier, 'entry').text = str(i)
 
-        # NOTE(andre:2019-12-18): Essas tags não são relevantes para a nossa modelagem
+        # NOTE(andre:2019-12-18): These tags are not used in our modeling
         ########################################################################
         # title = xml.SubElement(general, 'title')
         # xml.SubElement(title, 'string', language='pt-BR').text = 'Algoritmos e Representações'

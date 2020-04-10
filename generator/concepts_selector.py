@@ -123,8 +123,8 @@ def roulette_concepts_selector(stats, num_materials):
     return materials_list
 
 
-def write_material_coverage_file(path, materials):
-    with open(path, 'w') as coverage_file:
+def write_material_coverage_file(filename, materials):
+    with open(filename, 'w') as coverage_file:
         coverage_writer = csv.writer(coverage_file, delimiter=';')
 
         for i, material in enumerate(materials):

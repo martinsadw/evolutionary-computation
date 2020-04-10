@@ -1,10 +1,10 @@
 [section]
-ppatosca.path = .
-ppatosca.path.learningMaterialsLOM = 100/LOM
+acs.path = .
+acs.path.learningMaterialsLOM = 100/LOM
 
-ppatosca.file.concepts = conceitos.csv
-ppatosca.file.materialsCoverage = 100/materiais_conceitos.csv
-ppatosca.file.learners = learner.csv
-ppatosca.file.learnersScore = learners_score.csv
-ppatosca.file.fitnessParameters = 100/fitness_parameters.txt
-# ppatosca.file.prerequisites =
+acs.file.concepts = conceitos.csv
+acs.file.materialsCoverage = 100/materiais_conceitos.csv
+acs.file.learners = learner.csv
+acs.file.learnersScore = learners_score.csv
+acs.file.fitnessParameters = 100/fitness_parameters.txt
+# acs.file.prerequisites =
