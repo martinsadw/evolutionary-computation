@@ -53,8 +53,6 @@ class LearningMaterial:
             print("Dificuldade não mapeada: {}".format(difficulty))
             self.difficulty = 0
 
-        # TODO(andre:2018-07-20): Confirmar o formato das datas
-        # time_regex = re.search(r"PT(?:(?P<hours>[0-9]+)H)?(?:(?P<minutes>[0-5]?[0-9]|60)M)?(?:(?P<seconds>[0-5]?[0-9]|60)S)?", typical_learning_time)
         time_regex = re.search(r"PT(?:(?P<hours>[0-9]+)H)?(?:(?P<minutes>[0-9]+)M)?(?:(?P<seconds>[0-5]?[0-9]|60)S)?", typical_learning_time)
         self.typical_learning_time = 0
         if time_regex.group('hours') is not None:
@@ -127,13 +125,9 @@ class LearningMaterial:
         # print(xml_root)
         # xml.dump(xml_root)
 
-        # TODO(andre:2018-06-15): Medida provisória. Remover isso depois que os arquivos de LOM for arrumado
         material_id = int(xml_root.find('./' + pref + 'general/' + pref + 'identifier/' + pref + 'entry').text)
         # material_name = xml_root.find('./' + pref + 'general/' + pref + 'title/' + pref + 'string').text
         material_name = "a"
-
-        # material_id = int(xml_root.find('./' + pref + 'entry').text)
-        # material_name = xml_root.find('./' + pref + 'title/' + pref + 'string').text
 
         material_type = xml_root.find('./' + pref + 'technical/' + pref + 'format').text
         typical_learning_time = xml_root.find('./' + pref + 'educational/' + pref + 'typicalLearningTime/' + pref + 'duration').text

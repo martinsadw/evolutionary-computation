@@ -73,8 +73,8 @@ def difficulty_function(individual, instance, student, timer):
     mean_student_materials_difficulty = student_materials_difficulty.mean()
 
     timer.add_time("fitness_difficulty_mean_difficulty")
-    # Impede que a função retorne um maskedConstant nos casos em que nenhum
-    # material cobre conceitos dos objetivos do aluno
+    # Prevents the function to return maskedConstant in cases where no material
+    # covers any student concepts
     # if not isinstance(mean_student_materials_difficulty, float):
     if mean_student_materials_difficulty is np.ma.masked:
         # print("Nenhum objetivo coberto")
@@ -93,8 +93,8 @@ def total_time_function(individual, instance, student):
     masked_estimated_time = np.ma.array(estimated_time, mask=~individual)
 
     total_time = masked_estimated_time.sum()
-    # Impede que o tempo total dos materiais seja um maskedConstant nos casos em
-    # que nenhum material tenha sido selecionado para o aluno
+    # Prevents the total time from materials to be maskedConstant when no
+    # material has been selected for the learner
     if total_time is np.ma.masked:
         total_time = 0
 
@@ -219,7 +219,7 @@ def fitness_population(population, instance, student, timer, print_results=False
     survival_values = np.empty(population_size)
 
     for i in range(population_size):
-        # Calcula o valor de sobrevivencia do individuo i
+        # Calculates the survival value of individual i
         survival_values[i] = fitness(population[i], instance, student, timer, print_results, data)
 
     return survival_values
