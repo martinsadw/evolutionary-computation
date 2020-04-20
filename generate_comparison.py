@@ -33,6 +33,7 @@ if __name__ == '__main__':
     parser.add_argument('--no-pso', action='store_true')
     parser.add_argument('--no-ga', action='store_true')
     parser.add_argument('--no-de', action='store_true')
+    parser.add_argument('-v', '--verbose', action='store_true')
 
     args = parser.parse_args()
 
@@ -73,7 +74,10 @@ if __name__ == '__main__':
         config.max_stagnation = args.max_stagnation
         config.num_iterations = args.num_iterations
 
-        results[name] = run_method(function, fitness, instance, config, args.repetitions)
+        if args.verbose:
+            print('Running %s' % name)
+
+        results[name] = run_method(function, fitness, instance, config, args.repetitions, verbose=args.verbose)
         results['info']['algorithms'].append(name)
 
     os.makedirs(os.path.dirname(args.results_name), exist_ok=True)

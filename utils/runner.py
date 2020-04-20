@@ -3,7 +3,7 @@ import random
 import numpy as np
 
 
-def run_method(method_function, fitness_function, instance, config, num_repetitions, seed=0, result_format='simple', **kwargs):
+def run_method(method_function, fitness_function, instance, config, num_repetitions, seed=0, result_format='simple', verbose=False, **kwargs):
     best_fitness = []
     partial_fitness = []
     perf_counter = []
@@ -17,6 +17,9 @@ def run_method(method_function, fitness_function, instance, config, num_repetiti
     # TODO(andre:2019-08-10): Calcular a quantidade de vezes que cada material foi selecionado para cada aluno
 
     for i in range(num_repetitions):
+        if verbose:
+            print('Progress: %d / %d (%d%%)' % (i + 1, num_repetitions, (i + 1) * 100 / num_repetitions))
+
         np.random.seed(seed + i)
         random.seed(seed + i)
         results = method_function(instance, config, fitness_function, out_info=out_info, **kwargs)

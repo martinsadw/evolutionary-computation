@@ -144,7 +144,8 @@ The behavior of data generation can be controlled by the following parameters:
 - `--no-ppad`: Do not run tests for PPAD;
 - `--no-pso`: Do not run tests for PSO;
 - `--no-ga`: Do not run tests for GA;
-- `--no-de`: Do not run tests for DE.
+- `--no-de`: Do not run tests for DE;
+- `-v, --verbose`: Show the progress.
 
 You must specify at least one of the stop criteria (`-b`,` -s` or `-i`). If multiple stopping criteria are defined, the algorithms will be interrupted when the first stopping criterion occurs.
 
