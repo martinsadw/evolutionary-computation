@@ -36,7 +36,7 @@ if __name__ == "__main__":
         results = pickle.load(file)
 
     algorithms = set(results['info']['algorithms'])
-    if not set('ppa_d', 'pso', 'ga', 'de').issubset(algorithms):
+    if not set(['ppa_d', 'pso', 'ga', 'de']).issubset(algorithms):
         raise Exception('Results file must contain data from "ppa_d", "pso", "ga" and "de".')
 
     results_ppa_d = results['ppa_d']
