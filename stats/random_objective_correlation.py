@@ -2,30 +2,40 @@ import pickle
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.colors import hsv_to_rgb
 import pandas as pd
 import seaborn as sns
 from scipy.stats import spearmanr
 
+from process.results import normalized_fitness, normalized_objectives
+
+from pprint import pprint
 
 # https://stackoverflow.com/questions/48139899/correlation-matrix-plot-with-coefficients-on-one-side-scatterplots-on-another
-def matrix_plot(data, path, method):
+def matrix_plot(data, path, method, colors=None):
+    def regplot_color(*args, **kwargs):
+        ax = sns.regplot(*args, scatter=False, **kwargs)
+        ax.scatter(*args, **kwargs['scatter_kws'])
+
     def corrdot(*args, **kwargs):
         corr_r = args[0].corr(args[1], method)
         # corr_text = f"{corr_r:2.2f}".replace("0.", ".")
         corr_text = ("%2.2f" % corr_r).replace("0.", ".")
         ax = plt.gca()
         ax.set_axis_off()
-        marker_size = abs(corr_r) * 10000
+        marker_size = abs(corr_r) * 9500 + 500
         ax.scatter([.5], [.5], marker_size, [corr_r], alpha=0.6, cmap="coolwarm",
                    vmin=-1, vmax=1, transform=ax.transAxes)
-        font_size = abs(corr_r) * 40 + 5
+        font_size = abs(corr_r) * 35 + 10
         ax.annotate(corr_text, [.5, .5,],  xycoords="axes fraction",
                     ha='center', va='center', fontsize=font_size)
 
     sns.set(style='white', font_scale=1.6)
     df = pd.DataFrame(data)
+
     g = sns.PairGrid(df, aspect=1.4, diag_sharey=False)
-    g.map_lower(sns.regplot, lowess=True, ci=False, line_kws={'color': 'black'})
+
+    g.map_lower(regplot_color, lowess=True, ci=False, scatter_kws={'s': 7, 'alpha': '.2', 'c': colors}, line_kws={'color': 'black'})
     g.map_diag(sns.distplot, kde_kws={'color': 'black'})
     g.map_upper(corrdot)
     plt.savefig(path)
@@ -33,7 +43,7 @@ def matrix_plot(data, path, method):
     # plt.show()
 
 if __name__ == "__main__":
-    base_folder = 'results/2020-02-22 - Matriz de correlação da população aleatória/'
+    base_folder = 'results/2020-05-11 - teste/'
     filename = 'results/2020-02-22 - Fitness da população aleatória/random_1000.pickle'
     bases_name = [
         'andre_50',
@@ -78,29 +88,37 @@ if __name__ == "__main__":
         # print('spearman')
         # matrix_plot(all_fitness, base_folder + '/spearman/correlation_%s.%s' % (bases_name[i], "png"), 'spearman')
 
-    # Remove 'andre_50'
-    results = results[1:, :, :100, :]
+    limit_size = 100
+    results = normalized_objectives('results/2020-02-22 - Fitness da população aleatória/random_1000.pickle', limit_size=limit_size)
+    num_instances = results.shape[0]
+    num_learners = results.shape[1]
 
-    # (instance, student, individual, function)
-    total_base_result = results[:, :, :100, :]
-
-    # (instance, student, individual)
-    total_sum_result = np.sum(total_base_result, axis=3)
-
-    # (instance, student, 0, 0)
-    min_sum_result = np.min(total_sum_result, axis=2)[:, :, np.newaxis, np.newaxis]
-
-    # (instance, student, individual, function)
-    normalized_base_result = total_base_result / min_sum_result
+    # order_fitness = np.argsort(results, axis=2)
+    # rank_fitness = np.argsort(order_fitness, axis=2)
 
     # (instance * student * individual, function)
-    total_all_fitness = total_base_result.reshape(total_base_result.shape[0] * total_base_result.shape[1] * total_base_result.shape[2], total_base_result.shape[3])
+    results = results.reshape(results.shape[0] * results.shape[1] * results.shape[2], results.shape[3])
+    # order_fitness = order_fitness.reshape(order_fitness.shape[0] * order_fitness.shape[1] * order_fitness.shape[2], order_fitness.shape[3])
+    # rank_fitness = rank_fitness.reshape(rank_fitness.shape[0] * rank_fitness.shape[1] * rank_fitness.shape[2], rank_fitness.shape[3])
 
-    # (instance * student * individual, function)
-    normalized_all_fitness = normalized_base_result.reshape(total_base_result.shape[0] * total_base_result.shape[1] * total_base_result.shape[2], total_base_result.shape[3])
+    order_fitness = np.argsort(results, axis=0)
+    rank_fitness = np.argsort(order_fitness, axis=0)
+
+    colors = np.empty((num_instances, num_learners, limit_size), dtype=object)
+    colors.fill((0.2980392156862745, 0.4470588235294118, 0.6901960784313725))
+    for i in range(num_instances):
+        for j in range(num_learners):
+            colors[i, j, :].fill((i / num_instances, j / num_learners, 0.5))
+    colors = colors.flatten()
+
+    # print('Reading %s' % 'total')
+    # print('pearson')
+    # matrix_plot(results, base_folder + '/pearson/correlation_%s.%s' % ("total", "png"), 'pearson', colors)
+    # print('spearman')
+    # matrix_plot(results, base_folder + '/spearman/correlation_%s.%s' % ("total", "png"), 'spearman', colors)
 
     print('Reading %s' % 'total')
     print('pearson')
-    matrix_plot(normalized_all_fitness, base_folder + '/pearson/correlation_%s.%s' % ("total", "png"), 'pearson')
+    matrix_plot(rank_fitness, base_folder + '/pearson_correlation_%s.%s' % ("total", "png"), 'pearson', colors)
     print('spearman')
-    matrix_plot(normalized_all_fitness, base_folder + '/spearman/correlation_%s.%s' % ("total", "png"), 'spearman')
+    matrix_plot(rank_fitness, base_folder + '/spearman_correlation_%s.%s' % ("total", "png"), 'spearman', colors)
