@@ -5,7 +5,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 
-from acs.objective import fitness, fitness_population
+from acs.objective import fitness
 from acs.instance import Instance
 
 from utils.timer import Timer

@@ -4,7 +4,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-from acs.objective import fitness
+from acs.objective import fitness, multi_fitness
 from acs.instance import Instance
 
 from utils.misc import evaluate_population_fixed, evaluate_population_random
@@ -123,7 +123,7 @@ if __name__ == '__main__':
         results = run_method(particle_swarm_optmization, fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')
     elif args.algorithm == 'ga':
         label = 'GA'
-        results = run_method(genetic_algorithm, fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')
+        results = run_method(genetic_algorithm, multi_fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')
     elif args.algorithm == 'de':
         label = 'DE'
         results = run_method(differential_evolution, fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')

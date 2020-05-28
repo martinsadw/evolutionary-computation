@@ -6,15 +6,16 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 
-from acs.objective import fitness, fitness_population
+from acs.objective import fitness
 from acs.instance import Instance, print_instance
 
 from utils.timer import Timer
+from utils.multiobjective import sort_nondominated, crowding_dist
 
 from algorithms.ga.config import Config
 from algorithms.ga.copying import copying_gene
 from algorithms.ga.local_search import local_search_gene
-from algorithms.ga.selection import selection_gene
+from algorithms.ga.selection import selection_gene, Selection
 from algorithms.ga.crossover import crossover_gene, Crossover
 from algorithms.ga.mutation import mutation_gene
 
@@ -37,6 +38,7 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
     results = []
 
     for student in range(instance.num_learners):
+        print('\n\n\n\n---------------------------------------------\n\n\n\nNew Student')
         cost_counter = 0
         iteration_counter = 0
         stagnation_counter = 0
@@ -52,7 +54,11 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
 
         population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
         population_best_individual = population[0]
-        population_best_fitness = counter_fitness(population[0], instance, student, timer)
+        population_best_fitness = np.array(counter_fitness(population[0], instance, student, timer))
+
+        is_multiobjective = False
+        if len(population_best_fitness.shape) == 1:
+            is_multiobjective = True
 
         start_perf_counter = time.perf_counter()
         start_process_time = time.process_time()
@@ -61,18 +67,35 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
                (not config.max_stagnation or stagnation_counter < config.max_stagnation)):
             timer.add_time()
             survival_values = np.apply_along_axis(counter_fitness, 1, population, instance, student, timer)
-            sorted_indices = np.argsort(survival_values)
-            population = population[sorted_indices]
-            survival_values = survival_values[sorted_indices]
+
+            print('----------------------')
+            if is_multiobjective:
+                sorted_fronts = sort_nondominated(survival_values, sign=-1)
+                distance = crowding_dist(survival_values)
+
+                sorted_indices = []
+                for front in sorted_fronts:
+                    sorted_indices.extend(sorted(front, key = lambda i: distance[i], reverse=True))
+
+                population = population[sorted_indices]
+                survival_values = survival_values[sorted_indices]
+            else:
+                sorted_indices = np.argsort(survival_values)
+                population = population[sorted_indices]
+                survival_values = survival_values[sorted_indices]
+
+                if survival_values[0] < population_best_fitness:
+                    population_best_individual = population[0]
+                    population_best_fitness = survival_values[0]
+
+                    stagnation_counter = 0
+                else:
+                    stagnation_counter += 1
 
             iteration_counter += 1
-            if survival_values[0] < population_best_fitness:
-                population_best_individual = population[0]
-                population_best_fitness = survival_values[0]
 
-                stagnation_counter = 0
-            else:
-                stagnation_counter += 1
+            res = np.sum(survival_values, axis=1)
+            print(np.min(res))
 
             if out_info is not None:
                 out_info['best_fitness'][-1].append(population_best_fitness)
@@ -86,7 +109,6 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
             if config.use_local_search:
                 new_population = local_search_gene(new_population, counter_fitness, config.local_search_method, config)
 
-            remaining_spots = np.random.randint(2, size=(population_size - new_population.shape[0], instance.num_materials), dtype=bool)
             remaining_spots = population_size - len(new_population)
 
             selection_spots = remaining_spots
@@ -95,7 +117,15 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
             else:
                 selection_spots = int(2 * math.ceil(remaining_spots / 2.))
 
-            parents = selection_gene(population, survival_values, selection_spots, config.selection_method, config)
+            # print(population.shape)
+            # print(survival_values.shape)
+            # print(selection_spots)
+
+            if is_multiobjective:
+                parents = selection_gene(population, survival_values, selection_spots, Selection.NSGA_II_SELECTION, config, crowding_dist=distance)
+            else:
+                parents = selection_gene(population, survival_values, selection_spots, config.selection_method, config)
+
             children = crossover_gene(parents, config.crossover_method, config)
             mutated = mutation_gene(children, config.mutation_method, config)
 

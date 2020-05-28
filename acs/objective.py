@@ -223,3 +223,33 @@ def fitness_population(population, instance, student, timer, print_results=False
         survival_values[i] = fitness(population[i], instance, student, timer, print_results, data)
 
     return survival_values
+
+
+def multi_fitness(individual, instance, student, timer, print_results=False, data=None):
+    concepts_covered_objective = concepts_covered_function(individual, instance, student, timer)
+    difficulty_objective = difficulty_function(individual, instance, student, timer)
+    total_time_objective = total_time_function(individual, instance, student)
+    materials_balancing_objective = materials_balancing_function(individual, instance, student)
+    learning_style_objective = learning_style_function(individual, instance, student)
+
+    objective = (instance.concepts_covered_weight * concepts_covered_objective,
+                 instance.difficulty_weight * difficulty_objective,
+                 instance.total_time_weight * total_time_objective,
+                 instance.materials_balancing_weight * materials_balancing_objective,
+                 instance.learning_style_weight * learning_style_objective)
+
+    if data is not None:
+        data.append(objective)
+
+    if print_results:
+        print("Materiais do aluno:")
+        print(individual)
+        print("Penalidades: [{}, {}, {}, {}, {}] = {}".format(
+            instance.concepts_covered_weight * concepts_covered_objective,
+            instance.difficulty_weight * difficulty_objective,
+            instance.total_time_weight * total_time_objective,
+            instance.materials_balancing_weight * materials_balancing_objective,
+            instance.learning_style_weight * learning_style_objective,
+            sum_objective))
+
+    return objective
