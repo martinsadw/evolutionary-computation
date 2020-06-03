@@ -145,6 +145,7 @@ def crowding_dist(fitness=None):
 
     return distances
 
+
 def nsga_ii_tourn(fit0, fit1, crowd_dist0, crowd_dist1):
     if dominates(fit0, fit1):
         return 0
@@ -159,3 +160,20 @@ def nsga_ii_tourn(fit0, fit1, crowd_dist0, crowd_dist1):
     if random.random() <= 0.5:
         return 0
     return 1
+
+
+def fitness_sch(individual, instance, student, timer, print_results=False, data=None):
+    f1 = individual ** 2
+    f2 = (individual - 2) ** 2
+
+    objective = (f1, f2)
+
+    if data is not None:
+        data.append(objective)
+
+    if print_results:
+        print("Individuo:")
+        print(individual)
+        print("Objetivos: [{}, {}]".format(f1, f2))
+
+    return objective

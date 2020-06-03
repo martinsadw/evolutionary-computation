@@ -170,7 +170,7 @@ def learning_style_function(individual, instance, student):
     return (objective_active_reflexive + objective_sensory_intuitive + objective_visual_verbal + objective_sequential_global) / 4
 
 
-def fitness(individual, instance, student, timer, print_results=False, data=None):
+def fitness(individual, instance, student, timer, print_results=False, data=None, **kwargs):
     timer.add_time()
     concepts_covered_objective = concepts_covered_function(individual, instance, student, timer)
     timer.add_time()
@@ -224,8 +224,7 @@ def fitness_population(population, instance, student, timer, print_results=False
 
     return survival_values
 
-
-def multi_fitness(individual, instance, student, timer, print_results=False, data=None):
+def multi_fitness(individual, instance, student, timer, print_results=False, data=None, num_objectives=5, **kwargs):
     concepts_covered_objective = concepts_covered_function(individual, instance, student, timer)
     difficulty_objective = difficulty_function(individual, instance, student, timer)
     total_time_objective = total_time_function(individual, instance, student)
@@ -237,6 +236,23 @@ def multi_fitness(individual, instance, student, timer, print_results=False, dat
                  instance.total_time_weight * total_time_objective,
                  instance.materials_balancing_weight * materials_balancing_objective,
                  instance.learning_style_weight * learning_style_objective)
+
+    if num_objectives == 1:
+        objective = (objective[0] + objective[1] + objective[2] + objective[3] + objective[4],)
+    if num_objectives == 2:
+        objective = (objective[0],
+                     objective[1] + objective[2] + objective[3] + objective[4])
+    if num_objectives == 3:
+        objective = (objective[0],
+                     objective[1],
+                     objective[2] + objective[3] + objective[4])
+    if num_objectives == 4:
+        objective = (objective[0],
+                     objective[1],
+                     objective[4],
+                     objective[2] + objective[3])
+    # if num_objectives == 5:
+    #     pass
 
     if data is not None:
         data.append(objective)
