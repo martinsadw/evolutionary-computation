@@ -1,6 +1,10 @@
 from collections import defaultdict, Iterable
 import random
 
+import numpy as np
+
+from utils.misc import array_to_float
+
 
 # Code adapted from:
 # https://medium.com/@rossleecooloh/optimization-algorithm-nsga-ii-and-python-package-deap-fca0be6b2ffc
@@ -162,9 +166,11 @@ def nsga_ii_tourn(fit0, fit1, crowd_dist0, crowd_dist1):
     return 1
 
 
-def fitness_sch(individual, instance, student, timer, print_results=False, data=None):
-    f1 = individual ** 2
-    f2 = (individual - 2) ** 2
+def fitness_sch(individual, instance, student, timer, print_results=False, data=None, **kwargs):
+    value = array_to_float(individual, 10)
+
+    f1 = value ** 2
+    f2 = (value - 2) ** 2
 
     objective = (f1, f2)
 

@@ -22,6 +22,17 @@ def get_float(array, bits_precision):
     return (total / (1 << bits_precision))
 
 
+def array_to_int(array):
+    factor = 2 ** np.arange(array.size)[::-1]
+    half_size = 2 ** (array.size - 1)
+    return array.dot(factor) - half_size
+
+def array_to_float(array, bits_precision):
+    factor = 2 ** (np.arange(array.size, dtype=float)[::-1] - bits_precision)
+    half_size = 2 ** (array.size - bits_precision - 1)
+    return array.dot(factor) - half_size
+
+
 def sigmoid(array):
     return 1 / (1 + np.exp(-array));
 

@@ -1,5 +1,9 @@
 import argparse
+import datetime
+import os
+import pickle
 import random
+import sys
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,8 +11,9 @@ import matplotlib.pyplot as plt
 from acs.objective import fitness, multi_fitness
 from acs.instance import Instance
 
+from utils.multiobjective import fitness_sch
 from utils.misc import evaluate_population_fixed, evaluate_population_random
-from utils.runner import run_method
+from utils.runner import run_method, run_multiobjective_method
 
 from algorithms.ppa_d.main import prey_predator_algorithm_discrete
 from algorithms.ppa_c.main import prey_predator_algorithm_continuous
@@ -37,6 +42,8 @@ def create_base_parser(parser):
     parser.add_argument('-s', '--max-stagnation', type=int)
     parser.add_argument('-i', '--num-iterations', type=int)
     parser.add_argument('--show', action='store_true')
+    parser.add_argument('-v', '--verbose', action='store_true')
+    parser.add_argument('-n', '--results-name', default='results/comparison.pickle')
 
 
 if __name__ == '__main__':
@@ -68,44 +75,44 @@ if __name__ == '__main__':
     parser_nsga_ii.add_argument('--mutation-chance', type=float, default=0.01)
     parser_nsga_ii.add_argument('-c', '--crossover', choices=['SINGLE_POINT', 'TWO_POINT', 'THREE_PARENT', 'UNIFORM'], default='TWO_POINT')
     parser_nsga_ii.add_argument('-m', '--mutation', choices=['SINGLE_BIT_INVERSION', 'MULTI_BIT_INVERSION'], default='SINGLE_BIT_INVERSION')
-    parser_nsga_ii.add_argument('-n', '--num-objectives', type=int, default=1)
+    parser_nsga_ii.add_argument('-o', '--num-objectives', type=int, default=1)
 
     parser_pso = subparsers.add_parser('pso')
     create_base_parser(parser_pso)
-    parser_pso.add_argument('-v', '--max-velocity', type=float, default=6)
-    parser_pso.add_argument('-n', '--inertia', type=float, default=1)
+    parser_pso.add_argument('-m', '--max-velocity', type=float, default=6)
+    parser_pso.add_argument('-t', '--inertia', type=float, default=1)
     parser_pso.add_argument('-l', '--local-influence', type=float, default=1)
     parser_pso.add_argument('-g', '--global-influence', type=float, default=1)
-    parser_pso.add_argument('-e', '--evaluator', choices=['RANDOM', 'FIXED'], default='RANDOM')
+    parser_pso.add_argument('-a', '--evaluator', choices=['RANDOM', 'FIXED'], default='RANDOM')
 
     parser_ppa_d = subparsers.add_parser('ppa_d')
     create_base_parser(parser_ppa_d)
     parser_ppa_d.add_argument('-d', '--distance-influence', type=float, default=1)
     parser_ppa_d.add_argument('-f', '--survival-influence', type=float, default=1)
-    parser_ppa_d.add_argument('-n', '--min-steps', type=int, default=4)
+    parser_ppa_d.add_argument('-t', '--min-steps', type=int, default=4)
     parser_ppa_d.add_argument('-x', '--max-steps', type=int, default=25)
-    parser_ppa_d.add_argument('-t', '--steps-distance', type=float, default=0.1)
+    parser_ppa_d.add_argument('-e', '--steps-distance', type=float, default=0.1)
     parser_ppa_d.add_argument('-l', '--local-search', type=int, default=5)
     parser_ppa_d.add_argument('-c', '--follow-chance', type=float, default=0.8)
 
     parser_ppa_c = subparsers.add_parser('ppa_c')
     create_base_parser(parser_ppa_c)
-    parser_ppa_c.add_argument('-v', '--max-velocity', type=float, default=6)
+    parser_ppa_c.add_argument('-m', '--max-velocity', type=float, default=6)
     parser_ppa_c.add_argument('-d', '--distance-influence', type=float, default=1)
     parser_ppa_c.add_argument('-f', '--survival-influence', type=float, default=1)
-    parser_ppa_c.add_argument('-n', '--min-steps', type=int, default=4)
+    parser_ppa_c.add_argument('-t', '--min-steps', type=int, default=4)
     parser_ppa_c.add_argument('-x', '--max-steps', type=int, default=25)
-    parser_ppa_c.add_argument('-t', '--steps-distance', type=float, default=0.1)
+    parser_ppa_c.add_argument('-e', '--steps-distance', type=float, default=0.1)
     parser_ppa_c.add_argument('-l', '--local-search', type=int, default=5)
     parser_ppa_c.add_argument('-c', '--follow-chance', type=float, default=0.8)
-    parser_ppa_c.add_argument('-e', '--evaluator', choices=['RANDOM', 'FIXED'], default='RANDOM')
+    parser_ppa_c.add_argument('-a', '--evaluator', choices=['RANDOM', 'FIXED'], default='RANDOM')
 
     parser_de = subparsers.add_parser('de')
     create_base_parser(parser_de)
-    parser_de.add_argument('-v', '--max-velocity', type=float, default=6)
-    parser_de.add_argument('-m', '--mutation-chance', type=float, default=0.1)
+    parser_de.add_argument('-m', '--max-velocity', type=float, default=6)
+    parser_de.add_argument('--mutation-chance', type=float, default=0.1)
     parser_de.add_argument('-c', '--crossover-rate', type=float, default=0.5)
-    parser_de.add_argument('-e', '--evaluator', choices=['RANDOM', 'FIXED'], default='RANDOM')
+    parser_de.add_argument('-a', '--evaluator', choices=['RANDOM', 'FIXED'], default='RANDOM')
 
     args = parser.parse_args()
 
@@ -125,36 +132,65 @@ if __name__ == '__main__':
     else:
         config = config_class.load_args(args)
 
+    results = {
+        'info': {
+            'command': os.path.basename(sys.argv[0]) + " " + " ".join(sys.argv[1:]),
+            'datetime': str(datetime.datetime.now()),
+            'instance': instance,
+            'config_id': args.config_id,
+            'instance_id': args.instance_id,
+            'seed': args.seed,
+            'config': config,
+            'results_name': args.results_name,
+            'algorithm': args.algorithm,
+        },
+    }
+
     if args.algorithm == 'ppa_d':
+        results['info']['multiobjective'] = False
         label = 'PPAB'
-        results = run_method(prey_predator_algorithm_discrete, fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')
+        results['data'] = run_method(prey_predator_algorithm_discrete, fitness, instance, config, args.repetitions, verbose=args.verbose, seed=args.seed, result_format='full')
     elif args.algorithm == 'ppa_c':
+        results['info']['multiobjective'] = False
         label = 'PPAC'
-        results = run_method(prey_predator_algorithm_continuous, fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')
+        results['data'] = run_method(prey_predator_algorithm_continuous, fitness, instance, config, args.repetitions, verbose=args.verbose, seed=args.seed, result_format='full')
     elif args.algorithm == 'pso':
+        results['info']['multiobjective'] = False
         label = 'PSO'
-        results = run_method(particle_swarm_optmization, fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')
+        results['data'] = run_method(particle_swarm_optmization, fitness, instance, config, args.repetitions, verbose=args.verbose, seed=args.seed, result_format='full')
     elif args.algorithm == 'ga':
+        results['info']['multiobjective'] = False
         label = 'GA'
-        results = run_method(genetic_algorithm, fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')
+        results['data'] = run_method(genetic_algorithm, fitness, instance, config, args.repetitions, verbose=args.verbose, seed=args.seed, result_format='full')
     elif args.algorithm == 'de':
+        results['info']['multiobjective'] = False
         label = 'DE'
-        results = run_method(differential_evolution, fitness, instance, config, args.repetitions, seed=args.seed, result_format='full')
+        results['data'] = run_method(differential_evolution, fitness, instance, config, args.repetitions, verbose=args.verbose, seed=args.seed, result_format='full')
     elif args.algorithm == 'nsga_ii':
-        label = 'GA'
-        results = run_method(nsga_ii, multi_fitness, instance, config, args.repetitions, num_objectives=args.num_objectives, seed=args.seed, result_format='full')
+        results['info']['multiobjective'] = True
+        results['info']['num_objectives'] = args.num_objectives
+        label = 'NSGA-II'
+        instance.num_learners = 1
+        results['data'] = run_multiobjective_method(nsga_ii, multi_fitness, instance, config, args.repetitions, verbose=args.verbose, num_objectives=args.num_objectives, seed=args.seed, result_format='full')
+        # instance.num_materials = 20
+        # results = run_multiobjective_method(nsga_ii, fitness_sch, instance, config, args.repetitions, num_objectives=args.num_objectives, seed=args.seed, result_format='full')
 
-    mean_best_fitness = np.mean(results[2], axis=(0, 1))
-    mean_partial_fitness = np.mean(results[3], axis=(0, 1))
 
-    print(mean_best_fitness[-1])
+    os.makedirs(os.path.dirname(args.results_name), exist_ok=True)
+    with open(args.results_name, 'wb') as file:
+        pickle.dump(results, file)
 
-    if args.show:
-        fig = plt.figure()
-        fig.suptitle('%s: best fitness' % label)
-        plt.plot(results[1], mean_best_fitness, label=label)
-        plt.legend(loc=1)
-        plt.show()
+    # mean_best_fitness = np.mean(results[2], axis=(0, 1))
+    # mean_partial_fitness = np.mean(results[3], axis=(0, 1))
+    #
+    # print(mean_best_fitness[-1])
+    #
+    # if args.show:
+    #     fig = plt.figure()
+    #     fig.suptitle('%s: best fitness' % label)
+    #     plt.plot(results[1], mean_best_fitness, label=label)
+    #     plt.legend(loc=1)
+    #     plt.show()
 
     # if args.show:
     #     fig = plt.figure()

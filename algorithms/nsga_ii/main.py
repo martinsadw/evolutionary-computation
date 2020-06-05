@@ -30,7 +30,7 @@ def nsga_ii(instance, config, fitness_function, out_info=None, **kwargs):
 
     if out_info is not None:
         out_info['best_fitness'] = []
-        out_info['partial_fitness'] = []
+        out_info['population_fitness'] = []
         out_info['perf_counter'] = []
         out_info['process_time'] = []
         out_info['cost_value'] = []
@@ -45,7 +45,7 @@ def nsga_ii(instance, config, fitness_function, out_info=None, **kwargs):
 
         if out_info is not None:
             out_info['best_fitness'].append([])
-            out_info['partial_fitness'].append([])
+            out_info['population_fitness'].append([])
             out_info['perf_counter'].append([])
             out_info['process_time'].append([])
             out_info['cost_value'].append([])
@@ -53,8 +53,8 @@ def nsga_ii(instance, config, fitness_function, out_info=None, **kwargs):
         timer = Timer()
 
         population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
-        population_best_individual = population[0]
-        population_best_fitness = np.array(counter_fitness(population[0], instance, student, timer, **kwargs))
+        print(population)
+        population_best_fitness = sum(counter_fitness(population[0], instance, student, timer, **kwargs))
 
         survival_values = np.apply_along_axis(counter_fitness, 1, population, instance, student, timer, **kwargs)
         sorted_fronts = sort_nondominated(survival_values, sign=-1)
@@ -70,11 +70,19 @@ def nsga_ii(instance, config, fitness_function, out_info=None, **kwargs):
                (not config.max_stagnation or stagnation_counter < config.max_stagnation)):
             timer.add_time()
 
+            cur_best = np.min(np.sum(survival_values, axis=1))
+            if cur_best < population_best_fitness:
+                population_best_fitness = cur_best
+                stagnation_counter = 0
+            else:
+                stagnation_counter += 1
+            print(population_best_fitness)
+
             iteration_counter += 1
 
             if out_info is not None:
                 out_info['best_fitness'][-1].append(population_best_fitness)
-                fitness_function(population_best_individual, instance, student, timer, data=out_info['partial_fitness'][-1], **kwargs)
+                out_info['population_fitness'][-1].append(survival_values)
                 out_info['perf_counter'][-1].append(time.perf_counter() - start_perf_counter)
                 out_info['process_time'][-1].append(time.process_time() - start_process_time)
                 out_info['cost_value'][-1].append(cost_counter)
@@ -86,10 +94,6 @@ def nsga_ii(instance, config, fitness_function, out_info=None, **kwargs):
                 selection_spots = int(3 * math.ceil(remaining_spots / 3.)) * 3
             else:
                 selection_spots = int(2 * math.ceil(remaining_spots / 2.))
-
-            # print(population.shape)
-            # print(survival_values.shape)
-            # print(selection_spots)
 
             parents = selection_gene(population, survival_values, selection_spots, Selection.NSGA_II_SELECTION, config, crowding_dist=distance)
             children = crossover_gene(parents, config.crossover_method, config)
@@ -120,16 +124,13 @@ def nsga_ii(instance, config, fitness_function, out_info=None, **kwargs):
             survival_values = new_survival_values[:population_size]
             distance = new_distance[:population_size]
 
-            res = np.sum(survival_values, axis=1)
-            print(np.min(res))
-
         if out_info is not None:
             out_info['best_fitness'][-1].append(population_best_fitness)
-            fitness_function(population_best_individual, instance, student, timer, data=out_info['partial_fitness'][-1], **kwargs)
+            out_info['population_fitness'][-1].append(survival_values)
             out_info['perf_counter'][-1].append(time.perf_counter() - start_perf_counter)
             out_info['process_time'][-1].append(time.process_time() - start_process_time)
             out_info['cost_value'][-1].append(cost_counter)
 
-        results.append((population_best_individual, population_best_fitness))
+        results.append((population, survival_values))
 
     return results
