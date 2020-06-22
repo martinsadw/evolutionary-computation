@@ -20,7 +20,7 @@ from algorithms.ga.crossover import crossover_gene, Crossover
 from algorithms.ga.mutation import mutation_gene
 
 
-def nsga_ii(instance, config, fitness_function, out_info=None, **kwargs):
+def nsga_ii(instance, config, fitness_function, out_info=None, verbose=False, **kwargs):
     population_size = config.population_size
 
     def counter_fitness(individual, instance, student, timer, print_results=False, data=None, **kwargs):
@@ -38,7 +38,9 @@ def nsga_ii(instance, config, fitness_function, out_info=None, **kwargs):
     results = []
 
     for student in range(instance.num_learners):
-        print('\n\n\n\n---------------------------------------------\n\n\n\nNew Student')
+        if verbose:
+            print('[NSGA-II] Students progress: %d / %d (%d%%)' % (student + 1, instance.num_learners, (student + 1) * 100 / instance.num_learners))
+
         cost_counter = 0
         iteration_counter = 0
         stagnation_counter = 0
@@ -53,7 +55,6 @@ def nsga_ii(instance, config, fitness_function, out_info=None, **kwargs):
         timer = Timer()
 
         population = np.random.randint(2, size=(population_size, instance.num_materials), dtype=bool)
-        print(population)
         population_best_fitness = sum(counter_fitness(population[0], instance, student, timer, **kwargs))
 
         survival_values = np.apply_along_axis(counter_fitness, 1, population, instance, student, timer, **kwargs)
@@ -76,7 +77,6 @@ def nsga_ii(instance, config, fitness_function, out_info=None, **kwargs):
                 stagnation_counter = 0
             else:
                 stagnation_counter += 1
-            print(population_best_fitness)
 
             iteration_counter += 1
 
@@ -106,7 +106,6 @@ def nsga_ii(instance, config, fitness_function, out_info=None, **kwargs):
             new_population = np.append(population, mutated, axis=0)
             new_survival_values = np.append(survival_values, new_survival_values, axis=0)
 
-            print('----------------------')
             sorted_fronts = sort_nondominated(new_survival_values, sign=-1)
 
             new_distance = np.zeros((new_survival_values.shape[0],))

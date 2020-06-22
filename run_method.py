@@ -170,7 +170,7 @@ if __name__ == '__main__':
         results['info']['multiobjective'] = True
         results['info']['num_objectives'] = args.num_objectives
         label = 'NSGA-II'
-        instance.num_learners = 1
+        # instance.num_learners = 1
         results['data'] = run_multiobjective_method(nsga_ii, multi_fitness, instance, config, args.repetitions, verbose=args.verbose, num_objectives=args.num_objectives, seed=args.seed, result_format='full')
         # instance.num_materials = 20
         # results = run_multiobjective_method(nsga_ii, fitness_sch, instance, config, args.repetitions, num_objectives=args.num_objectives, seed=args.seed, result_format='full')

@@ -40,7 +40,7 @@ def dominates(obj1, obj2, sign=None):
     return indicator
 
 
-def sort_nondominated(fitness, k=None, first_front_only=False, sign=None):
+def sort_nondominated(fitness, k=None, first_front_only=False, include_repetition=True, sign=None):
     """Sort the first *k* *individuals* into different nondomination levels
         using the "Fast Nondominated Sorting Approach" proposed by Deb et al.,
         see [Deb2002]_. This algorithm has a time complexity of :math:`O(MN^2)`,
@@ -66,8 +66,6 @@ def sort_nondominated(fitness, k=None, first_front_only=False, sign=None):
         map_fit_ind[tuple(f_value)].append(i)
     fits = list(map_fit_ind.keys())  # fitness values
 
-    # print('economia:', k - len(fits))
-
     current_front = []
     next_front = []
     dominating_fits = defaultdict(int)  # n (The number of people dominate you)
@@ -89,7 +87,10 @@ def sort_nondominated(fitness, k=None, first_front_only=False, sign=None):
 
     fronts = [[]]  # The first front
     for fit in current_front:
-        fronts[-1].extend(map_fit_ind[fit])
+        if include_repetition:
+            fronts[-1].extend(map_fit_ind[fit])
+        else:
+            fronts[-1].append(map_fit_ind[fit][0])
     pareto_sorted = len(fronts[-1])
 
     # Rank the next front until all individuals are sorted or
@@ -107,7 +108,11 @@ def sort_nondominated(fitness, k=None, first_front_only=False, sign=None):
                         next_front.append(fit_d)
                          # Count and append chromosomes with same objectives
                         pareto_sorted += len(map_fit_ind[fit_d])
-                        fronts[-1].extend(map_fit_ind[fit_d])
+
+                        if include_repetition:
+                            fronts[-1].extend(map_fit_ind[fit_d])
+                        else:
+                            fronts[-1].append(map_fit_ind[fit_d][0])
             current_front = next_front
             next_front = []
 

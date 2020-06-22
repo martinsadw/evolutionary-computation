@@ -224,19 +224,8 @@ def fitness_population(population, instance, student, timer, print_results=False
 
     return survival_values
 
-def multi_fitness(individual, instance, student, timer, print_results=False, data=None, num_objectives=5, **kwargs):
-    concepts_covered_objective = concepts_covered_function(individual, instance, student, timer)
-    difficulty_objective = difficulty_function(individual, instance, student, timer)
-    total_time_objective = total_time_function(individual, instance, student)
-    materials_balancing_objective = materials_balancing_function(individual, instance, student)
-    learning_style_objective = learning_style_function(individual, instance, student)
 
-    objective = (instance.concepts_covered_weight * concepts_covered_objective,
-                 instance.difficulty_weight * difficulty_objective,
-                 instance.total_time_weight * total_time_objective,
-                 instance.materials_balancing_weight * materials_balancing_objective,
-                 instance.learning_style_weight * learning_style_objective)
-
+def reduce_objectives(objective, num_objectives):
     if num_objectives == 1:
         objective = (objective[0] + objective[1] + objective[2] + objective[3] + objective[4],)
     if num_objectives == 2:
@@ -253,6 +242,24 @@ def multi_fitness(individual, instance, student, timer, print_results=False, dat
                      objective[2] + objective[3])
     # if num_objectives == 5:
     #     pass
+
+    return objective
+
+
+def multi_fitness(individual, instance, student, timer, print_results=False, data=None, num_objectives=5, **kwargs):
+    concepts_covered_objective = concepts_covered_function(individual, instance, student, timer)
+    difficulty_objective = difficulty_function(individual, instance, student, timer)
+    total_time_objective = total_time_function(individual, instance, student)
+    materials_balancing_objective = materials_balancing_function(individual, instance, student)
+    learning_style_objective = learning_style_function(individual, instance, student)
+
+    objective = (instance.concepts_covered_weight * concepts_covered_objective,
+                 instance.difficulty_weight * difficulty_objective,
+                 instance.total_time_weight * total_time_objective,
+                 instance.materials_balancing_weight * materials_balancing_objective,
+                 instance.learning_style_weight * learning_style_objective)
+
+    objective = reduce_objectives(objective, num_objectives)
 
     if data is not None:
         data.append(objective)
