@@ -1,5 +1,7 @@
 import configparser
 
+from utils.misc import set_default
+
 
 class Config:
     def __init__(self):
@@ -7,18 +9,18 @@ class Config:
         self.num_iterations = None
         self.max_stagnation = None
 
-        self.population_size = 1
+        self.population_size = 10
 
-        self.follow_distance_parameter = 1
-        self.follow_survival_parameter = 1
+        self.follow_distance_parameter = 0.6
+        self.follow_survival_parameter = 0.9
 
-        self.min_steps = 1
-        self.max_steps = 1
-        self.steps_distance_parameter = 1
+        self.min_steps = 10
+        self.max_steps = 15
+        self.steps_distance_parameter = 0.5
 
-        self.local_search_tries = 1
+        self.local_search_tries = 10
 
-        self.follow_chance = 0.5
+        self.follow_chance = 0.6
 
     @classmethod
     def load_from_file(cls, config_filename):
@@ -73,24 +75,19 @@ class Config:
 
         return config
 
-    @classmethod
-    def load_args(cls, args):
-        config = cls()
+    def update_from_args(self, args):
+        self.cost_budget = set_default(args.cost_budget, self.cost_budget)
+        self.num_iterations = set_default(args.num_iterations, self.num_iterations)
+        self.max_stagnation = set_default(args.max_stagnation, self.max_stagnation)
+        self.population_size = set_default(args.population, self.population_size)
 
-        config.cost_budget = args.cost_budget
-        config.num_iterations = args.num_iterations
-        config.max_stagnation = args.max_stagnation
-        config.population_size = args.population
+        self.follow_distance_parameter = set_default(args.distance_influence, self.follow_distance_parameter)
+        self.follow_survival_parameter = set_default(args.survival_influence, self.follow_survival_parameter)
 
-        config.follow_distance_parameter = args.distance_influence
-        config.follow_survival_parameter = args.survival_influence
+        self.min_steps = set_default(args.min_steps, self.min_steps)
+        self.max_steps = set_default(args.max_steps, self.max_steps)
+        self.steps_distance_parameter = set_default(args.steps_distance, self.steps_distance_parameter)
 
-        config.min_steps = args.min_steps
-        config.max_steps = args.max_steps
-        config.steps_distance_parameter = args.steps_distance
+        self.local_search_tries = set_default(args.local_search, self.local_search_tries)
 
-        config.local_search_tries = args.local_search
-
-        config.follow_chance = args.follow_chance
-
-        return config
+        self.follow_chance = set_default(args.follow_chance, self.follow_chance)

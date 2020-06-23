@@ -1,6 +1,8 @@
 from enum import Enum
 import configparser
 
+from utils.misc import set_default
+
 
 class Evaluator(Enum):
     RANDOM_EVALUATOR = 1
@@ -13,21 +15,21 @@ class Config:
         self.num_iterations = None
         self.max_stagnation = None
 
-        self.population_size = 1
+        self.population_size = 20
         self.max_position = 1
 
-        self.follow_distance_parameter = 1
-        self.follow_survival_parameter = 1
+        self.follow_distance_parameter = 0.5
+        self.follow_survival_parameter = 0.7
 
-        self.min_steps = 1
-        self.max_steps = 1
-        self.steps_distance_parameter = 1
+        self.min_steps = 2
+        self.max_steps = 50
+        self.steps_distance_parameter = 0.2
 
-        self.local_search_tries = 1
+        self.local_search_tries = 10
 
-        self.follow_chance = 0.5
+        self.follow_chance = 1
 
-        self.evaluator = Evaluator.RANDOM_EVALUATOR
+        self.evaluator = Evaluator.FIXED_EVALUATOR
 
     @classmethod
     def load_from_file(cls, config_filename):
@@ -85,28 +87,24 @@ class Config:
 
         return config
 
-    @classmethod
-    def load_args(cls, args):
-        config = cls()
+    def update_from_args(self, args):
+        self.max_position = set_default(args.max_velocity, self.max_position)
 
-        config.max_position = args.max_velocity
+        self.cost_budget = set_default(args.cost_budget, self.cost_budget)
+        self.num_iterations = set_default(args.num_iterations, self.num_iterations)
+        self.max_stagnation = set_default(args.max_stagnation, self.max_stagnation)
+        self.population_size = set_default(args.population, self.population_size)
 
-        config.cost_budget = args.cost_budget
-        config.num_iterations = args.num_iterations
-        config.max_stagnation = args.max_stagnation
-        config.population_size = args.population
+        self.follow_distance_parameter = set_default(args.distance_influence, self.follow_distance_parameter)
+        self.follow_survival_parameter = set_default(args.survival_influence, self.follow_survival_parameter)
 
-        config.follow_distance_parameter = args.distance_influence
-        config.follow_survival_parameter = args.survival_influence
+        self.min_steps = set_default(args.min_steps, self.min_steps)
+        self.max_steps = set_default(args.max_steps, self.max_steps)
+        self.steps_distance_parameter = set_default(args.steps_distance, self.steps_distance_parameter)
 
-        config.min_steps = args.min_steps
-        config.max_steps = args.max_steps
-        config.steps_distance_parameter = args.steps_distance
+        self.local_search_tries = set_default(args.local_search, self.local_search_tries)
 
-        config.local_search_tries = args.local_search
+        self.follow_chance = set_default(args.follow_chance, self.follow_chance)
 
-        config.follow_chance = args.follow_chance
-
-        config.evaluator = Evaluator[args.evaluator + '_EVALUATOR']
-
-        return config
+        if args.evaluator is not None:
+            self.evaluator = Evaluator[args.evaluator + '_EVALUATOR']

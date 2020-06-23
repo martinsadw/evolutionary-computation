@@ -65,3 +65,7 @@ def improve_population(old_population, old_fitness, new_population, new_fitness)
     best_fitness = np.where(improve_mask, new_fitness, old_fitness)
 
     return (best_population, best_fitness)
+
+
+def set_default(value, default):
+    return value if value is not None else default

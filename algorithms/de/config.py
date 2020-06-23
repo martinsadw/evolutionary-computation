@@ -1,6 +1,8 @@
 import configparser
 from enum import Enum
 
+from utils.misc import set_default
+
 
 class Evaluator(Enum):
     RANDOM_EVALUATOR = 1
@@ -15,11 +17,11 @@ class Config:
         self.num_iterations = None
         self.max_stagnation = None
 
-        self.population_size = 1
-        self.mutation_chance = 0.8
-        self.crossover_rate = 0.9
+        self.population_size = 20
+        self.mutation_chance = 0.2
+        self.crossover_rate = 0.05
 
-        self.evaluator = Evaluator.RANDOM_EVALUATOR
+        self.evaluator = Evaluator.FIXED_EVALUATOR
 
     @classmethod
     def load_from_file(cls, config_filename):
@@ -58,6 +60,7 @@ class Config:
         config.cost_budget = 12000
         config.num_iterations = 600
         config.max_stagnation = 100
+
         config.population_size = 20
         config.mutation_chance = 0.8
         config.crossover_rate = 0.9
@@ -66,19 +69,16 @@ class Config:
 
         return config
 
-    @classmethod
-    def load_args(cls, args):
-        config = cls()
+    def update_from_args(self, args):
+        self.max_velocity = set_default(args.max_velocity, self.max_velocity)
 
-        config.max_velocity = args.max_velocity
+        self.cost_budget = set_default(args.cost_budget, self.cost_budget)
+        self.num_iterations = set_default(args.num_iterations, self.num_iterations)
+        self.max_stagnation = set_default(args.max_stagnation, self.max_stagnation)
 
-        config.cost_budget = args.cost_budget
-        config.num_iterations = args.num_iterations
-        config.max_stagnation = args.max_stagnation
-        config.population_size = args.population
-        config.mutation_chance = args.mutation_chance
-        config.crossover_rate = args.crossover_rate
+        self.population_size = set_default(args.population, self.population_size)
+        self.mutation_chance = set_default(args.mutation_chance, self.mutation_chance)
+        self.crossover_rate = set_default(args.crossover_rate, self.crossover_rate)
 
-        config.evaluator = Evaluator[args.evaluator + '_EVALUATOR']
-
-        return config
+        if args.evaluator is not None:
+            self.evaluator = Evaluator[args.evaluator + '_EVALUATOR']

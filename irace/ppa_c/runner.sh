@@ -1,1 +1,1 @@
-python3 -m irace.test ppa_c $@ -b 100000
+python3 -m run_method ppa_c $@ -b 100000

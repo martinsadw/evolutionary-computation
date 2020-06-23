@@ -15,7 +15,7 @@ from algorithms.ppa_c.config import Config, Evaluator
 from algorithms.ppa_c.population_movement import move_population_direction, move_population_random, move_population_random_complement, move_population_local_search
 
 
-def prey_predator_algorithm_continuous(instance, config, fitness_function, out_info=None):
+def prey_predator_algorithm_continuous(instance, config, fitness_function, out_info=None, verbose=False):
     population_size = config.population_size
 
     if config.max_steps > instance.num_materials:
@@ -44,6 +44,8 @@ def prey_predator_algorithm_continuous(instance, config, fitness_function, out_i
     results = []
 
     for student in range(instance.num_learners):
+        if verbose:
+            print('[PPAC] Students progress: %d / %d (%d%%)' % (student + 1, instance.num_learners, (student + 1) * 100 / instance.num_learners))
         cost_counter = 0
         iteration_counter = 0
         stagnation_counter = 0

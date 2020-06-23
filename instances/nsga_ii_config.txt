@@ -1,0 +1,11 @@
+[section]
+
+acs.nsgaii.crossoverMethod = UNIFORM_CROSSOVER
+acs.nsgaii.mutationMethod = SINGLE_BIT_INVERSION_MUTATION
+
+acs.nsgaii.costBudget = 12000
+;acs.nsgaii.numIterations = 600
+;acs.nsgaii.maxStagnation = 100
+acs.nsgaii.populationSize = 50
+
+acs.nsgaii.mutationChance = 0.01

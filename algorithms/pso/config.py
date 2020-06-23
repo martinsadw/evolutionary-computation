@@ -1,6 +1,8 @@
 from enum import Enum
 import configparser
 
+from utils.misc import set_default
+
 
 class Evaluator(Enum):
     RANDOM_EVALUATOR = 1
@@ -9,17 +11,17 @@ class Evaluator(Enum):
 
 class Config:
     def __init__(self):
-        self.max_velocity = 1
+        self.max_velocity = 6
 
         self.cost_budget = None
         self.num_iterations = None
         self.max_stagnation = None
 
-        self.num_particles = 1
+        self.num_particles = 20
 
-        self.inertia_parameter = 1
-        self.local_influence_parameter = 1
-        self.global_influence_parameter = 1
+        self.inertia_parameter = 1.3
+        self.local_influence_parameter = 4.1
+        self.global_influence_parameter = 2.5
 
         self.evaluator = Evaluator.RANDOM_EVALUATOR
 
@@ -70,21 +72,17 @@ class Config:
 
         return config
 
-    @classmethod
-    def load_args(cls, args):
-        config = cls()
+    def update_from_args(self, args):
+        self.max_velocity = set_default(args.max_velocity, self.max_velocity)
 
-        config.max_velocity = args.max_velocity
+        self.cost_budget = set_default(args.cost_budget, self.cost_budget)
+        self.num_iterations = set_default(args.num_iterations, self.num_iterations)
+        self.max_stagnation = set_default(args.max_stagnation, self.max_stagnation)
+        self.num_particles = set_default(args.population, self.num_particles)
 
-        config.cost_budget = args.cost_budget
-        config.num_iterations = args.num_iterations
-        config.max_stagnation = args.max_stagnation
-        config.num_particles = args.population
+        self.inertia_parameter = set_default(args.inertia, self.inertia_parameter)
+        self.local_influence_parameter = set_default(args.local_influence, self.local_influence_parameter)
+        self.global_influence_parameter = set_default(args.global_influence, self.global_influence_parameter)
 
-        config.inertia_parameter = args.inertia
-        config.local_influence_parameter = args.local_influence
-        config.global_influence_parameter = args.global_influence
-
-        config.evaluator = Evaluator[args.evaluator + '_EVALUATOR']
-
-        return config
+        if args.evaluator is not None:
+            self.evaluator = Evaluator[args.evaluator + '_EVALUATOR']

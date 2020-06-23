@@ -1,3 +1,3 @@
 @echo off
 cls
-python -m irace.test ppa_d %* -b 12000
+python -m run_method ppa_d %* -b 100000

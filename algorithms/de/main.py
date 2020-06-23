@@ -14,7 +14,7 @@ from utils.misc import evaluate_population_random, evaluate_population_fixed
 from algorithms.de.config import Config, Evaluator
 
 
-def differential_evolution(instance, config, fitness_function, out_info=None):
+def differential_evolution(instance, config, fitness_function, out_info=None, verbose=False):
     population_size = config.population_size
 
     if config.evaluator == Evaluator.FIXED_EVALUATOR:
@@ -37,6 +37,8 @@ def differential_evolution(instance, config, fitness_function, out_info=None):
     results = []
 
     for student in range(instance.num_learners):
+        if verbose:
+            print('[DE] Students progress: %d / %d (%d%%)' % (student + 1, instance.num_learners, (student + 1) * 100 / instance.num_learners))
         cost_counter = 0
         iteration_counter = 0
         stagnation_counter = 0

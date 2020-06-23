@@ -13,7 +13,7 @@ from utils.misc import sigmoid, evaluate_population_random, evaluate_population_
 from algorithms.pso.config import Config, Evaluator
 
 
-def particle_swarm_optmization(instance, config, fitness_function, out_info=None):
+def particle_swarm_optmization(instance, config, fitness_function, out_info=None, verbose=False):
     num_particles = config.num_particles
 
     if config.evaluator == Evaluator.FIXED_EVALUATOR:
@@ -36,6 +36,8 @@ def particle_swarm_optmization(instance, config, fitness_function, out_info=None
     results = []
 
     for student in range(instance.num_learners):
+        if verbose:
+            print('[PSO] Students progress: %d / %d (%d%%)' % (student + 1, instance.num_learners, (student + 1) * 100 / instance.num_learners))
         cost_counter = 0
         iteration_counter = 0
         stagnation_counter = 0

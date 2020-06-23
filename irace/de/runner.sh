@@ -1,1 +1,1 @@
-python3 -m irace.test de $@ -b 100000
+python3 -m run_method de $@ -b 100000

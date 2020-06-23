@@ -1,3 +1,3 @@
 @echo off
 cls
-python -m irace.test pso %* -b 12000
+python -m run_method pso %* -b 100000

@@ -20,7 +20,7 @@ def run_method(method_function, fitness_function, instance, config, num_repetiti
 
         np.random.seed(seed + i)
         random.seed(seed + i)
-        results = method_function(instance, config, fitness_function, out_info=out_info, **kwargs)
+        results = method_function(instance, config, fitness_function, out_info=out_info, verbose=verbose, **kwargs)
 
         for j, result in enumerate(results):
             selected_materials[i, j] = result[0]

@@ -1,1 +1,1 @@
-python3 -m irace.test pso $@ -b 100000
+python3 -m run_method pso $@ -b 100000

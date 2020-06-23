@@ -16,7 +16,7 @@ from algorithms.ppa_d.config import Config
 from algorithms.ppa_d.population_movement import move_population_roulette, move_population_direction, move_population_random, move_population_random_complement, move_population_local_search
 
 
-def prey_predator_algorithm_discrete(instance, config, fitness_function, out_info=None):
+def prey_predator_algorithm_discrete(instance, config, fitness_function, out_info=None, verbose=False):
     population_size = config.population_size
 
     if config.max_steps > instance.num_materials:
@@ -40,6 +40,8 @@ def prey_predator_algorithm_discrete(instance, config, fitness_function, out_inf
     results = []
 
     for student in range(instance.num_learners):
+        if verbose:
+            print('[PPAD] Students progress: %d / %d (%d%%)' % (student + 1, instance.num_learners, (student + 1) * 100 / instance.num_learners))
         cost_counter = 0
         iteration_counter = 0
         stagnation_counter = 0

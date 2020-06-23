@@ -20,7 +20,7 @@ from algorithms.ga.crossover import crossover_gene, Crossover
 from algorithms.ga.mutation import mutation_gene
 
 
-def genetic_algorithm(instance, config, fitness_function, out_info=None):
+def genetic_algorithm(instance, config, fitness_function, out_info=None, verbose=False):
     population_size = config.population_size
 
     def counter_fitness(individual, instance, student, timer, print_results=False, data=None):
@@ -38,7 +38,8 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
     results = []
 
     for student in range(instance.num_learners):
-        print('\n\n\n\n---------------------------------------------\n\n\n\nNew Student')
+        if verbose:
+            print('[GA] Students progress: %d / %d (%d%%)' % (student + 1, instance.num_learners, (student + 1) * 100 / instance.num_learners))
         cost_counter = 0
         iteration_counter = 0
         stagnation_counter = 0
@@ -64,7 +65,6 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
             timer.add_time()
             survival_values = np.apply_along_axis(counter_fitness, 1, population, instance, student, timer)
 
-            print('----------------------')
             sorted_indices = np.argsort(survival_values)
             population = population[sorted_indices]
             survival_values = survival_values[sorted_indices]
@@ -76,8 +76,6 @@ def genetic_algorithm(instance, config, fitness_function, out_info=None):
                 stagnation_counter = 0
             else:
                 stagnation_counter += 1
-
-            print(population_best_fitness)
 
             iteration_counter += 1
 

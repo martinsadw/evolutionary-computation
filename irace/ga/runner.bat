@@ -1,3 +1,3 @@
 @echo off
 cls
-python -m irace.test ga %* -b 12000
+python -m run_method ga %* -b 100000
