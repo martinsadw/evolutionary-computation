@@ -246,7 +246,7 @@ def reduce_objectives(objective, num_objectives):
     return objective
 
 
-def multi_fitness(individual, instance, student, timer, print_results=False, data=None, num_objectives=5, **kwargs):
+def multi_fitness(individual, instance, student, timer, print_results=False, data=None, num_objectives=None, **kwargs):
     concepts_covered_objective = concepts_covered_function(individual, instance, student, timer)
     difficulty_objective = difficulty_function(individual, instance, student, timer)
     total_time_objective = total_time_function(individual, instance, student)
@@ -259,7 +259,8 @@ def multi_fitness(individual, instance, student, timer, print_results=False, dat
                  instance.materials_balancing_weight * materials_balancing_objective,
                  instance.learning_style_weight * learning_style_objective)
 
-    objective = reduce_objectives(objective, num_objectives)
+    if num_objectives is not None:
+        objective = reduce_objectives(objective, num_objectives)
 
     if data is not None:
         data.append(objective)

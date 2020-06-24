@@ -45,9 +45,9 @@ class Instance:
         instance.materials = course.learning_materials
         instance.learners = course.learners
 
-        instance.concepts_keys = [concept for concept in course.concepts]
-        instance.materials_keys = [material for material in course.learning_materials]
-        instance.learners_keys = [learner for learner in course.learners]
+        instance.concepts_keys = sorted(course.concepts.keys())
+        instance.materials_keys = sorted(course.learning_materials.keys())
+        instance.learners_keys = sorted(course.learners.keys())
 
         instance.num_concepts = len(course.concepts)
         instance.num_materials = len(course.learning_materials)
@@ -72,36 +72,35 @@ class Instance:
                 except (KeyError, TypeError):
                     instance.objectives[learner, concept] = False
 
-        instance.duration_min = np.array([course.learners[learner].lower_time for learner in course.learners])
+        instance.duration_min = np.array([course.learners[learner].lower_time for learner in instance.learners_keys])
 
-        instance.duration_max = np.array([course.learners[learner].upper_time for learner in course.learners])
+        instance.duration_max = np.array([course.learners[learner].upper_time for learner in instance.learners_keys])
 
-        instance.student_active_reflexive = np.array([course.learners[learner].active_reflexive for learner in course.learners])
+        instance.student_active_reflexive = np.array([course.learners[learner].active_reflexive for learner in instance.learners_keys])
 
-        instance.student_sensory_intuitive = np.array([course.learners[learner].sensory_intuitive for learner in course.learners])
+        instance.student_sensory_intuitive = np.array([course.learners[learner].sensory_intuitive for learner in instance.learners_keys])
 
-        instance.student_visual_verbal = np.array([course.learners[learner].visual_verbal for learner in course.learners])
+        instance.student_visual_verbal = np.array([course.learners[learner].visual_verbal for learner in instance.learners_keys])
 
-        instance.student_sequential_global = np.array([course.learners[learner].sequential_global for learner in course.learners])
+        instance.student_sequential_global = np.array([course.learners[learner].sequential_global for learner in instance.learners_keys])
 
-        instance.materials_difficulty = np.array([course.learning_materials[material].difficulty for material in course.learning_materials])
+        instance.materials_difficulty = np.array([course.learning_materials[material].difficulty for material in instance.materials_keys])
 
         instance.concepts_materials = np.zeros((instance.num_concepts, instance.num_materials), dtype=bool)
         for material in range(instance.num_materials):
             for concept in range(instance.num_concepts):
                 if instance.concepts_keys[concept] in course.material_coverage[instance.materials_keys[material]]:
                     instance.concepts_materials[concept, material] = True
-        # instance.concepts_materials = np.array([course.concepts[concept].learning_materials for concept in course.concepts])
 
-        instance.estimated_time = np.array([course.learning_materials[material].typical_learning_time for material in course.learning_materials])
+        instance.estimated_time = np.array([course.learning_materials[material].typical_learning_time for material in instance.materials_keys])
 
-        instance.materials_active_reflexive = np.array([course.learning_materials[material].active_reflexive for material in course.learning_materials])
-        instance.materials_sensory_intuitive = np.array([course.learning_materials[material].sensory_intuitive for material in course.learning_materials])
-        instance.materials_visual_verbal = np.array([course.learning_materials[material].visual_verbal for material in course.learning_materials])
-        instance.materials_sequential_global = np.array([course.learning_materials[material].sequential_global for material in course.learning_materials])
-        instance.materials_learning_resource_types = [course.learning_materials[material].learning_resource_types for material in course.learning_materials]
-        instance.materials_interactivity_level = [course.learning_materials[material].interactivity_level for material in course.learning_materials]
-        instance.materials_interactivity_type = [course.learning_materials[material].interactivity_type for material in course.learning_materials]
+        instance.materials_active_reflexive = np.array([course.learning_materials[material].active_reflexive for material in instance.materials_keys])
+        instance.materials_sensory_intuitive = np.array([course.learning_materials[material].sensory_intuitive for material in instance.materials_keys])
+        instance.materials_visual_verbal = np.array([course.learning_materials[material].visual_verbal for material in instance.materials_keys])
+        instance.materials_sequential_global = np.array([course.learning_materials[material].sequential_global for material in instance.materials_keys])
+        instance.materials_learning_resource_types = [course.learning_materials[material].learning_resource_types for material in instance.materials_keys]
+        instance.materials_interactivity_level = [course.learning_materials[material].interactivity_level for material in instance.materials_keys]
+        instance.materials_interactivity_type = [course.learning_materials[material].interactivity_type for material in instance.materials_keys]
 
         instance.missing_concepts_coeficient = course.missing_concepts_coeficient
         instance.concepts_covered_weight = course.concepts_covered_weight
