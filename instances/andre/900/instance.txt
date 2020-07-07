@@ -1,0 +1,9 @@
+[section]
+acs.path = .
+acs.path.learningMaterialsLOM = LOM
+
+acs.file.concepts = ../concepts.csv
+acs.file.materialsCoverage = material_coverage.csv
+acs.file.learners = ../learners.csv
+acs.file.learnersScore = ../learners_score.csv
+acs.file.fitnessParameters = fitness_parameters.txt

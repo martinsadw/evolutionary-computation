@@ -1,0 +1,7 @@
+[section]
+acs.fitness.missingConceptsCoeficient = 2
+acs.fitness.conceptsCoveredWeight = 1
+acs.fitness.difficultyWeight = 1
+acs.fitness.totalTimeWeight = 0.00166666666666666666666666666667 ; (1 / 600)
+acs.fitness.materialsBalancingWeight = 1
+acs.fitness.learningStyleWeight = 1
