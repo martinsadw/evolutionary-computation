@@ -7,8 +7,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from utils.roulette import Roulette, roulette_spin
-from generator.concepts_selector import random_concepts_selector, histogram_concepts_selector, roulette_concepts_selector, write_material_coverage_file
-from generator.lom import write_lom_file
+from generate.dataset.concepts_selector import random_concepts_selector, histogram_concepts_selector, roulette_concepts_selector, write_material_coverage_file
+from generate.dataset.lom import write_lom_file
 
 from acs.instance import Instance
 

@@ -6,7 +6,8 @@ import numpy as np
 def read_results(dataset, limit_size=100):
     # (instance, student, individual, function)
     with open(dataset, 'rb') as file:
-        results = pickle.load(file)
+        file_results = pickle.load(file)
+    results = file_results['data']
 
     # Remove 'andre_50'
     results = results[1:, :, :, :]

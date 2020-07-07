@@ -3,7 +3,7 @@ import statsmodels.api as sm
 import matplotlib.pyplot as plt
 import pandas as pd
 
-from process.results import normalized_fitness, normalized_objectives
+from process.comparison import normalized_fitness, normalized_objectives
 
 data = normalized_fitness('results/2020-02-22 - Fitness da população aleatória/random_1000.pickle', limit_size=100)
 data2 = normalized_objectives('results/2020-02-22 - Fitness da população aleatória/random_1000.pickle', limit_size=100)

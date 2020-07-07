@@ -3,12 +3,12 @@ import os
 import pickle
 import sys
 
-from stats.extract import extract_data
+from read.dataset.stats import extract_data
 
-from generator.main import generate_materials
-from generator.concepts_selector import write_material_coverage_file
-from generator.lom import write_lom_file
-from generator.extra import write_instance_file
+from generate.dataset.main import generate_materials
+from generate.dataset.concepts_selector import write_material_coverage_file
+from generate.dataset.lom import write_lom_file
+from generate.dataset.extra import write_instance_file
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

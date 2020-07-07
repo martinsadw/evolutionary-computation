@@ -7,7 +7,7 @@ import pandas as pd
 import seaborn as sns
 from scipy.stats import spearmanr
 
-from process.results import normalized_fitness, normalized_objectives
+from process.comparison import normalized_fitness, normalized_objectives
 
 from pprint import pprint
 

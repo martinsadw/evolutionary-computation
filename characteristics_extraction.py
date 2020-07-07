@@ -4,7 +4,7 @@ import pickle
 import sys
 
 from acs.instance import Instance
-from stats.extract import extract_data
+from read.dataset.stats import extract_data
 
 
 if __name__ == '__main__':
