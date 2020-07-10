@@ -3,9 +3,10 @@ from pprint import pprint
 
 import numpy as np
 
-from acs.objective import fitness, multi_fitness, reduce_objectives
+from acs.objective import multi_fitness
 from utils.multiobjective import dominates, sort_nondominated
 from utils.timer import Timer
+from read.consts import MAX_OBJECTIVES
 
 
 # Compares how many solution obtained by NSGA are dominated by the solution
@@ -37,15 +38,14 @@ with open('results/algorithm_results/ga_real.pickle', 'rb') as file:
 num_repetitions = selected_nsga.shape[0]
 num_students = selected_nsga.shape[1]
 num_individuals = selected_nsga.shape[2]
-num_objectives = 5
 
 # Calculate the fitness value considering all objectives
 # (repetitions, students, individuals, objectives)
 timer = Timer()
 instance_nsga.duration_max[:] = 3600
 instance_ga.duration_max[:] = 3600
-results_ga = np.empty((num_repetitions, num_students, 1, num_objectives))
-results_nsga = np.empty((num_repetitions, num_students, num_individuals, num_objectives))
+results_ga = np.empty((num_repetitions, num_students, 1, MAX_OBJECTIVES))
+results_nsga = np.empty((num_repetitions, num_students, num_individuals, MAX_OBJECTIVES))
 for i in range(num_repetitions):
     for j in range(num_students):
         results_ga[i, j, 0] = multi_fitness(selected_ga[i, j], instance_ga, j, timer)
