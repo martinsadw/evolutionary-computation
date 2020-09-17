@@ -229,17 +229,17 @@ def reduce_objectives(objective, num_objectives):
     if num_objectives == 1:
         objective = (objective[0] + objective[1] + objective[2] + objective[3] + objective[4],)
     if num_objectives == 2:
-        objective = (objective[0],
-                     objective[1] + objective[2] + objective[3] + objective[4])
+        objective = (objective[4],
+                     objective[0] + objective[1] + objective[2] + objective[3])
     if num_objectives == 3:
-        objective = (objective[0],
-                     objective[1],
-                     objective[2] + objective[3] + objective[4])
-    if num_objectives == 4:
-        objective = (objective[0],
-                     objective[1],
+        objective = (objective[1],
                      objective[4],
-                     objective[2] + objective[3])
+                     objective[0] + objective[2] + objective[3])
+    if num_objectives == 4:
+        objective = (objective[1],
+                     objective[3],
+                     objective[4],
+                     objective[0] + objective[2])
     # if num_objectives == 5:
     #     pass
 
