@@ -2,6 +2,8 @@ import warnings
 
 import numpy as np
 
+from utils.timer import Timer
+
 
 INVALID_VALUE = 1000
 
@@ -246,7 +248,9 @@ def reduce_objectives(objective, num_objectives):
     return objective
 
 
-def multi_fitness(individual, instance, student, timer, print_results=False, data=None, num_objectives=None, **kwargs):
+def multi_fitness(individual, instance, student, timer=None, print_results=False, data=None, num_objectives=None, **kwargs):
+    if timer is None:
+        timer = Timer()
     concepts_covered_objective = concepts_covered_function(individual, instance, student, timer)
     difficulty_objective = difficulty_function(individual, instance, student, timer)
     total_time_objective = total_time_function(individual, instance, student)

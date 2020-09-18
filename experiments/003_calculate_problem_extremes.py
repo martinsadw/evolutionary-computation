@@ -7,6 +7,10 @@ from read.algorithm import create_results_name_list
 from process.extremes import get_instances_extremes
 
 
+# Calculates the worst point and the pareto front for each problem using the
+# provided results
+
+
 instances = ['andre_50', 'andre_300', 'andre_1000', 'real']
 algorithms_single = ['ga']
 algorithms_multi = ['nsga_ii']
