@@ -1,5 +1,7 @@
-results/*
+
 temp.py
+
+results/acs_algorithm_results/*
 
 __pycache__/
 *.pyc

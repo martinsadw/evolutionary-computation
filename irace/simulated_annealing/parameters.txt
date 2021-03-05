@@ -1,0 +1,7 @@
+max_iterations            "--max_iterations="         i   (50, 200)
+cycle                     "--cycle="                  i   (0, 10)
+initial_temperature       "--initial_temperature="    r   (100, 10000)
+final_temperature         "--final_temperature="      r   (0.00001, 0.01)
+alpha                     "--alpha="                  r   (0.8, 0.99)
+
+##beta                      "--beta="                   r   (0.001, 0.3)

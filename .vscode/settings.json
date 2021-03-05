@@ -1,0 +1,14 @@
+{
+  "python.pythonPath": "/home/bravo/anaconda3/envs/tcc/bin/python",
+  "terminal.integrated.env.osx": {"PYTHONPATH": "${workspaceFolder}"},
+  //"python.analysis.extraPaths": ["./natalie"],
+  
+  // "python.linting.pylintEnabled": false,
+  // "python.linting.flake8Enabled": true,
+  // "python.linting.enabled": true,
+  // "python.linting.flake8Args": [
+  //     "--max-line-length=120",
+  //     "--ignore=E501, E111, E114, E128, E202, E201, W293, W503, E303",
+  // ],
+  // "python.formatting.autopep8Args": ["--indent-size=2"]
+}
