@@ -43,37 +43,54 @@ class SimulatedAnnealing:
     return cls(max_iterations, cycle, initial_temperature, final_temperature, alpha, beta, max_materials_changes, max_concepts_changes, seed)
     
   def get_orderOfModifiedMaterials(self):
+    
     student_yes = np.matmul(recommendation.astype(int), objectives.astype(int)) #quantos alunos receberam o material E o tem como objetivo
     student_no = np.matmul(recommendation.astype(int), (~objectives).astype(int)) #quantos alunos receberam o material E não o tem como objetivo
-    student_difference = student_no - student_yes #(quantos alunos querem ter o conveito adicionado) - (quantos alunos querem ter o conceito removido)
-    scaled_coverage = (concept_coverage * 2 - 1) # concept_coverage, onde False é -1 e True é 1
-    self.conflicts = student_difference * scaled_coverage
-    change_potential = np.maximum(0, self.conflicts).sum(axis=1)
-    
-    self.orderOf_changed_materials = np.argsort(-change_potential).tolist()
-   
-  def get_randNeighbor(self, concept_coverage):
-    concept_coverage_neighbor = concept_coverage.copy()
-    
-    selected_material_index = random.randrange(int(len(self.orderOf_changed_materials)*0.95))
-    material = self.orderOf_changed_materials[0]
+    student_difference = student_no - student_yes #(quantos alunos querem ter o conceito adicionado) - (quantos alunos querem ter o conceito removido)
+    #student_difference = student_yes
+    scaled_coverage = (concept_coverage * 2 - 1) # concept_coverage, onde False é -1 e True é 1   
 
-    # while selected_material_index in self.materials_changed:
-    #   selected_material_index = random.randrange(len(materials_unchanged))
-      
-    if(len(self.materials_changed) > int(self.max_materials_changes * num_materials)):
+    self.conflicts = student_difference * scaled_coverage
+    change_potential = np.maximum(0, self.conflicts).sum(axis=1) #np.maximum(0, self.conflicts) >>> replace nos numeros negativos com 0
+    
+    '''
+    print('student difference',student_difference[1])
+    print('scaled coverage',scaled_coverage[1])
+    print('concept coverage',concept_coverage[1])
+    print('conflicts',self.conflicts[1])
+    print('change potential',change_potential[1])
+    print(np.maximum(0, self.conflicts)[1])
+    '''
+    self.orderOf_changed_materials = np.argsort(-change_potential).tolist() #retorna os index que orderia o vetor change potential de forma cresce
+    #print('orderOf_changed_materials: ', self.orderOf_changed_materials)
+
+  def get_randNeighbor(self, concept_coverage):
+  
+    concept_coverage_neighbor = concept_coverage.copy()
+    selected_material_index = random.randrange(int(len(self.orderOf_changed_materials)*0.95))
+    
+    material = random.choice(self.orderOf_changed_materials)
+    #material = self.orderOf_changed_materials[0]
+    #material = self.orderOf_changed_materials[selected_material_index]
+
+    if(len(self.materials_changed) > self.max_materials_changes ): #<<<
+
             selected_undo_index = random.randrange(len(self.materials_changed))
             undo_material = self.materials_changed[selected_undo_index]
             self.orderOf_changed_materials.append(undo_material)
             del self.materials_changed[selected_undo_index]
-
+            #print('material changed after:',len(self.materials_changed))
             concept_coverage_neighbor[undo_material] = concept_coverage[undo_material]
+            
+            #print(self.materials_changed)
 
     self.materials_changed.append(selected_material_index)
     del self.orderOf_changed_materials[selected_material_index]
 
     conflicts_order = np.argsort(-self.conflicts[material]).tolist()
-    num_iterations = random.randrange(int(self.max_concepts_changes * num_concepts))
+    num_iterations = random.randrange(self.max_concepts_changes ) 
+    #num_iterations = int(self.max_concepts_changes * num_concepts*current_temperature_factor)
+ 
     for k in range(num_iterations):
         selected_concept_index = random.randrange(len(conflicts_order))
         concept = conflicts_order[selected_concept_index]
@@ -97,11 +114,13 @@ class SimulatedAnnealing:
       
   
   def run(self, concept_coverage, fitnessConcepts_total, DATFILE=None):
+    
     best_solution = concept_coverage
     best_fitness = fitnessConcepts_total
     
     current_temperature = self.initial_temperature
     current_solution = concept_coverage
+
     current_fitness = fitnessConcepts_total
     
     self.get_orderOfModifiedMaterials()
@@ -109,25 +128,33 @@ class SimulatedAnnealing:
     
     for i in range(self.max_iterations):
       for l in range(self.cycle):
+         
+        #current_temperature_factor = current_temperature/self.initial_temperature
+        #next_solution = self.get_randNeighbor(best_solution,current_temperature_factor)
+        
         next_solution = self.get_randNeighbor(best_solution)
-        next_fitness = sum([Fitness.get_fitnessConcepts(student_id, current_solution.T) for student_id in range(num_students)])/num_students
+        next_fitness = sum([Fitness.get_fitnessConcepts(student_id, next_solution.T) for student_id in range(num_students)])/num_students        
         
         deltaE = next_fitness - current_fitness
+        
+        #print('deltaE:', deltaE)
         if(deltaE < 0.0):
           current_solution = next_solution
           current_fitness = next_fitness
           
-          if(next_fitness < best_fitness):
+          if(next_fitness < best_fitness  ):
             best_solution = next_solution
             best_fitness = next_fitness
         else:
           if(random.uniform(0,1) < math.exp(-deltaE / current_temperature)):
             current_solution = next_solution
             current_fitness = next_fitness
+            
+            #print('current fitness: ', current_fitness)
       
       current_temperature = self.decreaseTemperature(current_temperature)
       fitness_progress[i] = best_fitness
-    
+      
     # print("current_temperature: ", current_temperature)
     if(DATFILE):
       with open(DATFILE, 'w') as f:

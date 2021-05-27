@@ -1,5 +1,5 @@
 {
-  "python.pythonPath": "/home/bravo/anaconda3/envs/tcc/bin/python",
+  "python.pythonPath": "C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.1520.0_x64__qbz5n2kfra8p0\\python3.9.exe",
   "terminal.integrated.env.osx": {"PYTHONPATH": "${workspaceFolder}"},
   //"python.analysis.extraPaths": ["./natalie"],
   
