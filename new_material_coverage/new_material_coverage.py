@@ -46,5 +46,11 @@ class New_material_coverage():
 new_material = New_material_coverage()
 new_material.get_concept_coverage_sa()
 
-#print(sum(new_material.best_solution_sa[1] != instance.concepts_materials.T[1]))
+materials_changed = 0
+
+for i in range(len(new_material.best_solution_sa)):
+    if sum(new_material.best_solution_sa[i] != instance.concepts_materials.T[i]) > 0:
+        materials_changed = materials_changed +1
+        
+print(materials_changed)      
 #print(instance.concepts_materials.T[1])

@@ -41,13 +41,15 @@ config.instance
 # print("materials_balancing_before: ", materials_balancing_before)
 
 # ####### fitnessConcepts After Grasp
-# grasp = Grasp.from_config(os.path.join(config.dir, 'algorithms', 'config', 'config_grasp.ini'))
-# grasp_concept_coverage, student_results_grasp = grasp.run(config.concept_coverage, student_results_before)
-# print(f'student_results_grasp: {student_results_grasp}')
+'''
+grasp = Grasp.from_config(os.path.join(config.dir, 'algorithms', 'config', 'config_grasp.ini'))
+grasp_concept_coverage, student_results_grasp = grasp.run(config.concept_coverage, student_results_before)
+print(f'student_results_grasp: {student_results_grasp}')
 
 grasp_results = pickle.load( open( "results_grasp_best.pickle", "rb" ) )
 grasp_concept_coverage = grasp_results["grasp_concept_coverage"]
 grasp_fitness = grasp_results["grasp_fitness"]
+'''
 
 # grasp_student_results = [Fitness.get_fitnessConcepts(student_id, grasp_concept_coverage.T) for student_id in range(config.num_students)]
 
@@ -61,6 +63,7 @@ grasp_fitness = grasp_results["grasp_fitness"]
 simulatedAnnealing = SimulatedAnnealing.from_config(os.path.join(config.dir, 'algorithms', 'config', 'config_simulated_annealing.ini'))
 annealing_concept_coverage, student_results_annealing = simulatedAnnealing.run(config.concept_coverage, student_results_before)
 print(f'student_results_annealing: {student_results_annealing}')
+#print('teste: ',simulatedAnnealing.teste)
 
 sa_results = pickle.load( open( "results_SA.pickle", "rb" ) )
 sa_concept_coverage = sa_results["sa_concept_coverage"]
@@ -72,8 +75,8 @@ print("sa_concepts_covered_after: ", sa_concepts_covered_after)
 print("sa_materials_balancing_after: ", sa_materials_balancing_after)
 
 
-
 ########### Others fitness functions 
+'''
 bruteForce = BruteForce(grasp_concept_coverage)
 
 
@@ -100,3 +103,4 @@ old_LS = sum([Fitness.get_fitnessLearningStyle(student_id, m_learning_syle) for 
 print(f'old_LS: {old_LS}')
 
 bruteForce.run("learning_syle")
+'''

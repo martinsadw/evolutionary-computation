@@ -23,8 +23,9 @@ class SimulatedAnnealing:
     self.materials_changed = []
     self.orderOf_changed_materials = []
     self.conflicts = []
-   
-   
+    self.material = None
+    self.teste = []
+
   @classmethod
   def from_config(cls, config_filename):
     config = configparser.ConfigParser(inline_comment_prefixes=("#",))
@@ -47,48 +48,46 @@ class SimulatedAnnealing:
     student_yes = np.matmul(recommendation.astype(int), objectives.astype(int)) #quantos alunos receberam o material E o tem como objetivo
     student_no = np.matmul(recommendation.astype(int), (~objectives).astype(int)) #quantos alunos receberam o material E não o tem como objetivo
     student_difference = student_no - student_yes #(quantos alunos querem ter o conceito adicionado) - (quantos alunos querem ter o conceito removido)
-    #student_difference = student_yes
+    #student_difference = student_no
     scaled_coverage = (concept_coverage * 2 - 1) # concept_coverage, onde False é -1 e True é 1   
 
     self.conflicts = student_difference * scaled_coverage
-    change_potential = np.maximum(0, self.conflicts).sum(axis=1) #np.maximum(0, self.conflicts) >>> replace nos numeros negativos com 0
-    
-    '''
-    print('student difference',student_difference[1])
-    print('scaled coverage',scaled_coverage[1])
-    print('concept coverage',concept_coverage[1])
-    print('conflicts',self.conflicts[1])
-    print('change potential',change_potential[1])
-    print(np.maximum(0, self.conflicts)[1])
-    '''
-    self.orderOf_changed_materials = np.argsort(-change_potential).tolist() #retorna os index que orderia o vetor change potential de forma cresce
-    #print('orderOf_changed_materials: ', self.orderOf_changed_materials)
 
+    change_potential = np.maximum(0,self.conflicts).sum(axis=1) #np.maximum(0, self.conflicts) >>> replace nos numeros negativos com 0
+    self.orderOf_changed_materials = np.argsort(-change_potential).tolist()#[:int(self.max_materials_changes)] #retorna os index que orderia o vetor change potential de forma crescente
+    
   def get_randNeighbor(self, concept_coverage):
   
     concept_coverage_neighbor = concept_coverage.copy()
-    selected_material_index = random.randrange(int(len(self.orderOf_changed_materials)*0.95))
-    
-    material = random.choice(self.orderOf_changed_materials)
+
+    if(len(self.materials_changed ) < self.max_materials_changes):
+      selected_material_index = random.randrange(int(len(self.orderOf_changed_materials)))#indice do material dentro do orderOf
+      self.material = self.orderOf_changed_materials[selected_material_index]
+      self.materials_changed.append(self.material)
+      del self.orderOf_changed_materials[selected_material_index]
+      
+
     #material = self.orderOf_changed_materials[0]
     #material = self.orderOf_changed_materials[selected_material_index]
 
-    if(len(self.materials_changed) > self.max_materials_changes ): #<<<
+    else:
+      #print(len(self.materials_changed))
+      selected_undo_index = random.randrange(len(self.materials_changed))
+      undo_material = self.materials_changed[selected_undo_index]
+      self.orderOf_changed_materials.append(undo_material)
+      del self.materials_changed[selected_undo_index]
+      #print('material changed after:',len(self.materials_changed))
+      concept_coverage_neighbor[undo_material] = concept_coverage[undo_material]
 
-            selected_undo_index = random.randrange(len(self.materials_changed))
-            undo_material = self.materials_changed[selected_undo_index]
-            self.orderOf_changed_materials.append(undo_material)
-            del self.materials_changed[selected_undo_index]
-            #print('material changed after:',len(self.materials_changed))
-            concept_coverage_neighbor[undo_material] = concept_coverage[undo_material]
-            
+      selected_material_index = random.randrange(len(self.materials_changed))
+      self.material = self.materials_changed[selected_material_index]
+   
+        
             #print(self.materials_changed)
 
-    self.materials_changed.append(selected_material_index)
-    del self.orderOf_changed_materials[selected_material_index]
+    conflicts_order = np.argsort(-self.conflicts[self.material]).tolist()
+    num_iterations = random.randrange(self.max_concepts_changes)
 
-    conflicts_order = np.argsort(-self.conflicts[material]).tolist()
-    num_iterations = random.randrange(self.max_concepts_changes ) 
     #num_iterations = int(self.max_concepts_changes * num_concepts*current_temperature_factor)
  
     for k in range(num_iterations):
@@ -96,9 +95,11 @@ class SimulatedAnnealing:
         concept = conflicts_order[selected_concept_index]
         del conflicts_order[selected_concept_index]
 
-        if self.conflicts[material, concept] > 0:
-          concept_coverage_neighbor[material, concept] = ~concept_coverage_neighbor[material, concept]
-    
+        if self.conflicts[self.material, concept] > 0: #mais alunos querem ter o conceito coberto
+            concept_coverage_neighbor[self.material, concept] = ~concept_coverage_neighbor[self.material, concept] #cobrindo o conceito
+        
+
+
     return concept_coverage_neighbor
   
   
