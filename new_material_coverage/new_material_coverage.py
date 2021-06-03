@@ -8,6 +8,9 @@ import numpy as np
 from config import instance
 from acs.instance import Instance
 import os
+from fitness import Fitness
+from config import instance, concept_coverage, objectives, num_students, num_concepts, num_materials, recommendation
+from algorithms import simulated_annealing
 
 class New_material_coverage():
     def __init__(self) -> None:
@@ -47,10 +50,42 @@ new_material = New_material_coverage()
 new_material.get_concept_coverage_sa()
 
 materials_changed = 0
-
+materials_changed_index = []
 for i in range(len(new_material.best_solution_sa)):
     if sum(new_material.best_solution_sa[i] != instance.concepts_materials.T[i]) > 0:
         materials_changed = materials_changed +1
-        
+        materials_changed_index.append(i)
+
 print(materials_changed)      
+print(materials_changed_index)
+
+add_concepts = []
+cont_concept = 0
+for i in range(len(new_material.best_solution_sa)):
+
+    old_concepts = sum(instance.concepts_materials.T[i] == True)
+    new_concepts = sum(new_material.best_solution_sa[i] == True)
+
+    if ( new_concepts > old_concepts):
+        
+        add_concepts.append(i)
+
+print(add_concepts)       
+
+
+fitness = sum([Fitness.get_fitnessConcepts(student_id, new_material.best_solution_sa.T) for student_id in range(num_students)])/num_students        
+print(fitness)
+
+teste_concepts_materials = instance.concepts_materials.T.copy()
+for i in range(len(teste_concepts_materials)):
+    teste_concepts_materials[i] = [True if x==False else x for x in teste_concepts_materials[i]]
+
+fitness_teste = sum([Fitness.get_fitnessConcepts(student_id, teste_concepts_materials.T) for student_id in range(num_students)])/num_students        
+print(fitness_teste)
+
+
+sa_results = pickle.load( open( "/mnt/c/Users/fonse/Documents/Improving-LOR/results_SA.pickle", "rb" ) )
+teste = sa_results['concept_mask']
+
+print(teste[40])
 #print(instance.concepts_materials.T[1])
