@@ -29,6 +29,7 @@ class SimulatedAnnealing:
     self.current_temperature = self.initial_temperature
     self.concepts_mask = np.zeros((num_materials,num_concepts))
     self.conflicts_order = {}
+    self.concept_coverage = concept_coverage
   @classmethod
   def from_config(cls, config_filename):
     config = configparser.ConfigParser(inline_comment_prefixes=("#",))
@@ -109,8 +110,33 @@ class SimulatedAnnealing:
             concept = self.conflicts_order[self.material][selected_concept_index]
             #del self.conflicts_order[self.material][selected_concept_index]          
             
+            #if(self.conflicts[self.material,concept] > 0):
             self.concepts_mask[self.material,concept] = self.concepts_mask[self.material,concept] + 1
             concept_coverage_neighbor[self.material, concept] = ~concept_coverage_neighbor[self.material, concept] 
+
+    
+    count_changes = sum(i>0 for i in self.concepts_mask[self.material])
+    #print(count_changes)
+    if(count_changes > self.max_concepts_changes):
+      changed_concepts = [idx for idx, val in enumerate(self.concepts_mask[self.material]) if val > 0] #pegando o indices dos conceitos que foram alterados
+      
+      #print('changed concepts before',len(changed_concepts))
+      for i in  range(len(self.concept_coverage[self.material])):
+        if(self.concept_coverage[self.material,i] == concept_coverage_neighbor[self.material,i]):
+           if i in changed_concepts:
+             del changed_concepts[changed_concepts.index(i)] #tirando dos changed concepts  os conceitos que foram alterados porem estão igual antes por multiplas alterações
+
+      #print('changed concepts after' ,len(changed_concepts))
+
+      while(self.max_concepts_changes < len(changed_concepts) ): #revertendo conceitos que foram modificados e estão diferentes até o limite
+        selected_undo_concept_index = random.randrange(len(changed_concepts))
+        concept_coverage_neighbor[self.material,changed_concepts[selected_undo_concept_index]] = ~concept_coverage_neighbor[self.material,changed_concepts[selected_undo_concept_index]]
+        del changed_concepts[selected_undo_concept_index]
+
+      #print('final changed concepts: ',len(changed_concepts))
+    
+     
+    #print(self.concept_coverage[self.material])  
 
     return concept_coverage_neighbor
   
@@ -173,7 +199,7 @@ class SimulatedAnnealing:
         f.write(str(best_fitness))
     else:
       with open('results_SA.pickle', 'wb') as file:
-        pickle.dump({"fitness_progress": fitness_progress, "sa_concept_coverage": best_solution, "sa_fitness": best_fitness,"concept_mask":self.concepts_mask}, file)
+        pickle.dump({"fitness_progress": fitness_progress, "sa_concept_coverage": best_solution, "sa_fitness": best_fitness}, file)
         
       return best_solution, best_fitness
 

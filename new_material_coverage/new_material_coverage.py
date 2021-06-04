@@ -59,33 +59,10 @@ for i in range(len(new_material.best_solution_sa)):
 print(materials_changed)      
 print(materials_changed_index)
 
-add_concepts = []
-cont_concept = 0
-for i in range(len(new_material.best_solution_sa)):
 
-    old_concepts = sum(instance.concepts_materials.T[i] == True)
-    new_concepts = sum(new_material.best_solution_sa[i] == True)
+check_changes = []
+for i in materials_changed_index:
+    if (sum(new_material.best_solution_sa[i] != instance.concepts_materials.T[i]) <= 30):
+        check_changes.append(True)
 
-    if ( new_concepts > old_concepts):
-        
-        add_concepts.append(i)
-
-print(add_concepts)       
-
-
-fitness = sum([Fitness.get_fitnessConcepts(student_id, new_material.best_solution_sa.T) for student_id in range(num_students)])/num_students        
-print(fitness)
-
-teste_concepts_materials = instance.concepts_materials.T.copy()
-for i in range(len(teste_concepts_materials)):
-    teste_concepts_materials[i] = [True if x==False else x for x in teste_concepts_materials[i]]
-
-fitness_teste = sum([Fitness.get_fitnessConcepts(student_id, teste_concepts_materials.T) for student_id in range(num_students)])/num_students        
-print(fitness_teste)
-
-
-sa_results = pickle.load( open( "/mnt/c/Users/fonse/Documents/Improving-LOR/results_SA.pickle", "rb" ) )
-teste = sa_results['concept_mask']
-
-print(teste[40])
-#print(instance.concepts_materials.T[1])
+print(len(check_changes))
