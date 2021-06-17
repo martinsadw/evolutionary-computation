@@ -16,7 +16,7 @@ class New_material_coverage():
     def __init__(self) -> None:
         
         self.best_solution_sa = pickle.load(open('/mnt/c/Users/fonse/Documents/Improving-LOR/results_SA.pickle','rb'))["sa_concept_coverage"]
-        self.best_solution_grasp = pickle.load(open('/mnt/c/Users/fonse/Documents/Improving-LOR/results_grasp_best.pickle','rb'))["grasp_concept_coverage"]
+        self.best_solution_grasp = pickle.load(open('/mnt/c/Users/fonse/Documents/Improving-LOR/results_grasp.pickle','rb'))["grasp_concept_coverage"]
         self.concepts_csv = pd.read_csv('/mnt/c/Users/fonse/Documents/Improving-LOR/instances/real/concepts.csv',delimiter= ';',header=None)
         self.course = Course('/mnt/c/Users/fonse/Documents/Improving-LOR/instances/real/instance.txt')
         self.concepts_keys = sorted(self.course.concepts.keys())
@@ -48,21 +48,33 @@ class New_material_coverage():
 
 new_material = New_material_coverage()
 new_material.get_concept_coverage_sa()
+new_material.get_concept_coverage_grasp()
 
 materials_changed = 0
 materials_changed_index = []
-for i in range(len(new_material.best_solution_sa)):
-    if sum(new_material.best_solution_sa[i] != instance.concepts_materials.T[i]) > 0:
-        materials_changed = materials_changed +1
-        materials_changed_index.append(i)
 
-print(materials_changed)      
-print(materials_changed_index)
+def check_changes(best_solution):
+    
+    materials_changed = 0
+    materials_changed_index = []
+    check_changes = []
+    for i in range(len(best_solution)):
+        if sum(best_solution[i] != instance.concepts_materials.T[i]) > 0:
+            materials_changed = materials_changed +1
+            materials_changed_index.append(i)
 
+    for i in materials_changed_index:
+        if (sum(best_solution[i] != instance.concepts_materials.T[i]) <= 30):
+            check_changes.append(sum(best_solution[i] != instance.concepts_materials.T[i]))
 
-check_changes = []
-for i in materials_changed_index:
-    if (sum(new_material.best_solution_sa[i] != instance.concepts_materials.T[i]) <= 30):
-        check_changes.append(True)
+    print(materials_changed)
+    print(materials_changed_index)
+    print(check_changes)
+    fitness = sum([Fitness.get_fitnessConcepts(student_id, best_solution.T) for student_id in range(num_students)])/num_students
+    print(fitness)
 
-print(len(check_changes))
+print("GRASP:")
+check_changes(new_material.best_solution_grasp)
+
+print("SA")
+check_changes(new_material.best_solution_sa)

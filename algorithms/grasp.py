@@ -17,7 +17,13 @@ class Grasp:
     self.max_materials_changes = max_materials_changes
     self.max_concepts_changes = max_concepts_changes
     self.seed = seed
-  
+    self.concepts_mask = np.zeros((num_materials,num_concepts))  
+    self.concept_coverage = concept_coverage
+    self.change_potential_order = []
+    self.material = None
+    self.materials_changed = []
+    self.conflicts_order = {}
+    self.cost_counter = 0
   @classmethod
   def from_config(cls, config_filename):
     config = configparser.ConfigParser(inline_comment_prefixes=("#",))
@@ -34,22 +40,29 @@ class Grasp:
     return cls(max_iterations, local_search_size, alpha_m, alpha_c, max_materials_changes, max_concepts_changes, seed)
   
   
+  def counter_fitness(self,solution):
+    self.cost_counter +=1
+    return sum([Fitness.get_fitnessConcepts(student_id, solution.T) for student_id in range(num_students)])/num_students        
+ 
   def run(self, concept_coverage, fitnessConcepts_total, DATFILE=None):
+    
     best_solution = concept_coverage
     best_fitness = fitnessConcepts_total
     
     fitness_progress = np.empty(self.max_iterations)
     for i in range(self.max_iterations):
+        
+      if(i%10 == 0):
+        print("iteration:",i)
       solution, solution_fitness, materials_changed = self.greadyRandomizedConstruction()
-      #if(!isFeasible(solution)):
       solution, solution_fitness = self.localSearch(solution, solution_fitness, materials_changed)
-      
+    
       if(solution_fitness < best_fitness):
         best_solution = solution
         best_fitness = solution_fitness
-      
+    
       fitness_progress[i] = best_fitness
-      
+    print("counter:",self.cost_counter)    
     if(DATFILE):
       with open(DATFILE, 'w') as f:
         f.write(str(best_fitness))
@@ -66,48 +79,87 @@ class Grasp:
     student_difference = student_no - student_yes #(quantos alunos querem ter o conveito adicionado) - (quantos alunos querem ter o conceito removido)
     scaled_coverage = (concept_coverage * 2 - 1) # concept_coverage, onde False é -1 e True é 1
     conflicts = student_difference * scaled_coverage
-    change_potential = np.maximum(0, conflicts).sum(axis=1)
-    
-    materials_changed = []
+    #change_potential = np.maximum(0, conflicts).sum(axis=1)
+    change_potential = -np.minimum(0,conflicts).sum(axis=1) #somando as posições onde < 0 pois é onde há conflitos
+
+    #materials_changed = []
     new_concept_coverage = concept_coverage.copy()
-    change_potential_order = np.argsort(-change_potential).tolist()
+    self.change_potential_order = np.argsort(-change_potential).tolist()[:int(self.max_materials_changes)]
+     
     
-    for j in range(int(self.max_materials_changes * num_materials)):
-        # Select a material and remove from the list
-        selected_material_index = random.randrange(int(len(change_potential_order) * self.alpha_m))
-        material = change_potential_order[selected_material_index]
-        materials_changed.append(material)
-        del change_potential_order[selected_material_index]
-
-        # print('[', material, change_potential[material], ']')
-        # print(conflicts[material])
-
-        conflicts_order = np.argsort(-conflicts[material]).tolist()
-        for k in range(int(self.max_concepts_changes * num_concepts)):
-            # Select a concept from the material and remove from the list
-            selected_concept_index = random.randrange(int(len(conflicts_order) * self.alpha_c))
-            concept = conflicts_order[selected_concept_index]
-            del conflicts_order[selected_concept_index]
-
-            # print(material, concept)
-            if conflicts[material, concept] > 0:
-                new_concept_coverage[material, concept] = ~new_concept_coverage[material, concept]
-
-    new_best_fitness = sum([Fitness.get_fitnessConcepts(student_id, new_concept_coverage.T) for student_id in range(num_students)])/num_students
-    return new_concept_coverage, new_best_fitness, materials_changed
+    for j in range(int(self.max_materials_changes)):
+      # Select a material and remove from the list
+      selected_material_index = random.randrange(int(len(self.change_potential_order)))
+      self.material = self.change_potential_order[selected_material_index]
+      self.materials_changed.append(self.material)
+      del self.change_potential_order[selected_material_index]
   
+
+      if(self.material not in  self.conflicts_order.keys()):
+          self.conflicts_order[self.material] = np.argsort(-conflicts[self.material]).tolist()
   
+      for k in range(int(self.max_concepts_changes)):
+        # Select a concept from the material and remove from the list
+        selected_concept_index = random.randrange(len(self.conflicts_order[self.material]))
+        concept = self.conflicts_order[self.material][selected_concept_index]
+        self.concepts_mask[self.material,concept] = self.concepts_mask[self.material,concept] + 1
+        new_concept_coverage[self.material, concept] = ~new_concept_coverage[self.material, concept]
+
+      count_changes = sum(i>0 for i in self.concepts_mask[self.material])
+      if(count_changes > self.max_concepts_changes):
+          changed_concepts = [idx for idx, val in enumerate(self.concepts_mask[self.material]) if val > 0] #pegando o indices dos conceitos que foram alterados
+      
+          for i in  range(len(self.concept_coverage[self.material])):
+            if(self.concept_coverage[self.material,i] == new_concept_coverage[self.material,i]):
+                if i in changed_concepts:
+                  del changed_concepts[changed_concepts.index(i)] #tirando dos changed concepts  os conceitos que foram alterados porem estão igual antes por multiplas alterações
+      
+          while(self.max_concepts_changes < len(changed_concepts) ): #revertendo conceitos que foram modificados e estão diferentes até o limitante
+            selected_undo_concept_index = random.randrange(len(changed_concepts))
+            new_concept_coverage[self.material,changed_concepts[selected_undo_concept_index]] = ~new_concept_coverage[self.material,changed_concepts[selected_undo_concept_index]]
+            del changed_concepts[selected_undo_concept_index]
+    
+    new_best_fitness = self.counter_fitness(new_concept_coverage)
+    return new_concept_coverage, new_best_fitness, self.materials_changed
+  
+
   def localSearch(self, solution, solution_fitness, materials_changed):
+  
+
     new_concept_coverage = solution
     new_best_fitness = solution_fitness
+    materials_changed_mask = np.zeros((num_materials,num_concepts)) #salvando as posições dos conceitos que foram alterados dos materiais
     
+    for j in range(len(materials_changed)):
+      for i in  range(num_concepts):
+          if(self.concept_coverage[materials_changed[j],i] != solution[materials_changed[j],i]): #materials change just has less than the maximum  concept change and differnete from the inital solution 
+              materials_changed_mask[materials_changed[j],i] = 1 #colocando 1 nas posições que já foram alteradas
+    
+    #materials come with the max or less than the max concepts changes
+    #     
     for j in range(self.local_search_size):
         fitness_improved = False
         for material in materials_changed:
             for concept in range(num_concepts):
                 step_concept_coverage = new_concept_coverage.copy()
                 step_concept_coverage[material, concept] = ~step_concept_coverage[material, concept]
-                step_fitness = sum([Fitness.get_fitnessConcepts(student_id, step_concept_coverage.T) for student_id in range(num_students)])/num_students
+                materials_changed_mask[material,concept] = materials_changed_mask[material,concept] +1
+           
+                #count_changes = sum(i>0 for i in materials_changed_mask[material])
+                
+                changed_concepts = [idx for idx, val in enumerate(materials_changed_mask[material]) if val > 0] #pegando o indices dos conceitos que foram alterados
+                for i in  range(num_concepts):
+                    if(self.concept_coverage[material,i] == step_concept_coverage[material,i]):
+                        if i in changed_concepts:
+                          del changed_concepts[changed_concepts.index(i)] 
+
+                while(self.max_concepts_changes < len(changed_concepts)): #testar, se ainda nao funcionar, comparar os conceitos que foram alterados com os conceitos antigos
+                  
+                  selected_undo_concept_index = random.randrange(len(changed_concepts))
+                  step_concept_coverage[material,changed_concepts[selected_undo_concept_index]] = ~step_concept_coverage[material,changed_concepts[selected_undo_concept_index]]
+                  del changed_concepts[selected_undo_concept_index]
+
+                step_fitness = self.counter_fitness(step_concept_coverage)
 
                 if new_best_fitness > step_fitness:
                     new_best_fitness = step_fitness

@@ -26,10 +26,12 @@ class SimulatedAnnealing:
     self.conflicts = []
     self.material = None
     self.deltaE = 0
+    self.cost_counter = 0
     self.current_temperature = self.initial_temperature
     self.concepts_mask = np.zeros((num_materials,num_concepts))
     self.conflicts_order = {}
     self.concept_coverage = concept_coverage
+
   @classmethod
   def from_config(cls, config_filename):
     config = configparser.ConfigParser(inline_comment_prefixes=("#",))
@@ -46,7 +48,14 @@ class SimulatedAnnealing:
     seed = int(config['default']['seed'])
     
     return cls(max_iterations, cycle, initial_temperature, final_temperature, alpha, beta, max_materials_changes, max_concepts_changes, seed)
-    
+  
+  def counter_fitness(self,solution):
+    self.cost_counter +=1
+    return sum([Fitness.get_fitnessConcepts(student_id, solution.T) for student_id in range(num_students)])/num_students        
+ 
+
+
+
   def get_orderOfModifiedMaterials(self):
     
     student_yes = np.matmul(recommendation.astype(int), objectives.astype(int)) #quantos alunos receberam o material E o tem como objetivo
@@ -60,17 +69,6 @@ class SimulatedAnnealing:
     #change_potential = np.maximum(0, self.conflicts).sum(axis=1)
     self.orderOf_changed_materials = np.argsort(-change_potential).tolist()[:int(self.max_materials_changes)] #retorna os index que orderia o vetor change potential de forma descrescente
     
-    #print('student yes: ', student_yes[40])
-    #print('student no: ',student_no[40])
-    #print('student diff: ',student_difference[40])
-    #print('scaled coverage: ',scaled_coverage[40])
-    #print('conflicts: ', self.conflicts[40])
-    #print(np.argsort(self.conflicts[40]).tolist())
-    #print('change potential:',change_potential[40])
-    #print(self.orderOf_changed_materials)
-    
-    #print(self.orderOf_changed_materials)
-    
   def get_randNeighbor(self, concept_coverage):
   
     concept_coverage_neighbor = concept_coverage.copy()
@@ -83,52 +81,35 @@ class SimulatedAnnealing:
       
 
     else:
-      '''
-      selected_undo_index = random.randrange(len(self.materials_changed))
-      undo_material = self.materials_changed[selected_undo_index]
-      self.orderOf_changed_materials.append(undo_material)
-      del self.materials_changed[selected_undo_index]
-      #print('material changed after:',len(self.materials_changed))
-      concept_coverage_neighbor[undo_material] = concept_coverage[undo_material]
-      '''
       selected_material_index = random.randrange(len(self.materials_changed))
       self.material = self.materials_changed[selected_material_index]
    
-    if(self.material not in  self.conflicts_order.keys()):
-      #filter = self.conflicts[self.material] < 0
-      #concepts_conflicts = list(np.where(filter, self.conflicts[self.material], np.nan).argsort()[:filter.sum()])
-      #self.conflicts_order[self.material] = concepts_conflicts
+    if(self.material not in  self.conflicts_order.keys()): #verificando se o material já está dentro do conflicts order
       self.conflicts_order[self.material] = np.argsort(self.conflicts[self.material]).tolist() 
-
-    #conflicts_order = np.argsort(self.conflicts[self.material]).tolist() 
+    
     num_iterations = random.randrange(self.max_concepts_changes)
 
     
     for k in range(num_iterations):
-      #if(self.concepts_mask[self.material].sum() < self.max_concepts_changes):
             selected_concept_index = random.randrange(len(self.conflicts_order[self.material]))
             concept = self.conflicts_order[self.material][selected_concept_index]
-            #del self.conflicts_order[self.material][selected_concept_index]          
-            
-            #if(self.conflicts[self.material,concept] > 0):
             self.concepts_mask[self.material,concept] = self.concepts_mask[self.material,concept] + 1
             concept_coverage_neighbor[self.material, concept] = ~concept_coverage_neighbor[self.material, concept] 
 
     
-    count_changes = sum(i>0 for i in self.concepts_mask[self.material])
-    #print(count_changes)
-    if(count_changes > self.max_concepts_changes):
-      changed_concepts = [idx for idx, val in enumerate(self.concepts_mask[self.material]) if val > 0] #pegando o indices dos conceitos que foram alterados
+    count_changes = sum(i>0 for i in self.concepts_mask[self.material]) #somando para o material, o número de conceitos que foram modificados
+   
+    if(count_changes > self.max_concepts_changes): #se o numero de alterações dos conceitos do material for maior que o máximo, salvar o index dos conceitos que foram modificados
+      changed_concepts = [idx for idx, val in enumerate(self.concepts_mask[self.material]) if val > 0] #salvando os indices dos conceitos que foram alterados
       
-      #print('changed concepts before',len(changed_concepts))
+
       for i in  range(len(self.concept_coverage[self.material])):
-        if(self.concept_coverage[self.material,i] == concept_coverage_neighbor[self.material,i]):
+        if(self.concept_coverage[self.material,i] == concept_coverage_neighbor[self.material,i]): #comparando se o material que foi alterado, está igual ao original ou se houve mudança
            if i in changed_concepts:
              del changed_concepts[changed_concepts.index(i)] #tirando dos changed concepts  os conceitos que foram alterados porem estão igual antes por multiplas alterações
 
-      #print('changed concepts after' ,len(changed_concepts))
 
-      while(self.max_concepts_changes < len(changed_concepts) ): #revertendo conceitos que foram modificados e estão diferentes até o limite
+      while(self.max_concepts_changes < len(changed_concepts) ): #revertendo conceitos que foram modificados e estão diferentes até o limitante
         selected_undo_concept_index = random.randrange(len(changed_concepts))
         concept_coverage_neighbor[self.material,changed_concepts[selected_undo_concept_index]] = ~concept_coverage_neighbor[self.material,changed_concepts[selected_undo_concept_index]]
         del changed_concepts[selected_undo_concept_index]
@@ -172,8 +153,8 @@ class SimulatedAnnealing:
         #next_solution = self.get_randNeighbor(best_solution,current_temperature_factor)
         
         next_solution = self.get_randNeighbor(best_solution)
-        next_fitness = sum([Fitness.get_fitnessConcepts(student_id, next_solution.T) for student_id in range(num_students)])/num_students        
-        
+        #next_fitness = sum([Fitness.get_fitnessConcepts(student_id, next_solution.T) for student_id in range(num_students)])/num_students        
+        next_fitness = self.counter_fitness(next_solution)
         self.deltaE = next_fitness - current_fitness
         
         #print('deltaE:', deltaE)
@@ -193,6 +174,7 @@ class SimulatedAnnealing:
       
       self.current_temperature = self.decreaseTemperature(self.current_temperature)
       fitness_progress[i] = best_fitness
+    print("counter:",self.cost_counter)  
     # print("current_temperature: ", current_temperature)
     if(DATFILE):
       with open(DATFILE, 'w') as f:

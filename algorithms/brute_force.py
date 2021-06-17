@@ -23,6 +23,7 @@ class BruteForce:
     return changed_mat
   
   def run(self, characteristic):
+    print(self.changed_materials)
     if(characteristic == "difficulty"):
       old_materials_difficulty = config.instance.materials_difficulty.copy()
       new_materials_difficulty = self.__run(old_materials_difficulty, self.materials_difficulty_values, Fitness.get_fitnessDifficulty)
