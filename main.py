@@ -46,9 +46,6 @@ grasp = Grasp.from_config(os.path.join(config.dir, 'algorithms', 'config', 'conf
 grasp_concept_coverage, student_results_grasp = grasp.run(config.concept_coverage, student_results_before)
 print(f'student_results_grasp: {student_results_grasp}')
 
-
-
-
 grasp_results = pickle.load( open( "results_grasp.pickle", "rb" ))
 grasp_concept_coverage = grasp_results["grasp_concept_coverage"]
 grasp_fitness = grasp_results["grasp_fitness"]

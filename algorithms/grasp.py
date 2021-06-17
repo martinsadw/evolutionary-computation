@@ -9,11 +9,13 @@ from fitness import Fitness
 from config import instance, concept_coverage, objectives, num_students, num_concepts, num_materials, recommendation, dir
 
 class Grasp:
-  def __init__(self, max_iterations, local_search_size, alpha_m, alpha_c, max_materials_changes, max_concepts_changes, seed):
-    self.max_iterations = max_iterations
+  def __init__(self, max_counter_fitness, local_search_size, max_materials_changes, max_concepts_changes, seed):
+    
+    self.max_counter_fitness = max_counter_fitness
     self.local_search_size = local_search_size
-    self.alpha_m = alpha_m
-    self.alpha_c = alpha_c
+
+    #self.alpha_m = alpha_m
+    #self.alpha_c = alpha_c
     self.max_materials_changes = max_materials_changes
     self.max_concepts_changes = max_concepts_changes
     self.seed = seed
@@ -24,20 +26,22 @@ class Grasp:
     self.materials_changed = []
     self.conflicts_order = {}
     self.cost_counter = 0
+
   @classmethod
   def from_config(cls, config_filename):
     config = configparser.ConfigParser(inline_comment_prefixes=("#",))
     config.read(config_filename)
     
-    max_iterations = int(config['default']['max_iterations'])
+    max_counter_fitness = int(config['default']['max_counter_fitness'])
     local_search_size = int(config['default']['local_search_size'])
-    alpha_m = float(config['default']['alpha_m'])
-    alpha_c = float(config['default']['alpha_c'])
+    #alpha_m = float(config['default']['alpha_m'])
+    #alpha_c = float(config['default']['alpha_c'])
     max_materials_changes = float(config['default']['max_materials_changes'])
     max_concepts_changes = float(config['default']['max_concepts_changes'])
     seed = int(config['default']['seed'])
     
-    return cls(max_iterations, local_search_size, alpha_m, alpha_c, max_materials_changes, max_concepts_changes, seed)
+    #return cls(max_iterations, local_search_size, alpha_m, alpha_c, max_materials_changes, max_concepts_changes, seed)  
+    return cls(max_counter_fitness, local_search_size, max_materials_changes, max_concepts_changes, seed)
   
   
   def counter_fitness(self,solution):
@@ -49,19 +53,18 @@ class Grasp:
     best_solution = concept_coverage
     best_fitness = fitnessConcepts_total
     
-    fitness_progress = np.empty(self.max_iterations)
-    for i in range(self.max_iterations):
+    fitness_progress = []
+    while(self.cost_counter<self.max_counter_fitness):
         
-      if(i%10 == 0):
-        print("iteration:",i)
+
       solution, solution_fitness, materials_changed = self.greadyRandomizedConstruction()
       solution, solution_fitness = self.localSearch(solution, solution_fitness, materials_changed)
-    
+      
       if(solution_fitness < best_fitness):
         best_solution = solution
         best_fitness = solution_fitness
     
-      fitness_progress[i] = best_fitness
+      fitness_progress.append(best_fitness)
     print("counter:",self.cost_counter)    
     if(DATFILE):
       with open(DATFILE, 'w') as f:
@@ -85,11 +88,11 @@ class Grasp:
     #materials_changed = []
     new_concept_coverage = concept_coverage.copy()
     self.change_potential_order = np.argsort(-change_potential).tolist()[:int(self.max_materials_changes)]
-     
     
     for j in range(int(self.max_materials_changes)):
       # Select a material and remove from the list
       selected_material_index = random.randrange(int(len(self.change_potential_order)))
+      
       self.material = self.change_potential_order[selected_material_index]
       self.materials_changed.append(self.material)
       del self.change_potential_order[selected_material_index]
@@ -136,7 +139,6 @@ class Grasp:
               materials_changed_mask[materials_changed[j],i] = 1 #colocando 1 nas posições que já foram alteradas
     
     #materials come with the max or less than the max concepts changes
-    #     
     for j in range(self.local_search_size):
         fitness_improved = False
         for material in materials_changed:
@@ -159,8 +161,11 @@ class Grasp:
                   step_concept_coverage[material,changed_concepts[selected_undo_concept_index]] = ~step_concept_coverage[material,changed_concepts[selected_undo_concept_index]]
                   del changed_concepts[selected_undo_concept_index]
 
-                step_fitness = self.counter_fitness(step_concept_coverage)
-
+                if(self.cost_counter<self.max_counter_fitness):
+                  step_fitness = self.counter_fitness(step_concept_coverage)
+                else:
+                  break
+                
                 if new_best_fitness > step_fitness:
                     new_best_fitness = step_fitness
                     new_concept_coverage = step_concept_coverage
@@ -179,8 +184,8 @@ if __name__ == '__main__':
   ap.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
   ap.add_argument('--max_iterations', type=int, default=100, help='Number of iterations')
   ap.add_argument('--local_search_size', type=int, default=2, help='Number of iterations in local search')
-  ap.add_argument('--alpha_m', type=float, default=0.2, help='alpha of materials')
-  ap.add_argument('--alpha_c', type=float, default=0.3, help='alpha of concepts')
+  #ap.add_argument('--alpha_m', type=float, default=0.2, help='alpha of materials')
+  #ap.add_argument('--alpha_c', type=float, default=0.3, help='alpha of concepts')
   ap.add_argument('--datfile', dest='datfile', type=str, help='File where it will be save the score (result)')
 
   args = ap.parse_args()
@@ -192,7 +197,7 @@ if __name__ == '__main__':
   
   student_results_before = sum([Fitness.get_fitnessConcepts(student_id, concept_coverage.T) for student_id in range(num_students)])/num_students
   
-  grasp = Grasp(args.max_iterations, args.local_search_size, args.alpha_m, args.alpha_c, 0.0356, 0.1667, 98092891)
+  grasp = Grasp(args.max_iterations, args.local_search_size, 0.0356, 0.1667, 98092891)
   
   grasp.run(concept_coverage, student_results_before, args.datfile)
   # grasp_concept_coverage, student_results_grasp = grasp.run(concept_coverage, student_results_before)

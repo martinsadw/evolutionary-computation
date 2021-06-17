@@ -11,8 +11,9 @@ from fitness import Fitness
 from config import instance, concept_coverage, objectives, num_students, num_concepts, num_materials, recommendation
 
 class SimulatedAnnealing:
-  def __init__(self, max_iterations, cycle, initial_temperature, final_temperature, alpha, beta, max_materials_changes, max_concepts_changes, seed):
-    self.max_iterations = max_iterations
+  def __init__(self,max_counter_fitness,cycle, initial_temperature, final_temperature, alpha, beta, max_materials_changes, max_concepts_changes, seed):
+    #self.max_iterations = max_iterations
+    self.max_counter_fitness =max_counter_fitness
     self.cycle = cycle
     self.initial_temperature = initial_temperature
     self.final_temperature = final_temperature
@@ -26,8 +27,7 @@ class SimulatedAnnealing:
     self.conflicts = []
     self.material = None
     self.deltaE = 0
-    self.cost_counter = 0
-    self.current_temperature = self.initial_temperature
+    self.cost_counter= 0
     self.concepts_mask = np.zeros((num_materials,num_concepts))
     self.conflicts_order = {}
     self.concept_coverage = concept_coverage
@@ -37,7 +37,7 @@ class SimulatedAnnealing:
     config = configparser.ConfigParser(inline_comment_prefixes=("#",))
     config.read(config_filename)
     
-    max_iterations = int(config['default']['max_iterations'])
+    max_counter_fitness = int(config['default']['max_counter_fitness'])
     cycle = int(config['default']['cycle'])
     initial_temperature = float(config['default']['initial_temperature'])
     final_temperature = float(config['default']['final_temperature'])
@@ -47,10 +47,10 @@ class SimulatedAnnealing:
     max_concepts_changes = float(config['default']['max_concepts_changes'])
     seed = int(config['default']['seed'])
     
-    return cls(max_iterations, cycle, initial_temperature, final_temperature, alpha, beta, max_materials_changes, max_concepts_changes, seed)
+    return cls(max_counter_fitness, cycle, initial_temperature, final_temperature, alpha, beta, max_materials_changes, max_concepts_changes, seed)
   
   def counter_fitness(self,solution):
-    self.cost_counter +=1
+    self.cost_counter+=1
     return sum([Fitness.get_fitnessConcepts(student_id, solution.T) for student_id in range(num_students)])/num_students        
  
 
@@ -144,16 +144,11 @@ class SimulatedAnnealing:
     current_fitness = fitnessConcepts_total
     
     self.get_orderOfModifiedMaterials()
-    fitness_progress = np.empty(self.max_iterations)
+    fitness_progress = []
     
-    for i in range(self.max_iterations):
+    while(self.cost_counter< self.max_counter_fitness):
       for l in range(self.cycle):
-         
-        #current_temperature_factor = current_temperature/self.initial_temperature
-        #next_solution = self.get_randNeighbor(best_solution,current_temperature_factor)
-        
         next_solution = self.get_randNeighbor(best_solution)
-        #next_fitness = sum([Fitness.get_fitnessConcepts(student_id, next_solution.T) for student_id in range(num_students)])/num_students        
         next_fitness = self.counter_fitness(next_solution)
         self.deltaE = next_fitness - current_fitness
         
@@ -170,12 +165,11 @@ class SimulatedAnnealing:
             current_solution = next_solution
             current_fitness = next_fitness
             
-            #print('current fitness: ', current_fitness)
       
       self.current_temperature = self.decreaseTemperature(self.current_temperature)
-      fitness_progress[i] = best_fitness
+      fitness_progress.append(best_fitness)
     print("counter:",self.cost_counter)  
-    # print("current_temperature: ", current_temperature)
+    print("l: ", l)
     if(DATFILE):
       with open(DATFILE, 'w') as f:
         f.write(str(best_fitness))
@@ -191,7 +185,7 @@ class SimulatedAnnealing:
 if __name__ == '__main__':
   ap = argparse.ArgumentParser(description='Simulated Annealing parameters definition')
   ap.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
-  ap.add_argument('-i', '--max_iterations', type=int, default=100, help='Number of iterations')
+  ap.add_argument('-cf',"--max_counter_fitness",type=int,default =3000,help="Cost limitation")
   ap.add_argument('-c', '--cycle', type=int, default=2, help='Number of cycles per temperature')
   ap.add_argument('-it', '--initial_temperature', default=1000.0, type=float,  help='Initial temperature')
   ap.add_argument('-ft', '--final_temperature', default=0.001, type=float,  help='Final temperature')
@@ -209,7 +203,7 @@ if __name__ == '__main__':
   student_results_before = sum([Fitness.get_fitnessConcepts(student_id, concept_coverage.T) for student_id in range(num_students)])/num_students
   
   
-  simulatedAnnealing = SimulatedAnnealing(args.max_iterations, args.cycle, args.initial_temperature, args.final_temperature, args.alpha, args.beta, 0.0356, 0.1667, 98092891)
+  simulatedAnnealing = SimulatedAnnealing(args, args.cycle, args.initial_temperature, args.final_temperature, args.alpha, args.beta, 0.0356, 0.1667, 98092891)
   
   simulatedAnnealing.run(concept_coverage, student_results_before, args.datfile)
   # annealing_concept_coverage, student_results_annealing = simulatedAnnealing.run(concept_coverage, student_results_before)
