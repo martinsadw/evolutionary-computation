@@ -146,7 +146,7 @@ class SimulatedAnnealing:
     self.get_orderOfModifiedMaterials()
     fitness_progress = []
     
-    while(self.cost_counter< self.max_counter_fitness):
+    while(self.cost_counter < self.max_counter_fitness):
       for l in range(self.cycle):
         next_solution = self.get_randNeighbor(best_solution)
         next_fitness = self.counter_fitness(next_solution)
@@ -169,7 +169,6 @@ class SimulatedAnnealing:
       self.current_temperature = self.decreaseTemperature(self.current_temperature)
       fitness_progress.append(best_fitness)
     print("counter:",self.cost_counter)  
-    print("l: ", l)
     if(DATFILE):
       with open(DATFILE, 'w') as f:
         f.write(str(best_fitness))
@@ -191,6 +190,8 @@ if __name__ == '__main__':
   ap.add_argument('-ft', '--final_temperature', default=0.001, type=float,  help='Final temperature')
   ap.add_argument('-a', '--alpha', type=float, default=0.90,  help='alpha')
   ap.add_argument('-b', '--beta', type=str,  default=0.2, help='beta')
+  ap.add_argument('-mc','--max_materials_changes',default=10,help="max materials")
+  ap.add_argument('-cc','--max_concepts_changes',default=5,help="max concepts")
   ap.add_argument('--datfile', dest='datfile', type=str, help='File where it will be save the score (result)')
 
   args = ap.parse_args()
@@ -203,7 +204,7 @@ if __name__ == '__main__':
   student_results_before = sum([Fitness.get_fitnessConcepts(student_id, concept_coverage.T) for student_id in range(num_students)])/num_students
   
   
-  simulatedAnnealing = SimulatedAnnealing(args, args.cycle, args.initial_temperature, args.final_temperature, args.alpha, args.beta, 0.0356, 0.1667, 98092891)
+  simulatedAnnealing = SimulatedAnnealing(args.max_counter_fitness, args.cycle, args.initial_temperature, args.final_temperature, args.alpha, args.beta,args.max_materials_changes,args.max_concepts_changes,98092891)
   
   simulatedAnnealing.run(concept_coverage, student_results_before, args.datfile)
   # annealing_concept_coverage, student_results_annealing = simulatedAnnealing.run(concept_coverage, student_results_before)

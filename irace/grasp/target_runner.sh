@@ -1,6 +1,6 @@
 #!/bin/bash
 
-EXE=/mnt/c/Users/natal/Documents/Natalie/TCC/improving-LOR/algorithms/grasp.py
+EXE=/mnt/c/Users/fonse/Documents/improving-LOR/algorithms/grasp.py
 
 
 CONFIG_ID=$1
@@ -15,7 +15,7 @@ LOGS=c${CONFIG_ID}-${INSTANCE_ID}.log
 DAT_FILE=c${CONFIG_ID}-${INSTANCE_ID}.dat
 touch ${DAT_FILE}
 
-/home/bravo/anaconda3/envs/tcc/bin/python $EXE -v ${CONFIG_PARAMS} --datfile ${DAT_FILE} > ${LOGS} 2>&1
+python3 $EXE -v ${CONFIG_PARAMS} --datfile ${DAT_FILE} > ${LOGS} 2>&1
 
 error() {
     echo "`TZ=UTC date`: error: $@"

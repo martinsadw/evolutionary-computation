@@ -1,0 +1,234 @@
+#------------------------------------------------------------------------------
+# irace: An implementation in R of (Elitist) Iterated Racing
+# Version: 3.4.1.9fcaeaf
+# Copyright (C) 2010-2020
+# Manuel Lopez-Ibanez     <manuel.lopez-ibanez@manchester.ac.uk>
+# Jeremie Dubois-Lacoste  
+# Leslie Perez Caceres    <leslie.perez.caceres@ulb.ac.be>
+#
+# This is free software, and you are welcome to redistribute it under certain
+# conditions.  See the GNU General Public License for details. There is NO
+# WARRANTY; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+# irace builds upon previous code from the race package:
+#     race: Racing methods for the selection of the best
+#     Copyright (C) 2003 Mauro Birattari
+#------------------------------------------------------------------------------
+# installed at: /home/thales/R/x86_64-pc-linux-gnu-library/3.6/irace
+# called with: -s /mnt/c/Users/fonse/Documents/improving-LOR/irace/simulated_annealing/scenario.txt
+# 2021-06-18 00:59:22 -03: Initialization
+# Elitist race
+# Elitist new instances: 1
+# Elitist limit: 2
+# nbIterations: 4
+# minNbSurvival: 4
+# nbParameters: 4
+# seed: 731614278
+# confidence level: 0.95
+# budget: 1000
+# mu: 5
+# deterministic: FALSE
+
+# 2021-06-18 00:59:22 -03: Iteration 1 of 4
+# experimentsUsedSoFar: 0
+# remainingBudget: 1000
+# currentBudget: 250
+# nbConfigurations: 41
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|          1|         41|          6|    23.66016694|         41|00:05:06|   NA|  NA|    NA|
+|x|          2|         41|          8|    23.86047254|         82|00:05:17|+0.05|0.52|0.9214|
+|x|          3|         41|         36|    23.84700937|        123|00:05:06|+0.17|0.44|0.8148|
+|x|          4|         41|         36|    23.90297733|        164|00:05:07|+0.10|0.32|0.8794|
+|=|          5|         41|         36|    23.97665572|        205|00:05:15|+0.06|0.25|0.9235|
+|=|          6|         41|         36|    24.03335386|        246|00:05:34|-0.01|0.16|0.9811|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:          36    mean value:     24.03335386
+Description of the best-so-far configuration:
+   .ID. cycle initial_temperature final_temperature alpha .PARENT.
+36   36    69              784.14              0.01  0.93       NA
+
+# 2021-06-18 01:30:50 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+   cycle initial_temperature final_temperature alpha
+36    69              784.14              0.01  0.93
+30    40             8619.08              0.00  0.95
+22    34             6031.88              0.01  0.99
+6     89             8942.48              0.01  0.90
+# 2021-06-18 01:30:50 -03: Iteration 2 of 4
+# experimentsUsedSoFar: 246
+# remainingBudget: 754
+# currentBudget: 251
+# nbConfigurations: 39
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|          7|         39|         49|    23.48624795|         39|00:05:17|   NA|  NA|    NA|
+|x|          4|         39|         65|    23.84545475|         74|00:04:55|+0.25|0.62|0.8305|
+|x|          6|         39|         65|    23.96652071|        109|00:04:39|+0.05|0.37|0.9217|
+|x|          1|         39|          6|    23.97910965|        144|00:04:15|+0.03|0.27|0.9133|
+|=|          2|         39|          6|    23.98044609|        179|00:04:15|+0.05|0.24|0.9186|
+|=|          5|         39|         65|    24.00496032|        214|00:04:16|+0.01|0.18|0.9602|
+|=|          3|         39|         36|    24.05547736|        249|00:04:15|+0.03|0.17|0.9484|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:          36    mean value:     24.05547736
+Description of the best-so-far configuration:
+   .ID. cycle initial_temperature final_temperature alpha .PARENT.
+36   36    69              784.14              0.01  0.93       NA
+
+# 2021-06-18 02:02:47 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+   cycle initial_temperature final_temperature alpha
+36    69              784.14              0.01  0.93
+68    73             2481.04              0.01  0.93
+65    69             6914.80              0.00  0.95
+48    45             9538.24              0.00  0.91
+# 2021-06-18 02:02:47 -03: Iteration 3 of 4
+# experimentsUsedSoFar: 495
+# remainingBudget: 505
+# currentBudget: 252
+# nbConfigurations: 35
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|          8|         35|         78|    23.79084565|         35|00:04:16|   NA|  NA|    NA|
+|x|          3|         35|         96|    23.80601168|         66|00:03:47|-0.12|0.44|1.0774|
+|x|          2|         35|         96|    23.86358177|         97|00:03:47|-0.00|0.33|0.9870|
+|x|          1|         35|         36|    23.95051086|        128|00:03:46|-0.05|0.21|1.0191|
+|=|          4|         35|         36|    23.97458493|        159|00:03:48|-0.02|0.18|0.9965|
+|=|          7|         35|         36|    24.01019051|        190|00:03:47|+0.01|0.17|0.9643|
+|=|          6|         35|         36|    24.05399823|        221|00:03:47|+0.02|0.16|0.9514|
+|=|          5|         35|         65|    24.07896312|        252|00:03:47|+0.03|0.15|0.9512|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:          65    mean value:     24.07896312
+Description of the best-so-far configuration:
+   .ID. cycle initial_temperature final_temperature alpha .PARENT.
+65   65    69              6914.8                 0  0.95       30
+
+# 2021-06-18 02:33:37 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+   cycle initial_temperature final_temperature alpha
+65    69             6914.80              0.00  0.95
+36    69              784.14              0.01  0.93
+68    73             2481.04              0.01  0.93
+48    45             9538.24              0.00  0.91
+# 2021-06-18 02:33:37 -03: Iteration 4 of 4
+# experimentsUsedSoFar: 747
+# remainingBudget: 253
+# currentBudget: 253
+# nbConfigurations: 31
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|          9|         31|        130|    23.75367178|         31|00:03:53|   NA|  NA|    NA|
+|x|          5|         31|        126|    23.98232531|         58|00:03:18|+0.31|0.65|0.7116|
+|x|          6|         31|        126|    23.97203217|         85|00:03:18|+0.12|0.41|0.9077|
+|x|          1|         31|        115|    23.99308406|        112|00:03:16|+0.10|0.33|0.8816|
+|=|          7|         31|        115|    24.04605911|        139|00:03:17|+0.04|0.23|0.9098|
+|=|          8|         31|        115|    23.99103342|        166|00:03:17|+0.07|0.23|0.8920|
+|-|          2|         17|        115|    24.01028227|        193|00:03:18|-0.07|0.08|1.0027|
+|=|          3|         17|        115|    24.02595614|        206|00:01:35|-0.05|0.08|0.9930|
+|=|          4|         17|         36|    24.07873665|        219|00:01:34|-0.04|0.07|0.9785|
+|=|         10|         17|         65|    24.14184912|        236|00:02:04|-0.04|0.06|0.9760|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:          65    mean value:     24.14184912
+Description of the best-so-far configuration:
+   .ID. cycle initial_temperature final_temperature alpha .PARENT.
+65   65    69              6914.8                 0  0.95       30
+
+# 2021-06-18 03:02:33 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+    cycle initial_temperature final_temperature alpha
+65     69             6914.80              0.00  0.95
+36     69              784.14              0.01  0.93
+115    46             8533.18              0.00  0.92
+48     45             9538.24              0.00  0.91
+# 2021-06-18 03:02:33 -03: Iteration 5 of 5
+# experimentsUsedSoFar: 983
+# remainingBudget: 17
+# currentBudget: 17
+# nbConfigurations: 5
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded
+
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|      Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+|x|         11|          5|        115|    23.85009579|          5|00:00:36|   NA|  NA|    NA|
+|x|          5|          5|         65|    23.96998723|          6|00:00:07|+0.80|0.90|0.0743|
+|x|          8|          5|        115|    23.88037463|          7|00:00:07|+0.77|0.84|0.1281|
+|x|          9|          5|        115|    23.86635080|          8|00:00:07|+0.35|0.51|0.5089|
+|!|          6|          5|        115|    23.88275862|          9|00:00:07|+0.42|0.54|0.4674|
+|=|          7|          5|        115|    23.94529207|         10|00:00:07|+0.15|0.29|0.6520|
+|=|          3|          5|        115|    23.97248938|         11|00:00:07|+0.06|0.20|0.7574|
+|=|          2|          5|        115|    23.99165013|         12|00:00:07|-0.05|0.08|0.8252|
+|=|          1|          5|        115|    24.00641610|         13|00:00:07|-0.05|0.07|0.8292|
+|=|         10|          5|        115|    24.07455528|         14|00:00:07|-0.05|0.06|0.8338|
+|=|          4|          5|        115|    24.11070060|         15|00:00:07|-0.07|0.03|0.8467|
++-+-----------+-----------+-----------+---------------+-----------+--------+-----+----+------+
+Best-so-far configuration:         115    mean value:     24.11070060
+Description of the best-so-far configuration:
+    .ID. cycle initial_temperature final_temperature alpha .PARENT.
+115  115    46             8533.18                 0  0.92       65
+
+# 2021-06-18 03:04:22 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+    cycle initial_temperature final_temperature alpha
+115    46             8533.18              0.00  0.92
+65     69             6914.80              0.00  0.95
+135    67             2276.77              0.01  0.97
+48     45             9538.24              0.00  0.91
+# 2021-06-18 03:04:22 -03: Stopped because there is not enough budget left to race more than the minimum (4)
+# You may either increase the budget or set 'minNbSurvival' to a lower value
+# Iteration: 6
+# nbIterations: 6
+# experimentsUsedSoFar: 998
+# timeUsed: 0
+# remainingBudget: 2
+# currentBudget: 2
+# number of elites: 4
+# nbConfigurations: 3
+# Best configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+    cycle initial_temperature final_temperature alpha
+115    46             8533.18              0.00  0.92
+65     69             6914.80              0.00  0.95
+135    67             2276.77              0.01  0.97
+48     45             9538.24              0.00  0.91
+# Best configurations as commandlines (first number is the configuration ID; same order as above):
+115  --cycle=46 --initial_temperature=8533.18 --final_temperature=0 --alpha=0.92
+65   --cycle=69 --initial_temperature=6914.8 --final_temperature=0 --alpha=0.95
+135  --cycle=67 --initial_temperature=2276.77 --final_temperature=0.01 --alpha=0.97
+48   --cycle=45 --initial_temperature=9538.24 --final_temperature=0 --alpha=0.91

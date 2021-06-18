@@ -182,8 +182,10 @@ class Grasp:
 if __name__ == '__main__':
   ap = argparse.ArgumentParser(description='Feature Selection using GA with DecisionTreeClassifier')
   ap.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
-  ap.add_argument('--max_iterations', type=int, default=100, help='Number of iterations')
+  ap.add_argument('--max_counter_fitness', type=int, default=3000, help='Cost limitation')
   ap.add_argument('--local_search_size', type=int, default=2, help='Number of iterations in local search')
+  ap.add_argument('-mc','--max_materials_changes',default=10,help="max materials")
+  ap.add_argument('-cc','--max_concepts_changes',default=5,help="max concepts")
   #ap.add_argument('--alpha_m', type=float, default=0.2, help='alpha of materials')
   #ap.add_argument('--alpha_c', type=float, default=0.3, help='alpha of concepts')
   ap.add_argument('--datfile', dest='datfile', type=str, help='File where it will be save the score (result)')
@@ -197,7 +199,7 @@ if __name__ == '__main__':
   
   student_results_before = sum([Fitness.get_fitnessConcepts(student_id, concept_coverage.T) for student_id in range(num_students)])/num_students
   
-  grasp = Grasp(args.max_iterations, args.local_search_size, 0.0356, 0.1667, 98092891)
+  grasp = Grasp(args.max_counter_fitness, args.local_search_size, args.max_materials_changes,args.max_concepts_chances, 98092891)
   
   grasp.run(concept_coverage, student_results_before, args.datfile)
   # grasp_concept_coverage, student_results_grasp = grasp.run(concept_coverage, student_results_before)

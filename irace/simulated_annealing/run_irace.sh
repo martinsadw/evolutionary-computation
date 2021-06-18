@@ -2,6 +2,7 @@
 
 export IRACE_HOME=/home/thales/R/x86_64-pc-linux-gnu-library/3.6/irace
 export PATH=${IRACE_HOME}/bin/:$PATH
+export PYTHONPATH=/mnt/c/Users/fonse/Documents/Improving-LOR
 
 now="$(date +'%d-%m-%Y_%Hh-%Mm-%Ss')"
 
