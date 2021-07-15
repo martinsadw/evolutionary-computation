@@ -1,6 +1,5 @@
 cycle                     "--cycle="                  i   (0, 100)
-initial_temperature       "--initial_temperature="    r   (100, 10000)
-final_temperature         "--final_temperature="      r   (0.00001, 0.01)
+initial_temperature       "--initial_temperature="    i   (100, 10000)
 alpha                     "--alpha="                  r   (0.8, 0.99)
 
 

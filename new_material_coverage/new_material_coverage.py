@@ -46,6 +46,9 @@ class New_material_coverage():
                 writer.writerow([key] + value)
 
 
+
+
+
 new_material = New_material_coverage()
 new_material.get_concept_coverage_sa()
 new_material.get_concept_coverage_grasp()
@@ -67,14 +70,12 @@ def check_changes(best_solution):
         if (sum(best_solution[i] != instance.concepts_materials.T[i]) <= 30):
             check_changes.append(sum(best_solution[i] != instance.concepts_materials.T[i]))
 
-    print(materials_changed)
-    print(materials_changed_index)
-    print(check_changes)
+    #print(materials_changed)
+    #print(materials_changed_index)
+    #print(check_changes)
     fitness = sum([Fitness.get_fitnessConcepts(student_id, best_solution.T) for student_id in range(num_students)])/num_students
     print(fitness)
 
-print("GRASP:")
-check_changes(new_material.best_solution_grasp)
 
-print("SA")
-check_changes(new_material.best_solution_sa)
+#print("SA")
+#check_changes(new_material.best_solution_sa)

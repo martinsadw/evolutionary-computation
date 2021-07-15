@@ -11,12 +11,11 @@ from fitness import Fitness
 from config import instance, concept_coverage, objectives, num_students, num_concepts, num_materials, recommendation
 
 class SimulatedAnnealing:
-  def __init__(self,max_counter_fitness,cycle, initial_temperature, final_temperature, alpha, beta, max_materials_changes, max_concepts_changes, seed):
+  def __init__(self,max_counter_fitness,cycle, initial_temperature, alpha, beta, max_materials_changes, max_concepts_changes, seed):
     #self.max_iterations = max_iterations
     self.max_counter_fitness =max_counter_fitness
     self.cycle = cycle
     self.initial_temperature = initial_temperature
-    self.final_temperature = final_temperature
     self.alpha = alpha
     self.beta = beta
     self.max_materials_changes = max_materials_changes
@@ -40,14 +39,13 @@ class SimulatedAnnealing:
     max_counter_fitness = int(config['default']['max_counter_fitness'])
     cycle = int(config['default']['cycle'])
     initial_temperature = float(config['default']['initial_temperature'])
-    final_temperature = float(config['default']['final_temperature'])
     alpha = float(config['default']['alpha'])
     beta = float(config['default']['beta'])
     max_materials_changes = float(config['default']['max_materials_changes'])
     max_concepts_changes = float(config['default']['max_concepts_changes'])
     seed = int(config['default']['seed'])
     
-    return cls(max_counter_fitness, cycle, initial_temperature, final_temperature, alpha, beta, max_materials_changes, max_concepts_changes, seed)
+    return cls(max_counter_fitness, cycle, initial_temperature, alpha, beta, max_materials_changes, max_concepts_changes, seed)
   
   def counter_fitness(self,solution):
     self.cost_counter+=1
@@ -62,13 +60,12 @@ class SimulatedAnnealing:
     student_no = np.matmul(recommendation.astype(int), (~objectives).astype(int)) #quantos alunos receberam o material E não o tem como objetivo
     student_difference = student_no - student_yes #(quantos alunos querem ter o conceito adicionado) - (quantos alunos querem ter o conceito removido)
     scaled_coverage = (concept_coverage * 2 - 1) # concept_coverage, onde False é -1 e True é 1   
-
     self.conflicts = student_difference * scaled_coverage
-    
     change_potential = -np.minimum(0,self.conflicts).sum(axis=1) #somando as posições onde < 0 pois é onde há conflitos
     #change_potential = np.maximum(0, self.conflicts).sum(axis=1)
     self.orderOf_changed_materials = np.argsort(-change_potential).tolist()[:int(self.max_materials_changes)] #retorna os index que orderia o vetor change potential de forma descrescente
-    
+   
+
   def get_randNeighbor(self, concept_coverage):
   
     concept_coverage_neighbor = concept_coverage.copy()
@@ -79,7 +76,6 @@ class SimulatedAnnealing:
       self.materials_changed.append(self.material)
       del self.orderOf_changed_materials[selected_material_index]
       
-
     else:
       selected_material_index = random.randrange(len(self.materials_changed))
       self.material = self.materials_changed[selected_material_index]
@@ -101,23 +97,15 @@ class SimulatedAnnealing:
    
     if(count_changes > self.max_concepts_changes): #se o numero de alterações dos conceitos do material for maior que o máximo, salvar o index dos conceitos que foram modificados
       changed_concepts = [idx for idx, val in enumerate(self.concepts_mask[self.material]) if val > 0] #salvando os indices dos conceitos que foram alterados
-      
-
+    
       for i in  range(len(self.concept_coverage[self.material])):
         if(self.concept_coverage[self.material,i] == concept_coverage_neighbor[self.material,i]): #comparando se o material que foi alterado, está igual ao original ou se houve mudança
            if i in changed_concepts:
              del changed_concepts[changed_concepts.index(i)] #tirando dos changed concepts  os conceitos que foram alterados porem estão igual antes por multiplas alterações
-
-
       while(self.max_concepts_changes < len(changed_concepts) ): #revertendo conceitos que foram modificados e estão diferentes até o limitante
         selected_undo_concept_index = random.randrange(len(changed_concepts))
         concept_coverage_neighbor[self.material,changed_concepts[selected_undo_concept_index]] = ~concept_coverage_neighbor[self.material,changed_concepts[selected_undo_concept_index]]
         del changed_concepts[selected_undo_concept_index]
-
-      #print('final changed concepts: ',len(changed_concepts))
-    
-     
-    #print(self.concept_coverage[self.material])  
 
     return concept_coverage_neighbor
   
@@ -137,7 +125,7 @@ class SimulatedAnnealing:
     
     best_solution = concept_coverage
     best_fitness = fitnessConcepts_total
-    
+    cost_progress = []
     self.current_temperature = self.initial_temperature
     current_solution = concept_coverage
 
@@ -152,34 +140,36 @@ class SimulatedAnnealing:
         next_fitness = self.counter_fitness(next_solution)
         self.deltaE = next_fitness - current_fitness
         
-        #print('deltaE:', deltaE)
         if(self.deltaE < 0.0):
           current_solution = next_solution
           current_fitness = next_fitness
           
-          if(next_fitness < best_fitness  ):
+          if(next_fitness < best_fitness):
             best_solution = next_solution
             best_fitness = next_fitness
         else:
-          if(random.uniform(0,1) < math.exp(-self.deltaE / self.current_temperature)):
+          if(random.uniform(0,1) < math.exp(-self.deltaE/self.current_temperature)):
             current_solution = next_solution
             current_fitness = next_fitness
-            
+        
+        if(self.cost_counter>=self.max_counter_fitness):
+          break
       
       self.current_temperature = self.decreaseTemperature(self.current_temperature)
       fitness_progress.append(best_fitness)
+      cost_progress.append(self.cost_counter)
     print("counter:",self.cost_counter)  
     if(DATFILE):
       with open(DATFILE, 'w') as f:
         f.write(str(best_fitness))
     else:
       with open('results_SA.pickle', 'wb') as file:
-        pickle.dump({"fitness_progress": fitness_progress, "sa_concept_coverage": best_solution, "sa_fitness": best_fitness}, file)
+        pickle.dump({"fitness_progress": fitness_progress, "sa_concept_coverage": best_solution, "sa_fitness": best_fitness,"cost_progress":cost_progress}, file)
         
       return best_solution, best_fitness
 
   def __repr__(self):
-    return f'\n max_iterations: {self.max_iterations}\n cycle: {self.cycle}\n initial_temperature: {self.initial_temperature}\n final_temperature: {self.final_temperature}\n alpha: {self.alpha}\n max_materials_changes: {self.max_materials_changes}\n max_concepts_changes: {self.max_concepts_changes}\n seed: {self.seed}\n'
+    return f'\n cycle: {self.cycle}\n initial_temperature: {self.initial_temperature}\n alpha: {self.alpha}\n max_materials_changes: {self.max_materials_changes}\n max_concepts_changes: {self.max_concepts_changes}\n seed: {self.seed}\n'
 
 if __name__ == '__main__':
   ap = argparse.ArgumentParser(description='Simulated Annealing parameters definition')
@@ -187,7 +177,6 @@ if __name__ == '__main__':
   ap.add_argument('-cf',"--max_counter_fitness",type=int,default =3000,help="Cost limitation")
   ap.add_argument('-c', '--cycle', type=int, default=2, help='Number of cycles per temperature')
   ap.add_argument('-it', '--initial_temperature', default=1000.0, type=float,  help='Initial temperature')
-  ap.add_argument('-ft', '--final_temperature', default=0.001, type=float,  help='Final temperature')
   ap.add_argument('-a', '--alpha', type=float, default=0.90,  help='alpha')
   ap.add_argument('-b', '--beta', type=str,  default=0.2, help='beta')
   ap.add_argument('-mc','--max_materials_changes',default=10,help="max materials")
@@ -204,7 +193,7 @@ if __name__ == '__main__':
   student_results_before = sum([Fitness.get_fitnessConcepts(student_id, concept_coverage.T) for student_id in range(num_students)])/num_students
   
   
-  simulatedAnnealing = SimulatedAnnealing(args.max_counter_fitness, args.cycle, args.initial_temperature, args.final_temperature, args.alpha, args.beta,args.max_materials_changes,args.max_concepts_changes,98092891)
+  simulatedAnnealing = SimulatedAnnealing(args.max_counter_fitness, args.cycle, args.initial_temperature, args.alpha, args.beta,args.max_materials_changes,args.max_concepts_changes,98092891)
   
   simulatedAnnealing.run(concept_coverage, student_results_before, args.datfile)
   # annealing_concept_coverage, student_results_annealing = simulatedAnnealing.run(concept_coverage, student_results_before)

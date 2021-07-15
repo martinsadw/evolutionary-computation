@@ -13,7 +13,6 @@ class Fitness:
 
     concepts_covered = concepts_covered_function(cls.recommendation[:, student_id], cls.instance, student_id)
     materials_balancing = materials_balancing_function(cls.recommendation[:, student_id], cls.instance, student_id)
-    
     fitnessConcepts = concepts_covered + materials_balancing #isolar cada função
 
     cls.instance.concepts_materials = old_concept_coverage

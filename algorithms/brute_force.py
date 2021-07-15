@@ -31,6 +31,7 @@ class BruteForce:
       new_difficulty = sum([Fitness.get_fitnessDifficulty(student_id, new_materials_difficulty, self.best_concept_coverage.T) for student_id in range(config.num_students)])/config.num_students
       print(new_materials_difficulty[self.changed_materials])
       print(f'new_difficulty: {new_difficulty}\n-----')
+      return new_materials_difficulty[self.changed_materials]
       
     elif(characteristic == "time"):
       old_material_duration = config.instance.estimated_time.copy()
@@ -39,6 +40,8 @@ class BruteForce:
       new_time = sum([Fitness.get_fitnessTime(student_id, new_material_duration) for student_id in range(config.num_students)])/config.num_students
       print(new_material_duration[self.changed_materials])
       print(f'new_time: {new_time}\n----')
+      
+      return new_material_duration[self.changed_materials]
       
     elif(characteristic == "learning_syle"):
       old_m_active_reflexive = config.instance.materials_active_reflexive.copy()
@@ -55,12 +58,21 @@ class BruteForce:
       
       new_LS = sum([Fitness.get_fitnessLearningStyle(student_id, new_m_learning_syle) for student_id in range(config.num_students)])/config.num_students
       
+      new_learning_style = {
+        "active_reflexive":new_m_learning_syle["active_reflexive"][self.changed_materials],
+        "sequential_global":new_m_learning_syle["sequential_global"][self.changed_materials],
+        "visual_verbal":new_m_learning_syle["visual_verbal"][self.changed_materials],
+        "sensory_intuitive":new_m_learning_syle["sensory_intuitive"][self.changed_materials] 
+      }
+
       print(new_m_learning_syle["active_reflexive"][self.changed_materials])
       print(new_m_learning_syle["sequential_global"][self.changed_materials])
       print(new_m_learning_syle["visual_verbal"][self.changed_materials])
       print(new_m_learning_syle["sensory_intuitive"][self.changed_materials])
       print(f'new_LS: {new_LS}\n----')
-              
+      
+      return new_learning_style
+
     else:
       raise Exception('The {} value is not applicable.'.format(characteristic))
     

@@ -2,6 +2,7 @@ import random
 import pickle
 import logging
 import argparse
+from typing import Counter
 import numpy as np
 import configparser
 
@@ -13,9 +14,6 @@ class Grasp:
     
     self.max_counter_fitness = max_counter_fitness
     self.local_search_size = local_search_size
-
-    #self.alpha_m = alpha_m
-    #self.alpha_c = alpha_c
     self.max_materials_changes = max_materials_changes
     self.max_concepts_changes = max_concepts_changes
     self.seed = seed
@@ -24,9 +22,11 @@ class Grasp:
     self.change_potential_order = []
     self.material = None
     self.materials_changed = []
+    self.fitness_progress = []
+
     self.conflicts_order = {}
     self.cost_counter = 0
-
+    self.count = 0
   @classmethod
   def from_config(cls, config_filename):
     config = configparser.ConfigParser(inline_comment_prefixes=("#",))
@@ -52,11 +52,8 @@ class Grasp:
     
     best_solution = concept_coverage
     best_fitness = fitnessConcepts_total
-    
-    fitness_progress = []
+    cost_progress = []
     while(self.cost_counter<self.max_counter_fitness):
-        
-
       solution, solution_fitness, materials_changed = self.greadyRandomizedConstruction()
       solution, solution_fitness = self.localSearch(solution, solution_fitness, materials_changed)
       
@@ -64,14 +61,15 @@ class Grasp:
         best_solution = solution
         best_fitness = solution_fitness
     
-      fitness_progress.append(best_fitness)
-    print("counter:",self.cost_counter)    
+      self.fitness_progress.append(best_fitness)
+      cost_progress.append(self.cost_counter)
+    
     if(DATFILE):
       with open(DATFILE, 'w') as f:
         f.write(str(best_fitness))
     else:
       with open('results_grasp.pickle', 'wb') as file:
-        pickle.dump({"fitness_progress": fitness_progress, "grasp_concept_coverage": best_solution, "grasp_fitness": best_fitness}, file)
+        pickle.dump({"fitness_progress": self.fitness_progress, "grasp_concept_coverage": best_solution, "grasp_fitness": best_fitness,"cost_progress":cost_progress}, file)
       
       return best_solution, best_fitness
   
@@ -82,10 +80,7 @@ class Grasp:
     student_difference = student_no - student_yes #(quantos alunos querem ter o conveito adicionado) - (quantos alunos querem ter o conceito removido)
     scaled_coverage = (concept_coverage * 2 - 1) # concept_coverage, onde False é -1 e True é 1
     conflicts = student_difference * scaled_coverage
-    #change_potential = np.maximum(0, conflicts).sum(axis=1)
     change_potential = -np.minimum(0,conflicts).sum(axis=1) #somando as posições onde < 0 pois é onde há conflitos
-
-    #materials_changed = []
     new_concept_coverage = concept_coverage.copy()
     self.change_potential_order = np.argsort(-change_potential).tolist()[:int(self.max_materials_changes)]
     
@@ -132,47 +127,53 @@ class Grasp:
     new_concept_coverage = solution
     new_best_fitness = solution_fitness
     materials_changed_mask = np.zeros((num_materials,num_concepts)) #salvando as posições dos conceitos que foram alterados dos materiais
-    
+  
+    teste = 0
     for j in range(len(materials_changed)):
       for i in  range(num_concepts):
           if(self.concept_coverage[materials_changed[j],i] != solution[materials_changed[j],i]): #materials change just has less than the maximum  concept change and differnete from the inital solution 
               materials_changed_mask[materials_changed[j],i] = 1 #colocando 1 nas posições que já foram alteradas
     
     #materials come with the max or less than the max concepts changes
-    for j in range(self.local_search_size):
-        fitness_improved = False
+
+    for j in range(self.local_search_size):  
+        fitness_improved = False        
+        if(self.cost_counter>=self.max_counter_fitness):
+              break
         for material in materials_changed:
+            if(self.cost_counter>=self.max_counter_fitness):
+              break
             for concept in range(num_concepts):
-                step_concept_coverage = new_concept_coverage.copy()
-                step_concept_coverage[material, concept] = ~step_concept_coverage[material, concept]
-                materials_changed_mask[material,concept] = materials_changed_mask[material,concept] +1
-           
-                #count_changes = sum(i>0 for i in materials_changed_mask[material])
-                
-                changed_concepts = [idx for idx, val in enumerate(materials_changed_mask[material]) if val > 0] #pegando o indices dos conceitos que foram alterados
-                for i in  range(num_concepts):
-                    if(self.concept_coverage[material,i] == step_concept_coverage[material,i]):
-                        if i in changed_concepts:
-                          del changed_concepts[changed_concepts.index(i)] 
+              if(self.cost_counter>=self.max_counter_fitness):
+                break
 
-                while(self.max_concepts_changes < len(changed_concepts)): #testar, se ainda nao funcionar, comparar os conceitos que foram alterados com os conceitos antigos
+              step_concept_coverage = new_concept_coverage.copy()
+              step_concept_coverage[material, concept] = ~step_concept_coverage[material, concept]
+              materials_changed_mask[material,concept] = materials_changed_mask[material,concept] +1             
+              changed_concepts = [idx for idx, val in enumerate(materials_changed_mask[material]) if val > 0] #pegando o indices dos conceitos que foram alterados
+              
+              for i in  range(num_concepts):
+                  if(self.concept_coverage[material,i] == step_concept_coverage[material,i]):
+                      if i in changed_concepts:
+                        del changed_concepts[changed_concepts.index(i)] 
+
+              while(self.max_concepts_changes < len(changed_concepts)): #testar, se ainda nao funcionar, comparar os conceitos que foram alterados com os conceitos antigos   
+                selected_undo_concept_index = random.randrange(len(changed_concepts))
+                step_concept_coverage[material,changed_concepts[selected_undo_concept_index]] = ~step_concept_coverage[material,changed_concepts[selected_undo_concept_index]]
+                del changed_concepts[selected_undo_concept_index]
+              
+              step_fitness = self.counter_fitness(step_concept_coverage)
+              
+              if new_best_fitness > step_fitness:
+                  new_best_fitness = step_fitness
+                  new_concept_coverage = step_concept_coverage
+                  fitness_improved = True
                   
-                  selected_undo_concept_index = random.randrange(len(changed_concepts))
-                  step_concept_coverage[material,changed_concepts[selected_undo_concept_index]] = ~step_concept_coverage[material,changed_concepts[selected_undo_concept_index]]
-                  del changed_concepts[selected_undo_concept_index]
-
-                if(self.cost_counter<self.max_counter_fitness):
-                  step_fitness = self.counter_fitness(step_concept_coverage)
-                else:
-                  break
-                
-                if new_best_fitness > step_fitness:
-                    new_best_fitness = step_fitness
-                    new_concept_coverage = step_concept_coverage
-                    fitness_improved = True
-
-        if not fitness_improved:
+                  
+                  
+        if fitness_improved:
             break
+    
     return new_concept_coverage, new_best_fitness
   
 
@@ -199,7 +200,7 @@ if __name__ == '__main__':
   
   student_results_before = sum([Fitness.get_fitnessConcepts(student_id, concept_coverage.T) for student_id in range(num_students)])/num_students
   
-  grasp = Grasp(args.max_counter_fitness, args.local_search_size, args.max_materials_changes,args.max_concepts_chances, 98092891)
+  grasp = Grasp(args.max_counter_fitness, args.local_search_size, args.max_materials_changes,args.max_concepts_changes, 98092891)
   
   grasp.run(concept_coverage, student_results_before, args.datfile)
   # grasp_concept_coverage, student_results_grasp = grasp.run(concept_coverage, student_results_before)
