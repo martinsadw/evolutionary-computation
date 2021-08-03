@@ -1,2 +1,0 @@
-0;a;tmp1;tmp2;tst
-1;a;tmp3;tst

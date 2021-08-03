@@ -1,0 +1,14 @@
+{
+  "python.pythonPath": "C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.9_3.9.1520.0_x64__qbz5n2kfra8p0\\python3.9.exe",
+  "terminal.integrated.env.osx": {"PYTHONPATH": "${workspaceFolder}"},
+  //"python.analysis.extraPaths": ["./natalie"],
+  
+  // "python.linting.pylintEnabled": false,
+  // "python.linting.flake8Enabled": true,
+  // "python.linting.enabled": true,
+  // "python.linting.flake8Args": [
+  //     "--max-line-length=120",
+  //     "--ignore=E501, E111, E114, E128, E202, E201, W293, W503, E303",
+  // ],
+  // "python.formatting.autopep8Args": ["--indent-size=2"]
+}
